@@ -547,6 +547,12 @@ function productToDbRow(p) {
   };
 }
 
+
+function isApiServerAvailable() {
+  return typeof window !== 'undefined' && 
+         (window.location.protocol === 'http:' || window.location.protocol === 'https:');
+}
+
 /* =========================================================================
    STORE CRUD & SYNC OPERATIONS
    ========================================================================= */
@@ -591,6 +597,21 @@ function saveStoredProducts(products, triggerBroadcast = true) {
  * If Supabase is connected, it updates the local cache and returns fresh data.
  */
 async function fetchStoreProductsAsync() {
+  if (isApiServerAvailable()) {
+    try {
+      const res = await fetch('/api/products');
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          saveStoredProducts(data, true);
+          return data;
+        }
+      }
+    } catch (e) {
+      console.warn('API server fetch error, falling back:', e);
+    }
+  }
+
   if (!supabaseClient) initSupabaseClient();
   if (supabaseClient && isSupabaseConfigured()) {
     try {
@@ -630,6 +651,22 @@ async function addStoreProductAsync(product) {
   current.unshift(newProduct);
   saveStoredProducts(current, true);
 
+  if (isApiServerAvailable()) {
+    try {
+      const res = await fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newProduct)
+      });
+      if (res.ok) {
+        const created = await res.json();
+        return created;
+      }
+    } catch (e) {
+      console.warn('API server insert error:', e);
+    }
+  }
+
   if (!supabaseClient) initSupabaseClient();
   if (supabaseClient && isSupabaseConfigured()) {
     try {
@@ -657,6 +694,22 @@ async function updateStoreProductAsync(id, updatedFields) {
   if (idx !== -1) {
     current[idx] = { ...current[idx], ...updatedFields, updatedAt: new Date().toISOString() };
     saveStoredProducts(current, true);
+
+    if (isApiServerAvailable()) {
+      try {
+        const res = await fetch('/api/products/' + encodeURIComponent(id), {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(current[idx])
+        });
+        if (res.ok) {
+          const updated = await res.json();
+          return updated;
+        }
+      } catch (e) {
+        console.warn('API server update error:', e);
+      }
+    }
 
     if (!supabaseClient) initSupabaseClient();
     if (supabaseClient && isSupabaseConfigured()) {
@@ -689,6 +742,17 @@ async function deleteStoreProductAsync(id) {
   if (current.length !== initialLen) {
     saveStoredProducts(current, true);
 
+    if (isApiServerAvailable()) {
+      try {
+        const res = await fetch('/api/products/' + encodeURIComponent(id), {
+          method: 'DELETE'
+        });
+        if (res.ok) return true;
+      } catch (e) {
+        console.warn('API server delete error:', e);
+      }
+    }
+
     if (!supabaseClient) initSupabaseClient();
     if (supabaseClient && isSupabaseConfigured()) {
       try {
@@ -716,6 +780,19 @@ function deleteStoreProduct(id) {
 async function loadSampleStoreProductsAsync() {
   saveStoredProducts(OM_SAMPLE_PRODUCTS, true);
 
+  if (isApiServerAvailable()) {
+    try {
+      const res = await fetch('/api/products/sample', { method: 'POST' });
+      if (res.ok) {
+        const data = await res.json();
+        saveStoredProducts(data.products || OM_SAMPLE_PRODUCTS, true);
+        return data.products || OM_SAMPLE_PRODUCTS;
+      }
+    } catch (e) {
+      console.warn('API server load sample error:', e);
+    }
+  }
+
   if (!supabaseClient) initSupabaseClient();
   if (supabaseClient && isSupabaseConfigured()) {
     try {
@@ -740,6 +817,18 @@ function loadSampleStoreProducts() {
  */
 async function clearAllStoreProductsAsync() {
   saveStoredProducts([], true);
+
+  if (isApiServerAvailable()) {
+    try {
+      const res = await fetch('/api/products/clear', { method: 'POST' });
+      if (res.ok) {
+        saveStoredProducts([], true);
+        return [];
+      }
+    } catch (e) {
+      console.warn('API server clear error:', e);
+    }
+  }
 
   if (!supabaseClient) initSupabaseClient();
   if (supabaseClient && isSupabaseConfigured()) {

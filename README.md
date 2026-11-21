@@ -96,12 +96,17 @@ A high-performance, responsive e-commerce and retail storefront web application 
 
 | File | Purpose |
 |------|---------|
+| `server.js` | Production Node.js backend server: reads `.env` securely, handles REST API, and serves frontend. |
+| `package.json` | Project scripts and metadata (`npm start`, `npm run dev`). |
+| `.env.example` | Environment configuration template committed to GitHub (never contains real secrets). |
+| `.env` | Protected secrets file (ignored by `.gitignore`, never pushed to GitHub). |
 | `index.html` | The primary, fully-functional and animated storefront single-page application (empty by default, dynamic via `store.js`). |
 | `products.html` | Dedicated empty products catalog page with placeholder state and inquiry actions (dynamic via `store.js`). |
 | `admin.html` | Secret Admin Portal with authentication login, full product CRUD, image upload, and 1-click restore/clear tools. |
 | `admin/index.html` | Direct route mirror enabling `/admin` URL access on local servers and static hosts. |
-| `store.js` | Centralized hybrid data store (Supabase Cloud + local cache fallback) with real-time broadcast. |
+| `store.js` | Centralized hybrid data store (REST API + Supabase Cloud + local cache fallback) with real-time broadcast. |
 | `supabase_schema.sql` | 1-Click PostgreSQL table schema, Row-Level-Security (RLS) policies, and Realtime pub script. |
+| `logo.png` | Official store logo used across header, footer, and admin portal. |
 | `code.html` | Updated synchronized version matching `index.html`. |
 | `DESIGN.md` | Original design system specification (Vibrant Civic Tech Retail). |
 | `screen.png` | Visual baseline screenshot from the original Stitch project. |
@@ -109,35 +114,48 @@ A high-performance, responsive e-commerce and retail storefront web application 
 
 ---
 
-## ⚡ Supabase Cloud Database Setup (2-Minute Guide)
+## 🔒 Security & Environment Secrets (.env)
 
-By default, the web application runs in **Local Storage mode** (zero configuration, works offline, safe for local testing). To make it a **global live cloud application** where products you add sync instantly to every customer across all devices:
+Your API keys and database credentials are **100% protected on the backend server**:
+* Real secrets are placed in **`.env`** on your machine/server.
+* **`.env` is strictly ignored by Git** (via `.gitignore`) so your credentials will **never** be committed or exposed to GitHub.
+* Website visitors and browser developer tools **never** see your Supabase keys because all database queries are proxied securely through `server.js`.
+
+---
+
+## ⚡ Supabase Cloud Database Setup (2-Minute Guide)
 
 1. **Sign Up & Create Project:** Go to [supabase.com](https://supabase.com) (100% free) and create a new project.
 2. **Run SQL Schema:** 
    - Open **SQL Editor** in your Supabase dashboard.
    - Copy all content from [`supabase_schema.sql`](file:///c:/Users/vedan/Downloads/stitch_om_mobile_electronics_website/supabase_schema.sql), paste it into the editor, and click **Run**.
-3. **Connect from Admin Panel:**
-   - Go to your Supabase **Project Settings** -> **API**.
-   - Copy your **Project URL** and **anon public key**.
-   - Open your store's Admin Panel (`/admin` or `admin.html`), click the **"Local Storage" / "Supabase Cloud"** button in the top bar.
-   - Paste your URL and anon key, click **Test Connection**, then **Save & Connect**!
-
-All products, pricing, stock statuses, and specs will now sync live across the cloud in real-time.
+3. **Configure Your `.env` File:**
+   - In your Supabase dashboard, go to **Project Settings** -> **API**.
+   - Open your local `.env` file and paste your credentials:
+     ```ini
+     SUPABASE_URL=https://your-project.supabase.co
+     SUPABASE_ANON_KEY=your-actual-anon-key
+     ```
+4. **Start the Production Server:**
+   ```bash
+   npm start
+   ```
+   All products and admin actions will now sync live across the cloud with full backend security!
 
 ---
 
 ## 🚀 How to Run & Preview
 
-Open the project files directly in any web browser:
-- **Customer Storefront:** Open `index.html` or `products.html` directly in your browser.
-- **Secret Admin Portal:** Enter `admin.html` or `/admin` in the browser URL bar:
-  - **Username:** `admin`
-  - **Password:** `om@dhanore2026`
-- **Local HTTP Server (Optional):**
-  ```bash
-  # Using Node
-  npx serve .
-  # or using Python (if installed)
-  python -m http.server 8000
-  ```
+### Method 1: Production Server (Recommended - Full Security & .env Support)
+```bash
+npm start
+```
+* **Storefront:** http://localhost:3000
+* **Products Page:** http://localhost:3000/products
+* **Admin Portal:** http://localhost:3000/admin
+  * **Username:** `guarav bhosle`
+  * **Password:** `guarav@omelectronics`
+
+### Method 2: Direct File / Offline Mode
+* Double-click `index.html` or `products.html` directly in your browser.
+* Double-click `admin.html` to access the Admin Portal offline.

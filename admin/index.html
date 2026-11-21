@@ -652,22 +652,41 @@
     let activeEditProductId = null;
 
     /* Cloud Sync Status & Config Logic */
-    function updateCloudStatusUI() {
-      const isCloud = typeof isSupabaseConfigured === 'function' && isSupabaseConfigured();
+    async function updateCloudStatusUI() {
       const badge = document.getElementById("cloud-status-badge");
       const dot = document.getElementById("cloud-status-dot");
       const text = document.getElementById("cloud-status-text");
+      if (!badge || !dot || !text) return;
 
-      if (badge && dot && text) {
-        if (isCloud) {
-          badge.className = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all shadow-xs bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100";
-          dot.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
-          text.textContent = "Supabase Cloud: Active";
-        } else {
-          badge.className = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all shadow-xs bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100";
-          dot.className = "w-2 h-2 rounded-full bg-amber-500 animate-pulse";
-          text.textContent = "Local Storage (Device)";
-        }
+      if (typeof isApiServerAvailable === 'function' && isApiServerAvailable()) {
+        try {
+          const res = await fetch('/api/status');
+          if (res.ok) {
+            const status = await res.json();
+            if (status.cloudConfigured) {
+              badge.className = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all shadow-xs bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100";
+              dot.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
+              text.textContent = "Cloud: .env Connected";
+              return;
+            } else {
+              badge.className = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all shadow-xs bg-blue-50 text-blue-800 border-blue-200 hover:bg-blue-100";
+              dot.className = "w-2 h-2 rounded-full bg-blue-500 animate-pulse";
+              text.textContent = "Server: .env File Storage";
+              return;
+            }
+          }
+        } catch (e) {}
+      }
+
+      const isCloud = typeof isSupabaseConfigured === 'function' && isSupabaseConfigured();
+      if (isCloud) {
+        badge.className = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all shadow-xs bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100";
+        dot.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
+        text.textContent = "Supabase Cloud: Active";
+      } else {
+        badge.className = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all shadow-xs bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100";
+        dot.className = "w-2 h-2 rounded-full bg-amber-500 animate-pulse";
+        text.textContent = "Local Storage (Device)";
       }
     }
 
@@ -797,12 +816,38 @@
     });
 
     /* Login & Authentication */
-    function handleAdminLogin(e) {
+    async function handleAdminLogin(e) {
       e.preventDefault();
       const user = document.getElementById("admin-username-input").value.trim().toLowerCase();
       const pass = document.getElementById("admin-password-input").value;
       const remember = document.getElementById("remember-admin-checkbox").checked;
       const errorMsg = document.getElementById("login-error-msg");
+
+      // 1. Try secure server backend login if running on Node server
+      if (typeof isApiServerAvailable === 'function' && isApiServerAvailable()) {
+        try {
+          const res = await fetch('/api/admin/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: user, password: pass })
+          });
+          const data = await res.json();
+          if (res.ok && data.success) {
+            if (remember) localStorage.setItem("om_admin_auth", "true");
+            else sessionStorage.setItem("om_admin_auth", "true");
+            errorMsg.classList.add("hidden");
+            unlockAdminDashboard();
+            showAdminToast("Welcome Gaurav Bhosle! Logged in via Secure .env Backend.");
+            return;
+          } else {
+            errorMsg.classList.remove("hidden");
+            showAdminToast(data.message || "Authentication failed.");
+            return;
+          }
+        } catch (err) {
+          console.warn("Backend auth offline, using fallback verification:", err);
+        }
+      }
 
       if (user === ADMIN_CREDS.user.toLowerCase() && pass === ADMIN_CREDS.pass) {
         if (remember) {
