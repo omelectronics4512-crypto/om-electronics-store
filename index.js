@@ -19,6 +19,24 @@ const MIME_TYPES = {
   '.ico': 'image/x-icon'
 };
 
+// Static string literals required for @vercel/nft to bundle all HTML files
+const STATIC_ASSETS = {
+  '/': path.join(__dirname, 'index.html'),
+  '/index': path.join(__dirname, 'index.html'),
+  '/index.html': path.join(__dirname, 'index.html'),
+  '/products': path.join(__dirname, 'products.html'),
+  '/products/': path.join(__dirname, 'products.html'),
+  '/products.html': path.join(__dirname, 'products.html'),
+  '/admin': path.join(__dirname, 'admin.html'),
+  '/admin/': path.join(__dirname, 'admin.html'),
+  '/admin.html': path.join(__dirname, 'admin.html'),
+  '/admin/index.html': path.join(__dirname, 'admin.html'),
+  '/store.js': path.join(__dirname, 'store.js'),
+  '/admin/store.js': path.join(__dirname, 'store.js'),
+  '/logo.png': path.join(__dirname, 'logo.png'),
+  '/admin/logo.png': path.join(__dirname, 'logo.png')
+};
+
 let apiHandler;
 try {
   apiHandler = require('./api/index.js');
@@ -37,41 +55,40 @@ module.exports = async (req, res) => {
     }
   }
 
-  // 2. Resolve clean URLs to static HTML files
-  if (pathname === '/' || pathname === '') {
-    pathname = '/index.html';
-  } else if (pathname === '/products') {
-    pathname = '/products.html';
-  } else if (pathname === '/admin') {
-    pathname = '/admin.html';
+  // 2. Normalize pathname (strip trailing slash if present)
+  const cleanPath = pathname.length > 1 ? pathname.replace(/\/$/, '') : pathname;
+
+  if (STATIC_ASSETS[cleanPath] || STATIC_ASSETS[pathname]) {
+    const targetFile = STATIC_ASSETS[cleanPath] || STATIC_ASSETS[pathname];
+    if (fs.existsSync(targetFile)) {
+      const ext = path.extname(targetFile).toLowerCase();
+      res.writeHead(200, {
+        'Content-Type': MIME_TYPES[ext] || 'text/html; charset=utf-8',
+        'Cache-Control': ext === '.html' ? 'no-cache, no-store, must-revalidate' : 'public, max-age=3600'
+      });
+      return res.end(fs.readFileSync(targetFile));
+    }
   }
 
-  const filePath = path.join(__dirname, pathname);
-  const ext = path.extname(filePath).toLowerCase();
-
+  // 3. Fallback for any other file on disk
+  const directPath = path.join(__dirname, pathname);
   try {
-    if (fs.existsSync(filePath)) {
-      const content = fs.readFileSync(filePath);
-      const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+    if (fs.existsSync(directPath) && fs.statSync(directPath).isFile()) {
+      const ext = path.extname(directPath).toLowerCase();
       res.writeHead(200, {
-        'Content-Type': contentType,
+        'Content-Type': MIME_TYPES[ext] || 'application/octet-stream',
         'Cache-Control': ext === '.html' ? 'no-cache' : 'public, max-age=3600'
       });
-      return res.end(content);
-    }
-  } catch (err) {
-    console.error('File read error:', err.message);
-  }
-
-  // Fallback to index.html for Single Page Applications
-  try {
-    const fallbackPath = path.join(__dirname, 'index.html');
-    if (fs.existsSync(fallbackPath)) {
-      const content = fs.readFileSync(fallbackPath);
-      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-      return res.end(content);
+      return res.end(fs.readFileSync(directPath));
     }
   } catch (err) {}
+
+  // 4. Default fallback: index.html
+  const indexPath = path.join(__dirname, 'index.html');
+  if (fs.existsSync(indexPath)) {
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+    return res.end(fs.readFileSync(indexPath));
+  }
 
   res.writeHead(404, { 'Content-Type': 'text/plain' });
   res.end('Not Found');
