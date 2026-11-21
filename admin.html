@@ -308,6 +308,12 @@
             <span class="sm:hidden">Sample</span>
           </button>
 
+          <button type="button" onclick="handleRefreshProductsFromCloud()" 
+                  class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-surface-low hover:bg-surface-mid text-on-surface text-xs font-bold transition-all border border-outline-variant/60" title="Sync & Refresh Inventory from Cloud Database">
+            <span class="material-symbols-outlined text-[18px]">sync</span>
+            <span>Sync Cloud</span>
+          </button>
+
           <button type="button" onclick="handleClearAllProducts()" 
                   class="inline-flex items-center justify-center p-2.5 rounded-xl bg-surface-low hover:bg-red-50 text-outline hover:text-red-600 transition-colors border border-outline-variant/60" title="Clear All Products from Store">
             <span class="material-symbols-outlined text-[18px]">delete_sweep</span>
@@ -807,6 +813,14 @@
         }).catch(() => {});
       }
 
+      // Realtime synchronization across browser tabs and administrative updates
+      window.addEventListener("om_products_changed", () => {
+        refreshAdminProductsTable();
+      });
+      window.addEventListener("storage", () => {
+        refreshAdminProductsTable();
+      });
+
       if (typeof subscribeToStoreRealtime === 'function') {
         subscribeToStoreRealtime(() => {
           refreshAdminProductsTable();
@@ -885,10 +899,27 @@
       showAdminToast("Logged out successfully.");
     }
 
-    function unlockAdminDashboard() {
+    async function unlockAdminDashboard() {
       document.getElementById("auth-gate-screen").classList.add("hidden");
       document.getElementById("admin-dashboard-app").classList.remove("hidden");
       refreshAdminProductsTable();
+      if (typeof fetchStoreProductsAsync === 'function') {
+        try {
+          await fetchStoreProductsAsync();
+        } catch (e) {}
+        refreshAdminProductsTable();
+      }
+    }
+
+    async function handleRefreshProductsFromCloud() {
+      showAdminToast("Syncing with cloud database...");
+      if (typeof fetchStoreProductsAsync === 'function') {
+        try {
+          await fetchStoreProductsAsync();
+        } catch (e) {}
+      }
+      refreshAdminProductsTable();
+      showAdminToast("Inventory catalog refreshed!");
     }
 
     /* Table Refresh & Rendering */
