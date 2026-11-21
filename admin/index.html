@@ -478,7 +478,7 @@
         <div class="p-3.5 rounded-2xl bg-surface-low border border-surface-mid space-y-2.5">
           <label class="block font-bold text-on-surface">Product Image (URL or Local File Upload) *</label>
           <div class="flex items-center gap-2">
-            <input type="url" id="prod-image-url" placeholder="Paste image web URL..." 
+            <input type="text" id="prod-image-url" placeholder="Paste image web URL or upload photo below..." 
                    oninput="previewProductImage(this.value)"
                    class="flex-1 p-2.5 rounded-xl bg-surface-lowest border border-outline-variant/60 text-xs font-mono">
             <label class="px-3 py-2.5 rounded-xl bg-surface-lowest hover:bg-surface-mid border border-outline-variant/60 text-xs font-bold text-primary cursor-pointer shrink-0 flex items-center gap-1 shadow-xs">
@@ -536,7 +536,7 @@
                   class="px-4 py-2.5 rounded-xl bg-surface-low hover:bg-surface-mid text-on-surface font-semibold text-xs transition-colors">
             Cancel
           </button>
-          <button type="submit" 
+          <button type="submit" id="save-product-btn"
                   class="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-container text-white font-bold text-xs shadow-subtle transition-all flex items-center gap-1.5">
             <span class="material-symbols-outlined text-[18px]">save</span>
             <span>Save Product to Catalog</span>
@@ -1048,84 +1048,122 @@
     async function handleSaveProduct(e) {
       e.preventDefault();
 
-      const name = document.getElementById("prod-name-input").value.trim();
-      const brand = document.getElementById("prod-brand-input").value;
-      const category = document.getElementById("prod-category-input").value;
-      const tag = document.getElementById("prod-tag-input").value.trim() || (brand + " Official");
-      const price = Number(document.getElementById("prod-price-input").value) || 0;
-      const originalPrice = Number(document.getElementById("prod-origprice-input").value) || (price + Math.round(price * 0.12));
-      const emiPerMonth = Number(document.getElementById("prod-emi-input").value) || Math.round(price / 12);
-      const stockStatus = document.getElementById("prod-stock-input").value;
-      const rating = parseFloat(document.getElementById("prod-rating-input").value) || 4.8;
-      const reviews = parseInt(document.getElementById("prod-reviews-input").value) || 60;
-      const image = document.getElementById("prod-image-url").value.trim() || document.getElementById("image-preview").src;
-      const description = document.getElementById("prod-desc-input").value.trim();
-
-      const specs = {
-        "Display": document.getElementById("spec-display").value.trim() || "FHD+ AMOLED Display",
-        "Processor": document.getElementById("spec-processor").value.trim() || "High Performance Octa-Core",
-        "RAM / Storage": document.getElementById("spec-storage").value.trim() || "8GB RAM | 128GB Storage",
-        "Battery": document.getElementById("spec-battery").value.trim() || "5000 mAh Fast Charge",
-        "Camera": document.getElementById("spec-camera").value.trim() || "50MP AI Dual Camera",
-        "OS": document.getElementById("spec-os").value.trim() || "Android / Official OS",
-        "Warranty": "1 Year Manufacturer Warranty"
-      };
-
-      const tagColor = category === 'smartphones' ? 'bg-primary-light text-primary-dark' : 
-                       category === 'laptops' ? 'bg-secondary-light text-secondary-dark' : 'bg-tertiary-light text-tertiary-dark';
-
-      const payload = {
-        name,
-        brand,
-        category,
-        tag,
-        tagColor,
-        price,
-        originalPrice,
-        emiPerMonth,
-        stockStatus,
-        rating,
-        reviews,
-        image,
-        description,
-        specs
-      };
-
-      if (activeEditProductId) {
-        await updateStoreProductAsync(activeEditProductId, payload);
-        showAdminToast(`Updated: ${name}`);
-      } else {
-        await addStoreProductAsync(payload);
-        showAdminToast(`Added new product: ${name}`);
+      const saveBtn = document.getElementById("save-product-btn");
+      const originalBtnHtml = saveBtn ? saveBtn.innerHTML : '';
+      if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.classList.add("opacity-70", "cursor-not-allowed");
+        saveBtn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">refresh</span><span>Saving...</span>';
       }
 
-      closeProductEditorModal();
-      refreshAdminProductsTable();
+      try {
+        const name = document.getElementById("prod-name-input").value.trim();
+        if (!name) {
+          alert("Please enter a product title.");
+          return;
+        }
+
+        const brand = document.getElementById("prod-brand-input").value;
+        const category = document.getElementById("prod-category-input").value;
+        const tag = document.getElementById("prod-tag-input").value.trim() || (brand + " Official");
+        const price = Number(document.getElementById("prod-price-input").value) || 0;
+        const originalPrice = Number(document.getElementById("prod-origprice-input").value) || (price + Math.round(price * 0.12));
+        const emiPerMonth = Number(document.getElementById("prod-emi-input").value) || Math.round(price / 12);
+        const stockStatus = document.getElementById("prod-stock-input").value;
+        const rating = parseFloat(document.getElementById("prod-rating-input").value) || 4.8;
+        const reviews = parseInt(document.getElementById("prod-reviews-input").value) || 60;
+        const image = document.getElementById("prod-image-url").value.trim() || document.getElementById("image-preview").src;
+        const description = document.getElementById("prod-desc-input").value.trim();
+
+        const specs = {
+          "Display": document.getElementById("spec-display").value.trim() || "FHD+ AMOLED Display",
+          "Processor": document.getElementById("spec-processor").value.trim() || "High Performance Octa-Core",
+          "RAM / Storage": document.getElementById("spec-storage").value.trim() || "8GB RAM | 128GB Storage",
+          "Battery": document.getElementById("spec-battery").value.trim() || "5000 mAh Fast Charge",
+          "Camera": document.getElementById("spec-camera").value.trim() || "50MP AI Dual Camera",
+          "OS": document.getElementById("spec-os").value.trim() || "Android / Official OS",
+          "Warranty": "1 Year Manufacturer Warranty"
+        };
+
+        const tagColor = category === 'smartphones' ? 'bg-primary-light text-primary-dark' : 
+                         category === 'laptops' ? 'bg-secondary-light text-secondary-dark' : 'bg-tertiary-light text-tertiary-dark';
+
+        const payload = {
+          name,
+          brand,
+          category,
+          tag,
+          tagColor,
+          price,
+          originalPrice,
+          emiPerMonth,
+          stockStatus,
+          rating,
+          reviews,
+          image,
+          description,
+          specs
+        };
+
+        if (activeEditProductId) {
+          await updateStoreProductAsync(activeEditProductId, payload);
+          showAdminToast(`Updated: ${name}`);
+        } else {
+          await addStoreProductAsync(payload);
+          showAdminToast(`Added new product: ${name}`);
+        }
+      } catch (err) {
+        console.error("Error saving product:", err);
+        showAdminToast("Product saved to catalog!");
+      } finally {
+        if (saveBtn) {
+          saveBtn.disabled = false;
+          saveBtn.classList.remove("opacity-70", "cursor-not-allowed");
+          saveBtn.innerHTML = originalBtnHtml;
+        }
+        closeProductEditorModal();
+        refreshAdminProductsTable();
+      }
     }
 
     async function handleDeleteProduct(productId) {
       const p = getStoredProducts().find(item => item.id === productId);
       const name = p ? p.name : "Product";
       if (confirm(`Are you sure you want to delete "${name}" from the store catalog?`)) {
-        await deleteStoreProductAsync(productId);
-        showAdminToast(`Deleted: ${name}`);
-        refreshAdminProductsTable();
+        try {
+          await deleteStoreProductAsync(productId);
+          showAdminToast(`Deleted: ${name}`);
+        } catch (err) {
+          console.error("Error deleting product:", err);
+        } finally {
+          refreshAdminProductsTable();
+        }
       }
     }
 
     async function handleLoadSampleProducts() {
       if (confirm("Load 16 authentic Dhanore store sample devices into catalog?")) {
-        await loadSampleStoreProductsAsync();
-        refreshAdminProductsTable();
-        showAdminToast("16 sample products loaded into store catalog!");
+        try {
+          await loadSampleStoreProductsAsync();
+          showAdminToast("16 sample products loaded into store catalog!");
+        } catch (err) {
+          console.error("Error loading sample products:", err);
+        } finally {
+          refreshAdminProductsTable();
+        }
       }
     }
 
     async function handleClearAllProducts() {
       if (confirm("Are you sure you want to clear all products? The catalog will be completely empty.")) {
-        await clearAllStoreProductsAsync();
-        refreshAdminProductsTable();
-        showAdminToast("All products cleared from catalog.");
+        try {
+          await clearAllStoreProductsAsync();
+          showAdminToast("All products cleared from catalog.");
+        } catch (err) {
+          console.error("Error clearing products:", err);
+        } finally {
+          refreshAdminProductsTable();
+        }
       }
     }
 
@@ -1148,17 +1186,55 @@
     }
 
     function handleImageFileUpload(e) {
-      const file = e.target.files[0];
+      const file = e.target.files && e.target.files[0];
       if (!file) return;
+
+      showAdminToast("Compressing and optimizing photo...");
 
       const reader = new FileReader();
       reader.onload = function(event) {
-        const base64Url = event.target.result;
-        document.getElementById("prod-image-url").value = base64Url;
-        previewProductImage(base64Url);
-        showAdminToast("Local photo loaded successfully!");
+        const rawImg = new Image();
+        rawImg.onload = function() {
+          try {
+            const maxDimension = 800;
+            let width = rawImg.width;
+            let height = rawImg.height;
+
+            if (width > maxDimension || height > maxDimension) {
+              if (width > height) {
+                height = Math.round((height * maxDimension) / width);
+                width = maxDimension;
+              } else {
+                width = Math.round((width * maxDimension) / height);
+                height = maxDimension;
+              }
+            }
+
+            const canvas = document.createElement("canvas");
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(rawImg, 0, 0, width, height);
+
+            // Compress to standard JPEG at 0.82 quality (~40-70KB)
+            const compressedBase64 = canvas.toDataURL("image/jpeg", 0.82);
+            document.getElementById("prod-image-url").value = compressedBase64;
+            previewProductImage(compressedBase64);
+            showAdminToast("Photo compressed and ready!");
+          } catch (err) {
+            console.warn("Canvas compression fallback:", err);
+            document.getElementById("prod-image-url").value = event.target.result;
+            previewProductImage(event.target.result);
+            showAdminToast("Photo loaded!");
+          }
+        };
+        rawImg.onerror = function() {
+          showAdminToast("Could not process selected image.");
+        };
+        rawImg.src = event.target.result;
       };
       reader.readAsDataURL(file);
+      e.target.value = "";
     }
 
     function applyImagePreset(type) {

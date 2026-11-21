@@ -553,6 +553,19 @@ function isApiServerAvailable() {
          (window.location.protocol === 'http:' || window.location.protocol === 'https:');
 }
 
+/**
+ * Robust fetch with timeout using AbortController to guarantee network requests never hang the UI.
+ */
+function fetchWithTimeout(url, options = {}, timeoutMs = 3500) {
+  if (typeof AbortController === 'undefined') {
+    return fetch(url, options);
+  }
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  return fetch(url, { ...options, signal: controller.signal })
+    .finally(() => clearTimeout(timeoutId));
+}
+
 /* =========================================================================
    STORE CRUD & SYNC OPERATIONS
    ========================================================================= */
@@ -599,12 +612,25 @@ function saveStoredProducts(products, triggerBroadcast = true) {
 async function fetchStoreProductsAsync() {
   if (isApiServerAvailable()) {
     try {
-      const res = await fetch('/api/products');
-      if (res.ok) {
+      const res = await fetchWithTimeout('/api/products', {}, 3500);
+      if (res && res.ok) {
+        const isCloudActiveHeader = res.headers.get('x-cloud-active');
         const data = await res.json();
         if (Array.isArray(data)) {
-          saveStoredProducts(data, true);
-          return data;
+          if (data.length > 0) {
+            saveStoredProducts(data, true);
+            return data;
+          } else if (isCloudActiveHeader === 'true') {
+            saveStoredProducts([], true);
+            return [];
+          } else {
+            // Server has no cloud active or returned empty fallback.
+            // Retain local products if user already created any locally!
+            const local = getStoredProducts();
+            if (local.length > 0) {
+              return local;
+            }
+          }
         }
       }
     } catch (e) {
@@ -653,17 +679,17 @@ async function addStoreProductAsync(product) {
 
   if (isApiServerAvailable()) {
     try {
-      const res = await fetch('/api/products', {
+      const res = await fetchWithTimeout('/api/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newProduct)
-      });
-      if (res.ok) {
+      }, 3500);
+      if (res && res.ok) {
         const created = await res.json();
         return created;
       }
     } catch (e) {
-      console.warn('API server insert error:', e);
+      console.warn('API server insert error (local copy retained):', e);
     }
   }
 
@@ -697,17 +723,17 @@ async function updateStoreProductAsync(id, updatedFields) {
 
     if (isApiServerAvailable()) {
       try {
-        const res = await fetch('/api/products/' + encodeURIComponent(id), {
+        const res = await fetchWithTimeout('/api/products/' + encodeURIComponent(id), {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(current[idx])
-        });
-        if (res.ok) {
+        }, 3500);
+        if (res && res.ok) {
           const updated = await res.json();
           return updated;
         }
       } catch (e) {
-        console.warn('API server update error:', e);
+        console.warn('API server update error (local copy retained):', e);
       }
     }
 
@@ -744,10 +770,10 @@ async function deleteStoreProductAsync(id) {
 
     if (isApiServerAvailable()) {
       try {
-        const res = await fetch('/api/products/' + encodeURIComponent(id), {
+        const res = await fetchWithTimeout('/api/products/' + encodeURIComponent(id), {
           method: 'DELETE'
-        });
-        if (res.ok) return true;
+        }, 3500);
+        if (res && res.ok) return true;
       } catch (e) {
         console.warn('API server delete error:', e);
       }
@@ -782,8 +808,8 @@ async function loadSampleStoreProductsAsync() {
 
   if (isApiServerAvailable()) {
     try {
-      const res = await fetch('/api/products/sample', { method: 'POST' });
-      if (res.ok) {
+      const res = await fetchWithTimeout('/api/products/sample', { method: 'POST' }, 3500);
+      if (res && res.ok) {
         const data = await res.json();
         saveStoredProducts(data.products || OM_SAMPLE_PRODUCTS, true);
         return data.products || OM_SAMPLE_PRODUCTS;
@@ -820,8 +846,8 @@ async function clearAllStoreProductsAsync() {
 
   if (isApiServerAvailable()) {
     try {
-      const res = await fetch('/api/products/clear', { method: 'POST' });
-      if (res.ok) {
+      const res = await fetchWithTimeout('/api/products/clear', { method: 'POST' }, 3500);
+      if (res && res.ok) {
         saveStoredProducts([], true);
         return [];
       }

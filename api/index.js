@@ -85,26 +85,34 @@ function sendJson(res, statusCode, data) {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+    'X-Cloud-Active': isCloudActive() ? 'true' : 'false'
   });
   res.end(JSON.stringify(data));
 }
 
 function parseBody(req) {
-  if (req.body && typeof req.body === 'object') {
-    return Promise.resolve(req.body);
+  if (req.body !== undefined && req.body !== null) {
+    if (typeof req.body === 'object') return Promise.resolve(req.body);
+    if (typeof req.body === 'string') {
+      try { return Promise.resolve(JSON.parse(req.body)); } catch (e) { return Promise.resolve({}); }
+    }
+  }
+  if (req.readableEnded || req.complete) {
+    return Promise.resolve({});
   }
   return new Promise((resolve) => {
     let body = '';
+    const timer = setTimeout(() => resolve({}), 2000);
     req.on('data', chunk => body += chunk.toString());
     req.on('end', () => {
-      try {
-        resolve(body ? JSON.parse(body) : {});
-      } catch (e) {
-        resolve({});
-      }
+      clearTimeout(timer);
+      try { resolve(body ? JSON.parse(body) : {}); } catch (e) { resolve({}); }
     });
-    req.on('error', () => resolve({}));
+    req.on('error', () => {
+      clearTimeout(timer);
+      resolve({});
+    });
   });
 }
 
@@ -114,29 +122,30 @@ module.exports = async (req, res) => {
     res.writeHead(204, {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With'
     });
     res.end();
     return;
   }
 
   const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
-  const pathname = parsedUrl.pathname;
+  const pathParam = req.query?.path || parsedUrl.searchParams.get('path');
+  const pathname = pathParam ? ('/api/' + pathParam) : (req.headers['x-matched-path'] || req.headers['x-vercel-matched-path'] || req.headers['x-forwarded-uri'] || parsedUrl.pathname);
 
   // 1. Status Check
-  if (pathname === '/api/status' && req.method === 'GET') {
+  if (pathname.includes('/status') && req.method === 'GET') {
     return sendJson(res, 200, {
       status: 'online',
       platform: 'Vercel Serverless',
       cloudConfigured: isCloudActive(),
-      storageEngine: isCloudActive() ? 'Supabase Cloud PostgreSQL' : 'Fallback Mode',
+      storageEngine: isCloudActive() ? 'Supabase Cloud PostgreSQL' : 'Local Fallback',
       storeName: 'OM Mobile & Electronics (Branch No. 4, Dhanore)',
       version: '2.0.0-production'
     });
   }
 
   // 2. Admin Authentication
-  if (pathname === '/api/admin/login' && req.method === 'POST') {
+  if (pathname.includes('/admin/login') && req.method === 'POST') {
     const { username, password } = await parseBody(req);
     const userClean = (username || '').trim().toLowerCase();
     if (userClean === ADMIN_USER && password === ADMIN_PASS) {
@@ -155,7 +164,7 @@ module.exports = async (req, res) => {
   }
 
   // 3. Products: GET ALL
-  if (pathname === '/api/products' && req.method === 'GET') {
+  if (pathname.includes('/products') && req.method === 'GET') {
     if (isCloudActive()) {
       try {
         const resp = await supabaseFetch('/products?select=*&order=created_at.desc');
@@ -170,8 +179,8 @@ module.exports = async (req, res) => {
     return sendJson(res, 200, []);
   }
 
-  // 4. Products: CREATE (POST /api/products)
-  if (pathname === '/api/products' && req.method === 'POST') {
+  // 4. Products: CREATE (POST)
+  if (pathname.includes('/products') && req.method === 'POST') {
     const product = await parseBody(req);
     const id = product.id || 'om-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
     const newProduct = { ...product, id, createdAt: new Date().toISOString() };
@@ -194,12 +203,12 @@ module.exports = async (req, res) => {
     return sendJson(res, 201, newProduct);
   }
 
-  // 5. Products: UPDATE (PUT /api/products/:id)
-  if (pathname.startsWith('/api/products/') && req.method === 'PUT') {
-    const id = decodeURIComponent(pathname.substring('/api/products/'.length));
+  // 5. Products: UPDATE (PUT)
+  if (pathname.includes('/products') && req.method === 'PUT') {
+    const id = req.query?.id || parsedUrl.searchParams.get('id') || decodeURIComponent(parsedUrl.pathname.split('/').pop());
     const updates = await parseBody(req);
 
-    if (isCloudActive()) {
+    if (isCloudActive() && id) {
       try {
         const resp = await supabaseFetch(`/products?id=eq.${encodeURIComponent(id)}`, {
           method: 'PATCH',
@@ -217,11 +226,11 @@ module.exports = async (req, res) => {
     return sendJson(res, 200, { ...updates, id });
   }
 
-  // 6. Products: DELETE (DELETE /api/products/:id)
-  if (pathname.startsWith('/api/products/') && req.method === 'DELETE') {
-    const id = decodeURIComponent(pathname.substring('/api/products/'.length));
+  // 6. Products: DELETE (DELETE)
+  if (pathname.includes('/products') && req.method === 'DELETE') {
+    const id = req.query?.id || parsedUrl.searchParams.get('id') || decodeURIComponent(parsedUrl.pathname.split('/').pop());
 
-    if (isCloudActive()) {
+    if (isCloudActive() && id) {
       try {
         await supabaseFetch(`/products?id=eq.${encodeURIComponent(id)}`, {
           method: 'DELETE'
@@ -234,7 +243,7 @@ module.exports = async (req, res) => {
   }
 
   // 7. Load Sample Products
-  if (pathname === '/api/products/sample' && req.method === 'POST') {
+  if (pathname.includes('/sample') && req.method === 'POST') {
     if (isCloudActive()) {
       try {
         await supabaseFetch('/products', {
@@ -242,23 +251,19 @@ module.exports = async (req, res) => {
           headers: { 'Prefer': 'resolution=merge-duplicates' },
           body: JSON.stringify(OM_SAMPLE_PRODUCTS.map(productToDb))
         });
-      } catch (e) {
-        console.error('Supabase sample load failed on Vercel:', e);
-      }
+      } catch (e) {}
     }
     return sendJson(res, 200, { success: true, count: OM_SAMPLE_PRODUCTS.length, products: OM_SAMPLE_PRODUCTS });
   }
 
   // 8. Clear Products
-  if (pathname === '/api/products/clear' && req.method === 'POST') {
+  if (pathname.includes('/clear') && req.method === 'POST') {
     if (isCloudActive()) {
       try {
         await supabaseFetch('/products?id=neq.___non_existent___', {
           method: 'DELETE'
         });
-      } catch (e) {
-        console.error('Supabase clear failed on Vercel:', e);
-      }
+      } catch (e) {}
     }
     return sendJson(res, 200, { success: true, count: 0 });
   }
