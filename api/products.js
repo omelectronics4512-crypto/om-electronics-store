@@ -192,7 +192,8 @@ module.exports = async (req, res) => {
   // UPDATE PRODUCT (PUT)
   if (req.method === 'PUT') {
     const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
-    const id = req.query?.id || parsedUrl.searchParams.get('id') || decodeURIComponent(parsedUrl.pathname.split('/').pop());
+    const idFromPath = decodeURIComponent(parsedUrl.pathname.split('/').pop());
+    const id = req.query?.id || parsedUrl.searchParams.get('id') || (idFromPath !== 'products' && idFromPath !== 'products.js' ? idFromPath : '');
     const updates = await parseBody(req);
 
     if (isCloudActive() && id) {
@@ -216,7 +217,8 @@ module.exports = async (req, res) => {
   // DELETE PRODUCT (DELETE)
   if (req.method === 'DELETE') {
     const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
-    const id = req.query?.id || parsedUrl.searchParams.get('id') || decodeURIComponent(parsedUrl.pathname.split('/').pop());
+    const idFromPath = decodeURIComponent(parsedUrl.pathname.split('/').pop());
+    const id = req.query?.id || parsedUrl.searchParams.get('id') || (idFromPath !== 'products' && idFromPath !== 'products.js' ? idFromPath : '');
 
     if (isCloudActive() && id) {
       try {

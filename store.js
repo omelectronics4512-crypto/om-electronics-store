@@ -620,16 +620,14 @@ async function fetchStoreProductsAsync() {
           if (data.length > 0) {
             saveStoredProducts(data, true);
             return data;
-          } else if (isCloudActiveHeader === 'true') {
-            saveStoredProducts([], true);
-            return [];
           } else {
-            // Server has no cloud active or returned empty fallback.
-            // Retain local products if user already created any locally!
+            // Cloud returned 0 items or query was empty.
+            // Retain local products so newly added items never vanish!
             const local = getStoredProducts();
             if (local.length > 0) {
               return local;
             }
+            return [];
           }
         }
       }

@@ -216,7 +216,9 @@ module.exports = async (req, res) => {
 
   // 5. Products: UPDATE (PUT)
   if (pathname.includes('/products') && req.method === 'PUT') {
-    const id = req.query?.id || parsedUrl.searchParams.get('id') || decodeURIComponent(parsedUrl.pathname.split('/').pop());
+    const idFromParam = pathParam && pathParam.includes('/') ? decodeURIComponent(pathParam.split('/').pop()) : '';
+    const idFromPath = decodeURIComponent(parsedUrl.pathname.split('/').pop());
+    const id = req.query?.id || parsedUrl.searchParams.get('id') || idFromParam || (idFromPath !== 'index.js' && idFromPath !== 'products' ? idFromPath : '');
     const updates = await parseBody(req);
 
     if (isCloudActive() && id) {
@@ -239,7 +241,9 @@ module.exports = async (req, res) => {
 
   // 6. Products: DELETE (DELETE)
   if (pathname.includes('/products') && req.method === 'DELETE') {
-    const id = req.query?.id || parsedUrl.searchParams.get('id') || decodeURIComponent(parsedUrl.pathname.split('/').pop());
+    const idFromParam = pathParam && pathParam.includes('/') ? decodeURIComponent(pathParam.split('/').pop()) : '';
+    const idFromPath = decodeURIComponent(parsedUrl.pathname.split('/').pop());
+    const id = req.query?.id || parsedUrl.searchParams.get('id') || idFromParam || (idFromPath !== 'index.js' && idFromPath !== 'products' ? idFromPath : '');
 
     if (isCloudActive() && id) {
       try {
