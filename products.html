@@ -145,7 +145,7 @@
   </style>
     <!-- Supabase JS Client SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="store.js"></script>
+  <script src="store.js?v=2.1"></script>
 </head>
 
 <body class="bg-background font-body text-on-surface text-[15px] antialiased selection:bg-primary-light selection:text-primary-dark overflow-x-hidden">
@@ -823,6 +823,34 @@
           }
         });
       }
+
+      // Re-fetch when switching back to tab
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+          refreshLiveCatalog();
+          if (typeof fetchStoreProductsAsync === "function") {
+            fetchStoreProductsAsync().then(fresh => {
+              if (Array.isArray(fresh) && fresh.length > 0) {
+                PRODUCTS = fresh;
+                updateCategoryCounts();
+                renderCatalog();
+              }
+            }).catch(() => {});
+          }
+        }
+      });
+      window.addEventListener("focus", () => {
+        refreshLiveCatalog();
+        if (typeof fetchStoreProductsAsync === "function") {
+          fetchStoreProductsAsync().then(fresh => {
+            if (Array.isArray(fresh) && fresh.length > 0) {
+              PRODUCTS = fresh;
+              updateCategoryCounts();
+              renderCatalog();
+            }
+          }).catch(() => {});
+        }
+      });
 
       // Mobile Menu Toggle
       const mobileToggle = document.getElementById("mobile-menu-toggle");

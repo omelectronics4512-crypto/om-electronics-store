@@ -642,10 +642,10 @@
   <!-- =========================================================================
        4. ADMIN JAVASCRIPT LOGIC
        ========================================================================= -->
-  <script src="store.js"></script>
+  <script src="store.js?v=2.1"></script>
   <script>
     if (typeof getStoredProducts === 'undefined') {
-      document.write('<script src="../store.js"><\/script>');
+      document.write('<script src="../store.js?v=2.1"><\/script>');
     }
   </script>
   <script>
@@ -800,13 +800,18 @@
 
     // Check existing session on load
     document.addEventListener("DOMContentLoaded", () => {
-      updateCloudStatusUI();
+      if (typeof bootstrapSupabaseConfig === 'function') {
+        bootstrapSupabaseConfig().then(() => updateCloudStatusUI()).catch(() => {});
+      } else {
+        updateCloudStatusUI();
+      }
+
       const isAuth = sessionStorage.getItem("om_admin_auth") === "true" || localStorage.getItem("om_admin_auth") === "true";
       if (isAuth) {
         unlockAdminDashboard();
       }
 
-      // If Supabase cloud is configured, pull fresh products in background
+      // Pull fresh products in background
       if (typeof fetchStoreProductsAsync === 'function') {
         fetchStoreProductsAsync().then(() => {
           refreshAdminProductsTable();
@@ -819,6 +824,22 @@
       });
       window.addEventListener("storage", () => {
         refreshAdminProductsTable();
+      });
+
+      // Auto-revalidate when switching back to tab
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+          refreshAdminProductsTable();
+          if (typeof fetchStoreProductsAsync === 'function') {
+            fetchStoreProductsAsync().then(() => refreshAdminProductsTable()).catch(() => {});
+          }
+        }
+      });
+      window.addEventListener("focus", () => {
+        refreshAdminProductsTable();
+        if (typeof fetchStoreProductsAsync === 'function') {
+          fetchStoreProductsAsync().then(() => refreshAdminProductsTable()).catch(() => {});
+        }
       });
 
       if (typeof subscribeToStoreRealtime === 'function') {
@@ -1244,7 +1265,7 @@
         const rawImg = new Image();
         rawImg.onload = function() {
           try {
-            const maxDimension = 800;
+            const maxDimension = 640;
             let width = rawImg.width;
             let height = rawImg.height;
 
@@ -1264,8 +1285,8 @@
             const ctx = canvas.getContext("2d");
             ctx.drawImage(rawImg, 0, 0, width, height);
 
-            // Compress to standard JPEG at 0.82 quality (~40-70KB)
-            const compressedBase64 = canvas.toDataURL("image/jpeg", 0.82);
+            // Compress to standard compact JPEG at 0.72 quality (~25-45KB) for instant network uploads
+            const compressedBase64 = canvas.toDataURL("image/jpeg", 0.72);
             document.getElementById("prod-image-url").value = compressedBase64;
             previewProductImage(compressedBase64);
             showAdminToast("Photo compressed and ready!");

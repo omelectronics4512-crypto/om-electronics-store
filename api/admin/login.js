@@ -8,26 +8,26 @@ const ADMIN_PASS = (process.env.ADMIN_PASSWORD || 'guarav@omelectronics');
 
 function parseBody(req) {
   if (req.body !== undefined && req.body !== null) {
-    if (typeof req.body === 'object') return Promise.resolve(req.body);
+    if (typeof req.body === 'object' && !Buffer.isBuffer(req.body)) return Promise.resolve(req.body);
+    if (Buffer.isBuffer(req.body)) {
+      try { return Promise.resolve(JSON.parse(req.body.toString('utf8'))); } catch (e) { return Promise.resolve({}); }
+    }
     if (typeof req.body === 'string') {
       try { return Promise.resolve(JSON.parse(req.body)); } catch (e) { return Promise.resolve({}); }
     }
   }
-  if (req.readableEnded || req.complete) {
-    return Promise.resolve({});
-  }
   return new Promise((resolve) => {
-    let body = '';
-    const timer = setTimeout(() => resolve({}), 2000);
-    req.on('data', chunk => body += chunk.toString());
+    const chunks = [];
+    req.on('data', chunk => chunks.push(chunk));
     req.on('end', () => {
-      clearTimeout(timer);
-      try { resolve(body ? JSON.parse(body) : {}); } catch (e) { resolve({}); }
+      try {
+        const raw = Buffer.concat(chunks).toString('utf8');
+        resolve(raw ? JSON.parse(raw) : {});
+      } catch (e) {
+        resolve({});
+      }
     });
-    req.on('error', () => {
-      clearTimeout(timer);
-      resolve({});
-    });
+    req.on('error', () => resolve({}));
   });
 }
 

@@ -62,9 +62,10 @@ module.exports = async (req, res) => {
     const targetFile = STATIC_ASSETS[cleanPath] || STATIC_ASSETS[pathname];
     if (fs.existsSync(targetFile)) {
       const ext = path.extname(targetFile).toLowerCase();
+      const isDynamic = ext === '.html' || ext === '.js';
       res.writeHead(200, {
         'Content-Type': MIME_TYPES[ext] || 'text/html; charset=utf-8',
-        'Cache-Control': ext === '.html' ? 'no-cache, no-store, must-revalidate' : 'public, max-age=3600'
+        'Cache-Control': isDynamic ? 'no-cache, must-revalidate' : 'public, max-age=3600'
       });
       return res.end(fs.readFileSync(targetFile));
     }
@@ -75,9 +76,10 @@ module.exports = async (req, res) => {
   try {
     if (fs.existsSync(directPath) && fs.statSync(directPath).isFile()) {
       const ext = path.extname(directPath).toLowerCase();
+      const isDynamic = ext === '.html' || ext === '.js';
       res.writeHead(200, {
         'Content-Type': MIME_TYPES[ext] || 'application/octet-stream',
-        'Cache-Control': ext === '.html' ? 'no-cache' : 'public, max-age=3600'
+        'Cache-Control': isDynamic ? 'no-cache, must-revalidate' : 'public, max-age=3600'
       });
       return res.end(fs.readFileSync(directPath));
     }

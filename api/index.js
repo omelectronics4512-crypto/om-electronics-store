@@ -1,6 +1,6 @@
 /* =========================================================================
    OM MOBILE & ELECTRONICS (Branch No. 4, Dhanore, Pune)
-   Vercel Serverless Function API Handler (/api/*)
+   Production Vercel Serverless Function API Handler (/api/*)
    ========================================================================= */
 
 let OM_SAMPLE_PRODUCTS = [];
@@ -11,6 +11,7 @@ try {
 
 const SUPABASE_URL = (process.env.SUPABASE_URL || '').replace(/\/$/, '');
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || '';
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || '';
 const ADMIN_USER = (process.env.ADMIN_USERNAME || 'guarav bhosle').trim().toLowerCase();
 const ADMIN_PASS = (process.env.ADMIN_PASSWORD || 'guarav@omelectronics');
 
@@ -36,9 +37,9 @@ function dbToProduct(row) {
     emiPerMonth: Number(row.emi_per_month) || 0,
     rating: Number(row.rating) || 4.8,
     reviews: Number(row.reviews) || 0,
-    tag: row.tag || 'New',
+    tag: row.tag || 'New Arrival',
     tagColor: row.tag_color || 'bg-primary text-white',
-    stockStatus: row.stock_status || 'In Stock',
+    stockStatus: row.stock_status || 'In Stock at Dhanore Showroom',
     image: row.image || '',
     description: row.description || '',
     specs: (typeof row.specs === 'object' && row.specs !== null) ? row.specs : {},
@@ -48,22 +49,26 @@ function dbToProduct(row) {
 }
 
 function productToDb(p) {
+  const name = String(p.name || 'OM Store Product').trim();
+  const price = Number(p.price) || 0;
+  const origPrice = Number(p.originalPrice != null ? p.originalPrice : (p.original_price != null ? p.original_price : price)) || price;
+  const emi = Number(p.emiPerMonth != null ? p.emiPerMonth : (p.emi_per_month != null ? p.emi_per_month : 0)) || 0;
   return {
     id: String(p.id),
-    name: p.name,
-    category: p.category || 'smartphones',
-    brand: p.brand || 'Other',
-    price: Number(p.price) || 0,
-    original_price: Number(p.originalPrice) || Number(p.price) || 0,
-    emi_per_month: Number(p.emiPerMonth) || 0,
+    name: name || 'OM Store Product',
+    category: String(p.category || 'smartphones').trim().toLowerCase(),
+    brand: String(p.brand || 'Other').trim(),
+    price: price,
+    original_price: origPrice,
+    emi_per_month: emi,
     rating: Number(p.rating) || 4.8,
     reviews: Number(p.reviews) || 0,
-    tag: p.tag || 'New Arrival',
-    tag_color: p.tagColor || 'bg-primary text-white',
-    stock_status: p.stockStatus || 'In Stock',
-    image: p.image || '',
-    description: p.description || '',
-    specs: p.specs || {},
+    tag: String(p.tag || 'New Arrival').trim(),
+    tag_color: String(p.tagColor || p.tag_color || 'bg-primary text-white').trim(),
+    stock_status: String(p.stockStatus || p.stock_status || 'In Stock at Dhanore Showroom').trim(),
+    image: String(p.image || '').trim(),
+    description: String(p.description || '').trim(),
+    specs: (typeof p.specs === 'object' && p.specs !== null) ? p.specs : {},
     colors: Array.isArray(p.colors) ? p.colors : [],
     updated_at: new Date().toISOString()
   };
@@ -94,26 +99,26 @@ function sendJson(res, statusCode, data, isCloudHealthy = null) {
 
 function parseBody(req) {
   if (req.body !== undefined && req.body !== null) {
-    if (typeof req.body === 'object') return Promise.resolve(req.body);
+    if (typeof req.body === 'object' && !Buffer.isBuffer(req.body)) return Promise.resolve(req.body);
+    if (Buffer.isBuffer(req.body)) {
+      try { return Promise.resolve(JSON.parse(req.body.toString('utf8'))); } catch (e) { return Promise.resolve({}); }
+    }
     if (typeof req.body === 'string') {
       try { return Promise.resolve(JSON.parse(req.body)); } catch (e) { return Promise.resolve({}); }
     }
   }
-  if (req.readableEnded || req.complete) {
-    return Promise.resolve({});
-  }
   return new Promise((resolve) => {
-    let body = '';
-    const timer = setTimeout(() => resolve({}), 2000);
-    req.on('data', chunk => body += chunk.toString());
+    const chunks = [];
+    req.on('data', chunk => chunks.push(chunk));
     req.on('end', () => {
-      clearTimeout(timer);
-      try { resolve(body ? JSON.parse(body) : {}); } catch (e) { resolve({}); }
+      try {
+        const raw = Buffer.concat(chunks).toString('utf8');
+        resolve(raw ? JSON.parse(raw) : {});
+      } catch (e) {
+        resolve({});
+      }
     });
-    req.on('error', () => {
-      clearTimeout(timer);
-      resolve({});
-    });
+    req.on('error', () => resolve({}));
   });
 }
 
@@ -133,19 +138,33 @@ module.exports = async (req, res) => {
   const pathParam = req.query?.path || parsedUrl.searchParams.get('path');
   const pathname = pathParam ? ('/api/' + pathParam) : (req.headers['x-matched-path'] || req.headers['x-vercel-matched-path'] || req.headers['x-forwarded-uri'] || parsedUrl.pathname);
 
-  // 1. Status Check
+  // 1. Status Check & Config Bootstrap
   if (pathname.includes('/status') && req.method === 'GET') {
     return sendJson(res, 200, {
       status: 'online',
       platform: 'Vercel Serverless',
       cloudConfigured: isCloudActive(),
       storageEngine: isCloudActive() ? 'Supabase Cloud PostgreSQL' : 'Local Fallback',
+      supabaseUrl: SUPABASE_URL,
+      supabaseAnonKey: SUPABASE_ANON_KEY,
       storeName: 'OM Mobile & Electronics (Branch No. 4, Dhanore)',
-      version: '2.0.0-production'
+      version: '2.1.0-production'
     });
   }
 
-  // 2. Admin Authentication
+  // 2. Public Client Config
+  if ((pathname.includes('/config') || pathname.includes('/public-config')) && req.method === 'GET') {
+    return sendJson(res, 200, {
+      supabaseUrl: SUPABASE_URL,
+      supabaseAnonKey: SUPABASE_ANON_KEY,
+      cloudConfigured: isCloudActive(),
+      storeName: 'OM Mobile & Electronics (Branch No. 4, Dhanore)',
+      branch: 'Branch No. 4, Dhanore, Pune',
+      phone: '+91 98220 12345'
+    });
+  }
+
+  // 3. Admin Authentication
   if (pathname.includes('/admin/login') && req.method === 'POST') {
     const { username, password } = await parseBody(req);
     const userClean = (username || '').trim().toLowerCase();
@@ -164,7 +183,7 @@ module.exports = async (req, res) => {
     }
   }
 
-  // 3. Products: GET ALL
+  // 4. Products: GET ALL
   if (pathname.includes('/products') && req.method === 'GET') {
     if (isCloudActive()) {
       try {
@@ -185,36 +204,71 @@ module.exports = async (req, res) => {
     return sendJson(res, 200, [], false);
   }
 
-  // 4. Products: CREATE (POST)
+  // 5. Products: CREATE (POST) - accepts single product OR array of products
   if (pathname.includes('/products') && req.method === 'POST') {
-    const product = await parseBody(req);
+    const body = await parseBody(req);
+
+    // Support batch insert if body is array
+    if (Array.isArray(body)) {
+      const dbRows = body.map(p => {
+        const id = p.id || 'om-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
+        return productToDb({ ...p, id });
+      });
+      if (isCloudActive()) {
+        try {
+          const resp = await supabaseFetch('/products', {
+            method: 'POST',
+            headers: { 'Prefer': 'resolution=merge-duplicates,return=representation' },
+            body: JSON.stringify(dbRows)
+          });
+          if (resp.ok) {
+            const data = await resp.json();
+            return sendJson(res, 201, data.map(dbToProduct), true);
+          }
+        } catch (e) {
+          console.error('Batch insert exception:', e);
+        }
+      }
+      return sendJson(res, 201, body, false);
+    }
+
+    const product = body;
     const id = product.id || 'om-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
     const newProduct = { ...product, id, createdAt: new Date().toISOString() };
+    const dbRow = productToDb(newProduct);
 
     if (isCloudActive()) {
       try {
         const resp = await supabaseFetch('/products', {
           method: 'POST',
           headers: { 'Prefer': 'resolution=merge-duplicates,return=representation' },
-          body: JSON.stringify([productToDb(newProduct)])
+          body: JSON.stringify([dbRow])
         });
         if (resp.ok) {
           const data = await resp.json();
           return sendJson(res, 201, dbToProduct(data[0]), true);
         } else {
           const errText = await resp.text();
-          console.warn('Supabase insert failed with status:', resp.status, errText);
-          return sendJson(res, 201, newProduct, false);
+          console.error('Supabase insert failed with status:', resp.status, errText);
+          return sendJson(res, resp.status >= 400 && resp.status < 600 ? resp.status : 500, {
+            error: 'Failed to save product in cloud database',
+            details: errText,
+            product: newProduct
+          }, false);
         }
       } catch (e) {
-        console.error('Supabase insert failed on Vercel:', e);
-        return sendJson(res, 201, newProduct, false);
+        console.error('Supabase insert exception on Vercel:', e);
+        return sendJson(res, 500, {
+          error: 'Database connection failed',
+          message: e.message,
+          product: newProduct
+        }, false);
       }
     }
     return sendJson(res, 201, newProduct, false);
   }
 
-  // 5. Products: UPDATE (PUT)
+  // 6. Products: UPDATE (PUT)
   if (pathname.includes('/products') && req.method === 'PUT') {
     const idFromParam = pathParam && pathParam.includes('/') ? decodeURIComponent(pathParam.split('/').pop()) : '';
     const idFromPath = decodeURIComponent(parsedUrl.pathname.split('/').pop());
@@ -230,16 +284,16 @@ module.exports = async (req, res) => {
         });
         if (resp.ok) {
           const data = await resp.json();
-          return sendJson(res, 200, dbToProduct(data[0]));
+          return sendJson(res, 200, dbToProduct(data[0]), true);
         }
       } catch (e) {
         console.error('Supabase update failed on Vercel:', e);
       }
     }
-    return sendJson(res, 200, { ...updates, id });
+    return sendJson(res, 200, { ...updates, id }, false);
   }
 
-  // 6. Products: DELETE (DELETE)
+  // 7. Products: DELETE (DELETE)
   if (pathname.includes('/products') && req.method === 'DELETE') {
     const idFromParam = pathParam && pathParam.includes('/') ? decodeURIComponent(pathParam.split('/').pop()) : '';
     const idFromPath = decodeURIComponent(parsedUrl.pathname.split('/').pop());
@@ -250,35 +304,40 @@ module.exports = async (req, res) => {
         await supabaseFetch(`/products?id=eq.${encodeURIComponent(id)}`, {
           method: 'DELETE'
         });
+        return sendJson(res, 200, { success: true, deletedId: id }, true);
       } catch (e) {
         console.error('Supabase delete failed on Vercel:', e);
       }
     }
-    return sendJson(res, 200, { success: true, deletedId: id });
+    return sendJson(res, 200, { success: true, deletedId: id }, false);
   }
 
-  // 7. Load Sample Products
+  // 8. Load Sample Products
   if (pathname.includes('/sample') && req.method === 'POST') {
-    if (isCloudActive()) {
+    if (isCloudActive() && OM_SAMPLE_PRODUCTS.length > 0) {
       try {
         await supabaseFetch('/products', {
           method: 'POST',
           headers: { 'Prefer': 'resolution=merge-duplicates' },
           body: JSON.stringify(OM_SAMPLE_PRODUCTS.map(productToDb))
         });
-      } catch (e) {}
+      } catch (e) {
+        console.error('Supabase sample load failed:', e);
+      }
     }
     return sendJson(res, 200, { success: true, count: OM_SAMPLE_PRODUCTS.length, products: OM_SAMPLE_PRODUCTS });
   }
 
-  // 8. Clear Products
+  // 9. Clear Products
   if (pathname.includes('/clear') && req.method === 'POST') {
     if (isCloudActive()) {
       try {
         await supabaseFetch('/products?id=neq.___non_existent___', {
           method: 'DELETE'
         });
-      } catch (e) {}
+      } catch (e) {
+        console.error('Supabase clear failed:', e);
+      }
     }
     return sendJson(res, 200, { success: true, count: 0 });
   }

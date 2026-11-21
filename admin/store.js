@@ -554,9 +554,9 @@ function isApiServerAvailable() {
 }
 
 /**
- * Robust fetch with timeout using AbortController to guarantee network requests never hang the UI.
+ * Robust fetch with timeout using AbortController. Defaults to 15000ms for reliable uploads.
  */
-function fetchWithTimeout(url, options = {}, timeoutMs = 3500) {
+function fetchWithTimeout(url, options = {}, timeoutMs = 15000) {
   if (typeof AbortController === 'undefined') {
     return fetch(url, options);
   }
@@ -564,6 +564,60 @@ function fetchWithTimeout(url, options = {}, timeoutMs = 3500) {
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
   return fetch(url, { ...options, signal: controller.signal })
     .finally(() => clearTimeout(timeoutId));
+}
+
+/**
+ * Automatically bootstrap public Supabase credentials from the server if not already in localStorage
+ */
+async function bootstrapSupabaseConfig() {
+  if (typeof window === 'undefined') return;
+  const existing = getSupabaseConfig();
+  if (existing.url && existing.anonKey) {
+    initSupabaseClient();
+    return;
+  }
+  if (isApiServerAvailable()) {
+    try {
+      const res = await fetchWithTimeout('/api/config', {}, 4000);
+      if (res && res.ok) {
+        const cfg = await res.json();
+        if (cfg.supabaseUrl && cfg.supabaseAnonKey) {
+          OM_SUPABASE_CONFIG = {
+            url: cfg.supabaseUrl,
+            anonKey: cfg.supabaseAnonKey,
+            tableName: 'products'
+          };
+          initSupabaseClient();
+        }
+      }
+    } catch (e) {}
+  }
+}
+
+/**
+ * Merge remote products with local optimistic additions so newly added products never vanish.
+ */
+function reconcileProducts(remoteProducts, localProducts) {
+  if (!Array.isArray(remoteProducts)) return localProducts || [];
+  if (!Array.isArray(localProducts) || localProducts.length === 0) return remoteProducts;
+
+  const remoteMap = new Map();
+  for (const p of remoteProducts) {
+    if (p && p.id) remoteMap.set(String(p.id), p);
+  }
+
+  // Preserve recent local additions (created within last 10 minutes) that are not yet in remote
+  const merged = [...remoteProducts];
+  for (const lp of localProducts) {
+    if (lp && lp.id && !remoteMap.has(String(lp.id))) {
+      const created = new Date(lp.createdAt || lp.created_at || Date.now()).getTime();
+      const ageMinutes = (Date.now() - created) / (1000 * 60);
+      if (ageMinutes < 10) {
+        merged.unshift(lp);
+      }
+    }
+  }
+  return merged;
 }
 
 /* =========================================================================
@@ -607,23 +661,23 @@ function saveStoredProducts(products, triggerBroadcast = true) {
 
 /**
  * Fetch from cloud asynchronously (SWR - Stale-While-Revalidate pattern).
- * If Supabase is connected, it updates the local cache and returns fresh data.
+ * Reconciles remote products with local pending additions so items never vanish!
  */
 async function fetchStoreProductsAsync() {
+  const local = getStoredProducts();
+
   if (isApiServerAvailable()) {
     try {
-      const res = await fetchWithTimeout('/api/products', {}, 3500);
+      const res = await fetchWithTimeout('/api/products', {}, 10000);
       if (res && res.ok) {
-        const isCloudActiveHeader = res.headers.get('x-cloud-active');
         const data = await res.json();
         if (Array.isArray(data)) {
           if (data.length > 0) {
-            saveStoredProducts(data, true);
-            return data;
+            const reconciled = reconcileProducts(data, local);
+            saveStoredProducts(reconciled, true);
+            return reconciled;
           } else {
-            // Cloud returned 0 items or query was empty.
-            // Retain local products so newly added items never vanish!
-            const local = getStoredProducts();
+            // Cloud returned 0 items; retain recent local additions
             if (local.length > 0) {
               return local;
             }
@@ -646,23 +700,24 @@ async function fetchStoreProductsAsync() {
 
       if (error) {
         console.warn('Supabase fetch error, using local cache:', error.message);
-        return getStoredProducts();
+        return local;
       }
 
       if (Array.isArray(data)) {
         const mapped = data.map(dbRowToProduct);
-        saveStoredProducts(mapped, true);
-        return mapped;
+        const reconciled = reconcileProducts(mapped, local);
+        saveStoredProducts(reconciled, true);
+        return reconciled;
       }
     } catch (err) {
       console.warn('Network error while querying Supabase:', err);
     }
   }
-  return getStoredProducts();
+  return local;
 }
 
 /**
- * Add a new product to store (Optimistic local update + Async cloud sync)
+ * Add a new product to store (Optimistic local update + Reliable async cloud sync)
  */
 async function addStoreProductAsync(product) {
   const current = getStoredProducts();
@@ -681,25 +736,31 @@ async function addStoreProductAsync(product) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newProduct)
-      }, 3500);
+      }, 15000);
       if (res && res.ok) {
         const created = await res.json();
+        const latest = getStoredProducts();
+        const idx = latest.findIndex(p => p.id === id);
+        if (idx !== -1) {
+          latest[idx] = { ...newProduct, ...created };
+          saveStoredProducts(latest, false);
+        }
         return created;
+      } else {
+        const err = await res.json().catch(() => ({}));
+        console.warn('Server error on add product:', res.status, err);
       }
     } catch (e) {
       console.warn('API server insert error (local copy retained):', e);
     }
-  }
-
-  if (!supabaseClient) initSupabaseClient();
-  if (supabaseClient && isSupabaseConfigured()) {
+  } else if (supabaseClient && isSupabaseConfigured()) {
     try {
       const { error } = await supabaseClient
         .from('products')
         .insert([productToDbRow(newProduct)]);
-      if (error) console.error('Supabase insert failed:', error.message);
+      if (error) console.error('Supabase direct insert failed:', error.message);
     } catch (e) {
-      console.error('Supabase insert exception:', e);
+      console.error('Supabase direct insert exception:', e);
     }
   }
   return newProduct;
@@ -725,7 +786,7 @@ async function updateStoreProductAsync(id, updatedFields) {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(current[idx])
-        }, 3500);
+        }, 15000);
         if (res && res.ok) {
           const updated = await res.json();
           return updated;
@@ -733,10 +794,7 @@ async function updateStoreProductAsync(id, updatedFields) {
       } catch (e) {
         console.warn('API server update error (local copy retained):', e);
       }
-    }
-
-    if (!supabaseClient) initSupabaseClient();
-    if (supabaseClient && isSupabaseConfigured()) {
+    } else if (supabaseClient && isSupabaseConfigured()) {
       try {
         const { error } = await supabaseClient
           .from('products')
@@ -770,15 +828,12 @@ async function deleteStoreProductAsync(id) {
       try {
         const res = await fetchWithTimeout('/api/products/' + encodeURIComponent(id), {
           method: 'DELETE'
-        }, 3500);
+        }, 10000);
         if (res && res.ok) return true;
       } catch (e) {
         console.warn('API server delete error:', e);
       }
-    }
-
-    if (!supabaseClient) initSupabaseClient();
-    if (supabaseClient && isSupabaseConfigured()) {
+    } else if (supabaseClient && isSupabaseConfigured()) {
       try {
         const { error } = await supabaseClient
           .from('products')
@@ -904,9 +959,10 @@ function subscribeToStoreRealtime(onFreshDataCallback) {
   return null;
 }
 
-// Auto-initialize client on load
+// Auto-initialize client and bootstrap public config on load
 if (typeof window !== 'undefined') {
   initSupabaseClient();
+  bootstrapSupabaseConfig();
 }
 
 // Global window and module exports
@@ -920,6 +976,8 @@ if (typeof window !== 'undefined') {
   window.initSupabaseClient = initSupabaseClient;
   window.isSupabaseConfigured = isSupabaseConfigured;
   window.testSupabaseConnection = testSupabaseConnection;
+  window.bootstrapSupabaseConfig = bootstrapSupabaseConfig;
+  window.reconcileProducts = reconcileProducts;
   window.getStoredProducts = getStoredProducts;
   window.saveStoredProducts = saveStoredProducts;
   window.fetchStoreProductsAsync = fetchStoreProductsAsync;
@@ -946,6 +1004,8 @@ if (typeof module !== 'undefined' && module.exports) {
     initSupabaseClient,
     isSupabaseConfigured,
     testSupabaseConnection,
+    bootstrapSupabaseConfig,
+    reconcileProducts,
     getStoredProducts,
     saveStoredProducts,
     fetchStoreProductsAsync,

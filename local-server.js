@@ -209,8 +209,22 @@ const server = http.createServer(async (req, res) => {
         status: 'online',
         cloudConfigured: isCloudActive(),
         storageEngine: isCloudActive() ? 'Supabase PostgreSQL' : 'Local File Storage',
+        supabaseUrl: SUPABASE_URL,
+        supabaseAnonKey: process.env.SUPABASE_ANON_KEY || '',
         storeName: 'OM Mobile & Electronics (Branch No. 4, Dhanore)',
-        version: '2.0.0-production'
+        version: '2.1.0-production'
+      });
+    }
+
+    // 1b. Public Config
+    if ((pathname === '/api/config' || pathname === '/api/public-config') && req.method === 'GET') {
+      return sendJson(res, 200, {
+        supabaseUrl: SUPABASE_URL,
+        supabaseAnonKey: process.env.SUPABASE_ANON_KEY || '',
+        cloudConfigured: isCloudActive(),
+        storeName: 'OM Mobile & Electronics (Branch No. 4, Dhanore)',
+        branch: 'Branch No. 4, Dhanore, Pune',
+        phone: '+91 98220 12345'
       });
     }
 

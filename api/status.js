@@ -5,6 +5,7 @@
 
 const SUPABASE_URL = (process.env.SUPABASE_URL || '').replace(/\/$/, '');
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || '';
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || '';
 
 function isCloudActive() {
   return Boolean(
@@ -28,7 +29,9 @@ module.exports = (req, res) => {
     platform: 'Vercel Serverless',
     cloudConfigured: isCloudActive(),
     storageEngine: isCloudActive() ? 'Supabase Cloud PostgreSQL' : 'Local Fallback',
+    supabaseUrl: SUPABASE_URL,
+    supabaseAnonKey: SUPABASE_ANON_KEY,
     storeName: 'OM Mobile & Electronics (Branch No. 4, Dhanore)',
-    version: '2.0.0-production'
+    version: '2.1.0-production'
   }));
 };
