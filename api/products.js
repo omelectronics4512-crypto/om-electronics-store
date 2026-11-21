@@ -72,13 +72,14 @@ async function supabaseFetch(endpoint, options = {}) {
   return fetch(url, { ...options, headers });
 }
 
-function sendJson(res, statusCode, data) {
+function sendJson(res, statusCode, data, isCloudHealthy = null) {
+  const cloudActive = isCloudHealthy !== null ? Boolean(isCloudHealthy) : isCloudActive();
   res.writeHead(statusCode, {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
-    'X-Cloud-Active': isCloudActive() ? 'true' : 'false'
+    'X-Cloud-Active': cloudActive ? 'true' : 'false'
   });
   res.end(JSON.stringify(data));
 }
@@ -145,13 +146,18 @@ module.exports = async (req, res) => {
         const resp = await supabaseFetch('/products?select=*&order=created_at.desc');
         if (resp.ok) {
           const data = await resp.json();
-          return sendJson(res, 200, data.map(dbToProduct));
+          return sendJson(res, 200, data.map(dbToProduct), true);
+        } else {
+          const errText = await resp.text();
+          console.warn('Supabase fetch returned error:', resp.status, errText);
+          return sendJson(res, 200, [], false);
         }
       } catch (e) {
         console.warn('Supabase fetch failed:', e);
+        return sendJson(res, 200, [], false);
       }
     }
-    return sendJson(res, 200, []);
+    return sendJson(res, 200, [], false);
   }
 
   // CREATE PRODUCT (POST)
@@ -169,16 +175,18 @@ module.exports = async (req, res) => {
         });
         if (resp.ok) {
           const data = await resp.json();
-          return sendJson(res, 201, dbToProduct(data[0]));
+          return sendJson(res, 201, dbToProduct(data[0]), true);
         } else {
           const errText = await resp.text();
-          console.error('Supabase insert failed with status:', resp.status, errText);
+          console.warn('Supabase insert failed with status:', resp.status, errText);
+          return sendJson(res, 201, newProduct, false);
         }
       } catch (e) {
         console.error('Supabase exception:', e);
+        return sendJson(res, 201, newProduct, false);
       }
     }
-    return sendJson(res, 201, newProduct);
+    return sendJson(res, 201, newProduct, false);
   }
 
   // UPDATE PRODUCT (PUT)
