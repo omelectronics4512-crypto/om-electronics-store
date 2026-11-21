@@ -92,10 +92,10 @@
     }
   </style>
 
-  <!-- Centralized Store Script -->
-  <script src="store.js"></script>
   <!-- Supabase JS Client SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Centralized Store Script -->
+  <script src="store.js?v=2.1"></script>
 </head>
 
 <body class="bg-surface-low font-body text-on-surface text-[15px] antialiased selection:bg-primary-light selection:text-primary-dark min-h-screen flex flex-col">
@@ -642,7 +642,6 @@
   <!-- =========================================================================
        4. ADMIN JAVASCRIPT LOGIC
        ========================================================================= -->
-  <script src="store.js?v=2.1"></script>
   <script>
     if (typeof getStoredProducts === 'undefined') {
       document.write('<script src="../store.js?v=2.1"><\/script>');
