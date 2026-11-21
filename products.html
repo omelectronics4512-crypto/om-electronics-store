@@ -194,62 +194,40 @@
       </a>
 
       <!-- Desktop Navigation Bar -->
-      <nav class="hidden lg:flex items-center gap-1 xl:gap-2">
+      <nav class="hidden md:flex items-center gap-1.5 lg:gap-3">
         <a href="index.html" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-low transition-colors">Home</a>
-        <a href="products.html" class="nav-link px-3 py-2 rounded-lg text-sm font-bold text-white bg-primary shadow-xs transition-colors flex items-center gap-1.5">
-          <span>Products</span>
-          <span class="px-1.5 py-0.2 rounded-full bg-white/20 text-white text-[10px] font-extrabold uppercase">Catalog</span>
-        </a>
-        <a href="index.html#laptops" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-low transition-colors">Laptops</a>
+        <a href="products.html" class="nav-link px-3 py-2 rounded-lg text-sm font-bold text-white bg-primary shadow-xs transition-colors flex items-center gap-1.5">Products</a>
         <a href="index.html#emi-calculator" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-low transition-colors">0% EMI</a>
-        <a href="index.html#brands" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-low transition-colors">Brands</a>
-        <a href="index.html#services" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-low transition-colors">Repairs</a>
-        <a href="index.html#offers" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-low transition-colors">Offers</a>
         <a href="index.html#contact" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-low transition-colors">Store Map</a>
       </nav>
 
       <!-- Header Action Controls -->
-      <div class="flex items-center gap-2 sm:gap-2.5">
+      <div class="flex items-center gap-1.5 sm:gap-2">
         
-        <!-- Omni Search Trigger -->
+        <!-- Search Trigger Icon Button -->
         <button id="search-trigger-btn" type="button" aria-label="Search electronics" 
-                class="hidden md:flex items-center gap-2 pl-3 pr-2.5 py-2 rounded-xl bg-surface-low hover:bg-surface-mid border border-outline-variant/60 text-on-surface-variant text-xs transition-all shadow-subtle group">
-          <span class="material-symbols-outlined text-[18px] text-outline group-hover:text-primary transition-colors">search</span>
-          <span class="text-on-surface-variant/80">Search iPhone, Vivo, Laptops...</span>
-          <kbd class="ml-2 px-1.5 py-0.5 text-[10px] font-semibold bg-surface-lowest text-outline border border-outline-variant rounded shadow-xs">Ctrl+K</kbd>
-        </button>
-
-        <!-- Mobile Search Button -->
-        <button id="mobile-search-btn" type="button" aria-label="Search" 
-                class="md:hidden p-1.5 sm:p-2 rounded-xl text-on-surface-variant hover:bg-surface-low transition-colors">
-          <span class="material-symbols-outlined text-[20px] sm:text-[22px]">search</span>
+                class="p-2 rounded-xl text-on-surface-variant hover:text-primary hover:bg-surface-low transition-colors" title="Search products (Ctrl+K)">
+          <span class="material-symbols-outlined text-[22px]">search</span>
         </button>
 
         <!-- Compare Button -->
         <button id="compare-toggle-btn" type="button" aria-label="Compare Products"
-                class="relative p-1.5 sm:p-2 rounded-xl text-on-surface-variant hover:text-primary hover:bg-surface-low transition-colors" title="Compare Devices">
-          <span class="material-symbols-outlined text-[20px] sm:text-[22px]">compare_arrows</span>
+                class="relative p-2 rounded-xl text-on-surface-variant hover:text-primary hover:bg-surface-low transition-colors" title="Compare Devices">
+          <span class="material-symbols-outlined text-[22px]">compare_arrows</span>
           <span id="compare-badge-count" class="hidden absolute -top-1 -right-1 px-1.5 py-0.2 rounded-full bg-tertiary-container text-white text-[10px] font-bold">0</span>
         </button>
 
-        <!-- Contact Store Trigger -->
-        <button type="button" onclick="openContactModal()" aria-label="Contact Store"
-                class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-primary-light/60 hover:bg-primary-light text-primary font-semibold text-xs transition-all shadow-subtle hover:scale-105" title="Contact Dhanore Store">
-          <span class="material-symbols-outlined text-[18px] sm:text-[20px]">chat</span>
-          <span class="hidden sm:inline">Contact</span>
-        </button>
-
-        <!-- WhatsApp Quick Chat -->
+        <!-- WhatsApp Quick Chat CTA -->
         <a href="https://wa.me/919172214216?text=Hello%20OM%20Mobile,%20I%20am%20inquiring%20about%20a%20product%20from%20your%20products%20catalog." 
            target="_blank" rel="noopener noreferrer"
-           class="hidden xl:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-secondary hover:bg-secondary-container text-white text-xs font-semibold shadow-subtle hover:shadow transition-all">
+           class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-secondary hover:bg-secondary-container text-white text-xs font-bold shadow-subtle hover:scale-105 transition-all">
           <span class="material-symbols-outlined text-[18px]">chat</span>
           <span>WhatsApp</span>
         </a>
 
         <!-- Mobile Hamburger Toggle -->
         <button id="mobile-menu-toggle" type="button" aria-label="Open Navigation Menu"
-                class="lg:hidden p-1.5 sm:p-2 rounded-xl text-on-surface hover:bg-surface-low transition-colors">
+                class="md:hidden p-2 rounded-xl text-on-surface hover:bg-surface-low transition-colors">
           <span id="hamburger-icon" class="material-symbols-outlined text-[26px]">menu</span>
         </button>
 
