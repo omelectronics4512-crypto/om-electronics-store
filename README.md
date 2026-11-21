@@ -159,3 +159,24 @@ npm start
 ### Method 2: Direct File / Offline Mode
 * Double-click `index.html` or `products.html` directly in your browser.
 * Double-click `admin.html` to access the Admin Portal offline.
+
+---
+
+## ☁️ 1-Minute Vercel Deployment (Live Website)
+
+This project is pre-configured with **`vercel.json`** and serverless API handlers in **`/api`**:
+
+1. **Push to GitHub:** Ensure your code is pushed to your repository.
+2. **Import into Vercel:**
+   * Go to **[vercel.com/new](https://vercel.com/new)** and import your GitHub repository (`om.electronics-`).
+   * Framework Preset: Leave as **Other**.
+   * Root Directory: Leave as `./`.
+3. **Add Environment Variables (Your Secrets):**
+   * In Vercel's **Environment Variables** section, add:
+     - `SUPABASE_URL` = *(Your Supabase project URL)*
+     - `SUPABASE_ANON_KEY` = *(Your Supabase anon key)*
+     - `ADMIN_USERNAME` = `guarav bhosle`
+     - `ADMIN_PASSWORD` = `guarav@omelectronics`
+4. **Click Deploy:**
+   * Vercel will build and deploy your site in ~20 seconds with a free `.vercel.app` domain and free SSL!
+   * Clean routes work out of the box: `/` (Home), `/products` (Catalog), `/admin` (Secure Admin Panel).
