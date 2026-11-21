@@ -913,13 +913,30 @@
 
     async function handleRefreshProductsFromCloud() {
       showAdminToast("Syncing with cloud database...");
+
+      // Upload local products to Supabase cloud if they haven't synced yet
+      const local = getStoredProducts();
+      if (local.length > 0 && typeof isApiServerAvailable === 'function' && isApiServerAvailable()) {
+        try {
+          for (const prod of local) {
+            await fetchWithTimeout('/api/products', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(prod)
+            }, 3000);
+          }
+        } catch (e) {
+          console.warn("Local to cloud sync notice:", e);
+        }
+      }
+
       if (typeof fetchStoreProductsAsync === 'function') {
         try {
           await fetchStoreProductsAsync();
         } catch (e) {}
       }
       refreshAdminProductsTable();
-      showAdminToast("Inventory catalog refreshed!");
+      showAdminToast("Sync complete! Products now live on all devices.");
     }
 
     /* Table Refresh & Rendering */

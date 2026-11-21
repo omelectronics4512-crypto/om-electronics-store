@@ -170,7 +170,7 @@ module.exports = async (req, res) => {
       try {
         const resp = await supabaseFetch('/products', {
           method: 'POST',
-          headers: { 'Prefer': 'return=representation' },
+          headers: { 'Prefer': 'resolution=merge-duplicates,return=representation' },
           body: JSON.stringify([productToDb(newProduct)])
         });
         if (resp.ok) {
