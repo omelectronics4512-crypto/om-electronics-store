@@ -1,11 +1,10 @@
 {
   "name": "om-mobile-electronics",
   "version": "1.0.0",
-  "description": "OM Mobile & Electronics (Branch No. 4, Dhanore, Pune) - Production Storefront & Secure Admin Portal",
-  "main": "server.js",
+  "description": "OM Mobile & Electronics (Branch No. 4, Dhanore, Pune) - Storefront & Admin Portal",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js"
+    "start": "node local-server.js",
+    "dev": "node --watch local-server.js"
   },
   "keywords": [
     "om-mobile",

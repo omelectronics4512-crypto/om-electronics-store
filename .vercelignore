@@ -1,0 +1,5 @@
+local-server.js
+.env
+.env.example
+data/
+*.log
