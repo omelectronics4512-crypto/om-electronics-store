@@ -146,33 +146,11 @@
 
 <body class="bg-background font-body text-on-surface text-[15px] antialiased selection:bg-primary-light selection:text-primary-dark overflow-x-hidden max-w-full w-full">
 
-  <!-- 1. TOP ANNOUNCEMENT BAR (Clean & Informative) -->
-  <div class="w-full bg-surface-low border-b border-surface-mid py-2 px-4 text-xs font-medium text-on-surface-variant">
-    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div class="flex items-center gap-2 truncate">
-        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 text-primary font-semibold text-[11px]">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          Branch No. 4 • PCS Chowk, Dhanore
-        </span>
-        <span class="text-xs text-on-surface-variant hidden md:inline">Authorized Smartphones, Laptops &amp; 0% EMI Store</span>
-      </div>
-      <div class="flex items-center gap-4 text-xs shrink-0">
-        <span id="live-store-status-top" class="font-medium text-emerald-700 flex items-center gap-1">
-          <span class="material-symbols-outlined text-[15px]">schedule</span>
-          <span>Open Today • 9:30 AM – 10:00 PM</span>
-        </span>
-        <span class="text-slate-300">|</span>
-        <a href="tel:+919172214216" class="hover:text-primary transition-colors flex items-center gap-1 font-semibold text-on-surface">
-          <span class="material-symbols-outlined text-[15px] text-primary">call</span>
-          <span>+91 91722 14216</span>
-        </a>
-      </div>
-    </div>
-  </div>
+  
 
   <!-- 2. STICKY MAIN HEADER -->
-  <header id="main-header" class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-surface-mid transition-all duration-200">
-    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
+  <header id="main-header" class="sticky top-2 sm:top-3 z-40 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 transition-all duration-200">
+    <div class="bg-white/95 backdrop-blur-md border border-surface-mid rounded-2xl sm:rounded-3xl shadow-subtle px-3 sm:px-6 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
       
       <!-- Brand Logo & Branch Info -->
       <a href="#home" class="flex items-center gap-2 sm:gap-3 shrink-0 group min-w-0">
@@ -202,14 +180,6 @@
           <span class="material-symbols-outlined text-[19px] sm:text-[20px]">search</span>
         </button>
 
-        <!-- WhatsApp Quick Chat CTA -->
-        <a href="https://wa.me/919172214216?text=Hello%20OM%20Mobile,%20I%20am%20inquiring%20about%20a%20product%20at%20Dhanore%20Branch." 
-           target="_blank" rel="noopener noreferrer"
-           class="inline-flex items-center justify-center gap-1 sm:gap-1.5 p-2 sm:px-4 sm:py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-subtle hover:scale-102 transition-all shrink-0" title="WhatsApp Store">
-          <span class="material-symbols-outlined text-[18px]">chat</span>
-          <span class="hidden sm:inline">WhatsApp</span>
-        </a>
-
         <!-- Mobile Hamburger Toggle -->
         <button id="mobile-menu-toggle" type="button" aria-label="Open Navigation Menu"
                 class="md:hidden p-2 rounded-xl text-on-surface hover:bg-surface-mid transition-colors shrink-0">
@@ -218,22 +188,21 @@
       </div>
     </div>
 
-    <!-- Mobile Navigation Drawer Dropdown -->
-    <div id="mobile-nav-panel" class="hidden md:hidden border-t border-surface-mid bg-white px-4 py-3 shadow-lg">
-      <div class="flex flex-col gap-1 pb-3">
-        <a href="#home" class="mobile-nav-link px-3 py-2 rounded-lg font-medium text-sm text-primary bg-primary-light/40">Home</a>
-        <a href="#products" class="mobile-nav-link px-3 py-2 rounded-lg font-medium text-sm text-on-surface hover:bg-surface-low">Live Products Catalog</a>
-        <a href="products.html" class="mobile-nav-link px-3 py-2 rounded-lg font-medium text-sm text-on-surface hover:bg-surface-low">Dedicated Catalog Page</a>
-        <a href="#services" class="mobile-nav-link px-3 py-2 rounded-lg font-medium text-sm text-on-surface hover:bg-surface-low">Services &amp; Repairs</a>
-        <a href="#contact" class="mobile-nav-link px-3 py-2 rounded-lg font-medium text-sm text-on-surface hover:bg-surface-low">Store Location &amp; Directions</a>
+    <!-- Mobile Navigation Drawer Dropdown (Compact & Rounded) -->
+    <div id="mobile-nav-panel" class="hidden md:hidden border border-surface-mid bg-white/95 backdrop-blur-md rounded-2xl mt-2 p-3 shadow-lg">
+      <div class="flex flex-col gap-1">
+        <a href="#home" class="mobile-nav-link px-3 py-2 rounded-xl text-xs font-semibold text-primary bg-primary-light/40">Home</a>
+        <a href="#products" class="mobile-nav-link px-3 py-2 rounded-xl text-xs font-medium text-on-surface hover:bg-surface-low">Products</a>
+        <a href="#services" class="mobile-nav-link px-3 py-2 rounded-xl text-xs font-medium text-on-surface hover:bg-surface-low">Services</a>
+        <a href="#contact" class="mobile-nav-link px-3 py-2 rounded-xl text-xs font-medium text-on-surface hover:bg-surface-low">Store Visit</a>
       </div>
-      <div class="pt-2 border-t border-surface-mid flex items-center justify-between gap-2">
-        <a href="tel:+919172214216" class="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-surface-mid text-on-surface font-semibold text-xs">
-          <span class="material-symbols-outlined text-[16px]">call</span>
+      <div class="pt-2 mt-2 border-t border-surface-mid flex items-center gap-2">
+        <a href="tel:+919172214216" class="flex-1 inline-flex items-center justify-center gap-1.5 py-2 rounded-xl bg-surface-mid text-on-surface font-semibold text-xs">
+          <span class="material-symbols-outlined text-[15px]">call</span>
           <span>Call Store</span>
         </a>
-        <a href="https://wa.me/919172214216" target="_blank" rel="noopener noreferrer" class="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-emerald-600 text-white font-semibold text-xs">
-          <span class="material-symbols-outlined text-[16px]">chat</span>
+        <a href="https://wa.me/919172214216" target="_blank" rel="noopener noreferrer" class="flex-1 inline-flex items-center justify-center gap-1.5 py-2 rounded-xl bg-emerald-600 text-white font-semibold text-xs">
+          <span class="material-symbols-outlined text-[15px]">chat</span>
           <span>WhatsApp</span>
         </a>
       </div>
@@ -243,85 +212,21 @@
   <!-- MAIN WRAPPER -->
   <main class="w-full pb-16 lg:pb-0">
 
-    <!-- 3. HERO SHOWROOM SECTION (Clean, Minimal, Spacious) -->
-    <section id="home" class="relative w-full bg-gradient-to-b from-surface-low via-white to-white pt-10 pb-16 lg:pt-16 lg:pb-24 border-b border-surface-mid">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-          
-          <!-- Hero Text Content -->
-          <div class="lg:col-span-7 flex flex-col items-start gap-5 z-10">
-            
-            <!-- Live Branch Pill -->
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-mid border border-outline-variant/60">
-              <span class="relative flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-              </span>
-              <span class="text-xs font-semibold text-on-surface">Branch No. 4 • PCS Chowk, Dhanore</span>
+    <!-- 3. SHOWROOM SHOWCASE BANNER (#home) -->
+    <section id="home" class="w-full pt-4 pb-6 sm:pt-6 sm:pb-8">
+      <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div class="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-card-hover border border-surface-mid bg-white h-52 sm:h-72 lg:h-80">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUzoaOnkR2uywaR6oAASK8zBgqvFUOPQrzAMzcG0ep-ob1DLIXj9dSUA7npurEyT4gQLTlOeaS8xL57KETI17rCYZIiIOZ7V1yGeUOEF6aQpLb6GM9fmMCjGz6EAK3eD1oe5nrPdH_et49PKfDt_tCP77aLzPqilS6mwVso2Z46TdAR3Vmp5KzoTB78m9euzw1SblMGKyG5mACD-minhbaSzzhP4puq3YkILG4yOnjIhx1xzCQUA5CXQ" 
+               alt="OM Mobile Dhanore Storefront Counter" 
+               class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex flex-col justify-end p-4 sm:p-7">
+            <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md w-fit mb-1 shadow-sm">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span class="text-[10px] sm:text-xs font-bold text-gray-900 uppercase tracking-wide">Branch No. 4 • PCS Chowk, Dhanore</span>
             </div>
-
-            <!-- Primary Headline -->
-            <h1 class="font-headline text-3xl sm:text-4xl md:text-5xl font-extrabold text-on-surface tracking-tight leading-[1.15]">
-              Authentic Smartphones, Laptops &amp; Tech.
-            </h1>
-
-            <p class="text-sm sm:text-base text-on-surface-variant max-w-xl leading-relaxed">
-              Discover official flagship 5G smartphones, laptops, audio gear, and accessories at <strong class="text-on-surface font-semibold">OM Mobile &amp; Electronics</strong>. Authorized brand warranty, 0% interest Bajaj &amp; TVS EMI schemes, and dedicated local support.
-            </p>
-
-            <!-- Quick Action Buttons -->
-            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2 w-full sm:w-auto">
-              <a href="#products" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-primary text-white font-semibold text-sm shadow-subtle hover:bg-primary-hover hover:-translate-y-0.5 active:translate-y-0 transition-all">
-                <span>Browse Products</span>
-                <span class="material-symbols-outlined text-[18px]">arrow_downward</span>
-              </a>
-              <a href="https://wa.me/919172214216?text=Hello%20OM%20Mobile,%20I%20want%20to%20inquire%20about%20products%20in%20stock." 
-                 target="_blank" rel="noopener noreferrer"
-                 class="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-surface-mid text-on-surface hover:bg-surface-high font-semibold text-sm transition-all">
-                <span class="material-symbols-outlined text-emerald-600 text-[18px]">chat</span>
-                <span>Chat on WhatsApp</span>
-              </a>
-            </div>
-
-            <!-- Sleek 3-point micro-trust line -->
-            <div class="flex flex-wrap items-center gap-y-2 gap-x-4 pt-3 text-xs text-on-surface-variant font-medium">
-              <span class="flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-emerald-600 text-[16px]">verified</span>
-                <span>100% Brand Sealed Pack</span>
-              </span>
-              <span class="text-slate-300">•</span>
-              <span class="flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-primary text-[16px]">payments</span>
-                <span>0% Downpayment EMI</span>
-              </span>
-              <span class="text-slate-300">•</span>
-              <span class="flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-emerald-600 text-[16px]">local_shipping</span>
-                <span>Same-Day Local Delivery</span>
-              </span>
-            </div>
-
+            <h1 class="font-headline text-lg sm:text-2xl lg:text-3xl font-extrabold text-white">OM Mobile &amp; Electronics</h1>
+            <p class="text-xs sm:text-sm text-white/85">Alandi–Markal Road, next to R Bikaner • Open All 7 Days (9:30 AM – 10:00 PM)</p>
           </div>
-
-          <!-- Hero Visual Media: Clean Showcase Card -->
-          <div class="lg:col-span-5 relative flex items-center justify-center">
-            <div class="relative w-full max-w-md mx-auto">
-              <div class="relative rounded-2xl overflow-hidden shadow-card-hover border border-surface-mid bg-white">
-                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUzoaOnkR2uywaR6oAASK8zBgqvFUOPQrzAMzcG0ep-ob1DLIXj9dSUA7npurEyT4gQLTlOeaS8xL57KETI17rCYZIiIOZ7V1yGeUOEF6aQpLb6GM9fmMCjGz6EAK3eD1oe5nrPdH_et49PKfDt_tCP77aLzPqilS6mwVso2Z46TdAR3Vmp5KzoTB78m9euzw1SblMGKyG5mACD-minhbaSzzhP4puq3YkILG4yOnjIhx1xzCQUA5CXQ" 
-                     alt="OM Mobile Dhanore Storefront Counter" 
-                     class="w-full h-64 sm:h-80 object-cover">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-5">
-                  <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/90 backdrop-blur-md w-fit mb-1 shadow-sm">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    <span class="text-[11px] font-bold text-gray-900 uppercase tracking-wide">Dhanore Showroom</span>
-                  </div>
-                  <p class="font-headline text-base sm:text-lg font-bold text-white">Branch No. 4 • PCS Chowk, Pune</p>
-                  <p class="text-xs text-white/80">Next to R Bikaner • Open All 7 Days</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
         </div>
       </div>
     </section>
