@@ -64,6 +64,21 @@ function dbToBanner(row) {
   };
 }
 
+
+function bannerPatchToDb(updates) {
+  const patch = {};
+  if (updates.image !== undefined) patch.image = String(updates.image);
+  if (updates.title !== undefined) patch.title = String(updates.title);
+  if (updates.subtitle !== undefined) patch.subtitle = String(updates.subtitle);
+  if (updates.tag !== undefined) patch.tag = String(updates.tag);
+  if (updates.link !== undefined) patch.link = String(updates.link);
+  if (updates.active !== undefined) patch.active = Boolean(updates.active);
+  if (updates.order !== undefined || updates.display_order !== undefined) {
+    patch.display_order = Number(updates.order != null ? updates.order : updates.display_order) || 1;
+  }
+  patch.updated_at = new Date().toISOString();
+  return patch;
+}
 function bannerToDb(b) {
   return {
     id: String(b.id),
@@ -428,6 +443,19 @@ module.exports = async (req, res) => {
         } catch (e) { console.error('Supabase banner add error:', e); }
       }
       return sendJson(res, 201, { success: true, banner: newB });
+    }
+    if (req.method === 'PUT' || req.method === 'PATCH') {
+      const id = req.query?.id || parsedUrl.searchParams.get('id') || decodeURIComponent(parsedUrl.pathname.split('/').pop());
+      const updates = await parseBody(req);
+      if (isCloudActive() && id) {
+        try {
+          await supabaseFetch(`/banners?id=eq.${encodeURIComponent(id)}`, {
+            method: 'PATCH',
+            body: JSON.stringify(bannerPatchToDb(updates))
+          });
+        } catch (e) { console.error('Supabase banner update error:', e); }
+      }
+      return sendJson(res, 200, { success: true, id, updates });
     }
     if (req.method === 'DELETE') {
       const id = req.query?.id || parsedUrl.searchParams.get('id') || decodeURIComponent(parsedUrl.pathname.split('/').pop());

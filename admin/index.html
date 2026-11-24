@@ -177,73 +177,149 @@
   <!-- =========================================================================
        2. AUTHENTICATED ADMIN DASHBOARD
        ========================================================================= -->
-  <div id="admin-dashboard-app" class="hidden flex-1 flex flex-col">
+  <div id="admin-dashboard-app" class="hidden flex-1 flex flex-col md:flex-row min-h-screen bg-background">
     
-    <!-- Top Admin App Bar -->
-    <header class="bg-surface-lowest border-b border-surface-mid sticky top-0 z-40 shadow-xs">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+    <!-- =====================================================================
+         DESKTOP VERTICAL SIDEBAR NAVBAR (Sticky on Very Left)
+         ===================================================================== -->
+    <aside id="admin-sidebar" class="hidden md:flex md:w-64 lg:w-72 shrink-0 bg-surface-lowest border-r border-surface-mid flex-col justify-between sticky top-0 h-screen z-30 overflow-y-auto select-none shadow-xs">
+      
+      <!-- Sidebar Top: Brand & Vertical Navigation -->
+      <div class="p-5 flex flex-col gap-6">
         
-        <div class="flex items-center gap-3">
-          <img alt="OM Mobile" class="h-8 w-auto object-contain" 
-               src="logo.png">
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="font-headline text-base font-extrabold text-on-surface">OM Admin</span>
-              <span class="px-2 py-0.5 rounded bg-primary-light text-primary-dark text-[10px] font-bold uppercase">Dhanore</span>
+        <!-- Brand Header -->
+        <div class="flex items-center gap-3 pb-4 border-b border-surface-mid/80">
+          <img alt="OM Mobile" class="h-9 w-auto object-contain shrink-0" src="logo.png">
+          <div class="min-w-0">
+            <div class="flex items-center gap-1.5">
+              <span class="font-headline text-base font-extrabold text-on-surface truncate">OM Admin</span>
+              <span class="px-1.5 py-0.5 rounded bg-primary-light text-primary-dark text-[9px] font-bold uppercase tracking-wider">Dhanore</span>
             </div>
-            <span class="hidden sm:inline text-[11px] text-outline">Dhanore Showroom • Product Catalog Manager</span>
+            <p class="text-[11px] text-outline truncate">Showroom Manager</p>
           </div>
         </div>
 
-        <div class="flex items-center gap-2.5">
-          <!-- Cloud Database Status & Config Button -->
-          <button type="button" onclick="openCloudConfigModal()" id="cloud-status-badge" 
-                  class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all shadow-xs bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100" title="Configure Cloud Database (Supabase)">
-            <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse" id="cloud-status-dot"></span>
-            <span id="cloud-status-text">Local Storage</span>
+        <!-- Vertical Navigation Links -->
+        <div class="space-y-1.5">
+          <div class="px-2 pb-1 flex items-center justify-between">
+            <span class="text-[10px] font-extrabold text-outline uppercase tracking-wider">Pages</span>
+            <span class="text-[10px] font-semibold text-outline">v2.4</span>
+          </div>
+
+          <!-- Tab 1: Products Catalog -->
+          <button type="button" onclick="switchAdminTab('products')" id="admin-tab-btn-products" 
+                  class="admin-tab-btn w-full px-3.5 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-between bg-primary text-white shadow-xs group cursor-pointer">
+            <div class="flex items-center gap-3 min-w-0">
+              <span class="material-symbols-outlined text-[20px] shrink-0">inventory_2</span>
+              <span class="truncate">Products Catalog</span>
+            </div>
+            <span class="tab-badge px-2 py-0.5 rounded-full bg-white/20 text-[10px] font-extrabold shrink-0" id="tab-count-products">0</span>
           </button>
-          <a href="index.html" target="_blank" rel="noopener noreferrer" 
-             class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-low hover:bg-surface-mid text-on-surface text-xs font-semibold transition-colors border border-outline-variant/60" title="Open Storefront in New Tab">
-            <span class="material-symbols-outlined text-[16px] text-primary">open_in_new</span>
-            <span class="hidden sm:inline">View Live Store</span>
-          </a>
-          <button type="button" onclick="handleAdminLogout()" 
-                  class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold transition-colors">
-            <span class="material-symbols-outlined text-[16px]">logout</span>
-            <span class="hidden sm:inline">Logout</span>
+
+          <!-- Tab 2: Hero Banners -->
+          <button type="button" onclick="switchAdminTab('banners')" id="admin-tab-btn-banners" 
+                  class="admin-tab-btn w-full px-3.5 py-3 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-between text-on-surface-variant hover:text-on-surface hover:bg-surface-mid border border-transparent group cursor-pointer">
+            <div class="flex items-center gap-3 min-w-0">
+              <span class="material-symbols-outlined text-[20px] shrink-0">view_carousel</span>
+              <span class="truncate">Hero Banners</span>
+            </div>
+            <span class="tab-badge px-2 py-0.5 rounded-full bg-surface-mid text-[10px] font-extrabold text-on-surface-variant shrink-0" id="tab-count-banners">0</span>
+          </button>
+
+          <!-- Tab 3: Customer Queries -->
+          <button type="button" onclick="switchAdminTab('queries')" id="admin-tab-btn-queries" 
+                  class="admin-tab-btn w-full px-3.5 py-3 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-between text-on-surface-variant hover:text-on-surface hover:bg-surface-mid border border-transparent group cursor-pointer">
+            <div class="flex items-center gap-3 min-w-0">
+              <span class="material-symbols-outlined text-[20px] shrink-0">contact_support</span>
+              <span class="truncate">Customer Queries</span>
+            </div>
+            <span class="tab-badge px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[10px] font-extrabold shrink-0" id="tab-count-queries">0</span>
           </button>
         </div>
 
       </div>
-    </header>
 
-    <!-- Main Dashboard Container -->
-    <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-      
-      <!-- Top Navigation Tabs (Products | Hero Banners | Customer Queries) -->
-      <div class="flex items-center gap-2 border-b border-surface-mid pb-3 overflow-x-auto no-scrollbar">
-        <button type="button" onclick="switchAdminTab('products')" id="admin-tab-btn-products" 
-                class="admin-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all bg-primary text-white shadow-xs flex items-center gap-2 shrink-0">
-          <span class="material-symbols-outlined text-[18px]">inventory_2</span>
-          <span>Products Catalog</span>
-          <span class="px-2 py-0.5 rounded-full bg-white/20 text-[10px] font-extrabold" id="tab-count-products">0</span>
-        </button>
-        
-        <button type="button" onclick="switchAdminTab('banners')" id="admin-tab-btn-banners" 
-                class="admin-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-surface-lowest text-on-surface-variant hover:text-on-surface hover:bg-surface-mid border border-surface-mid flex items-center gap-2 shrink-0">
-          <span class="material-symbols-outlined text-[18px]">view_carousel</span>
-          <span>Hero Banners</span>
-          <span class="px-2 py-0.5 rounded-full bg-surface-mid text-[10px] font-extrabold" id="tab-count-banners">0</span>
+      <!-- Sidebar Bottom: Status & Quick Controls -->
+      <div class="p-4 border-t border-surface-mid space-y-2.5 bg-surface-lowest/50">
+        <!-- Cloud Database Status & Config Button -->
+        <button type="button" onclick="openCloudConfigModal()" id="cloud-status-badge" 
+                class="w-full flex items-center justify-between px-3 py-2 rounded-xl border text-xs font-bold transition-all shadow-xs bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100 cursor-pointer" title="Configure Cloud Database (Supabase)">
+          <div class="flex items-center gap-2 min-w-0">
+            <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse shrink-0" id="cloud-status-dot"></span>
+            <span class="truncate" id="cloud-status-text">Local Storage</span>
+          </div>
+          <span class="material-symbols-outlined text-[16px] text-amber-700 shrink-0">settings</span>
         </button>
 
-        <button type="button" onclick="switchAdminTab('queries')" id="admin-tab-btn-queries" 
-                class="admin-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-surface-lowest text-on-surface-variant hover:text-on-surface hover:bg-surface-mid border border-surface-mid flex items-center gap-2 shrink-0">
-          <span class="material-symbols-outlined text-[18px]">contact_support</span>
-          <span>Customer Queries</span>
-          <span class="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[10px] font-extrabold" id="tab-count-queries">0</span>
-        </button>
+        <div class="grid grid-cols-2 gap-2 pt-0.5">
+          <a href="index.html" target="_blank" rel="noopener noreferrer" 
+             class="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-surface-low hover:bg-surface-mid text-on-surface text-xs font-semibold transition-colors border border-outline-variant/60" title="Open Live Store in New Tab">
+            <span class="material-symbols-outlined text-[15px] text-primary">open_in_new</span>
+            <span>Store</span>
+          </a>
+          <button type="button" onclick="handleAdminLogout()" 
+                  class="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold transition-colors cursor-pointer" title="Sign out of Admin Panel">
+            <span class="material-symbols-outlined text-[15px]">logout</span>
+            <span>Logout</span>
+          </button>
+        </div>
       </div>
 
+    </aside>
+
+    <!-- =====================================================================
+         MOBILE APP BAR (Header for < md screens)
+         ===================================================================== -->
+    <header class="md:hidden bg-surface-lowest border-b border-surface-mid sticky top-0 z-40 px-4 py-2.5 shadow-xs">
+      <div class="flex items-center justify-between gap-3">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <img alt="OM Mobile" class="h-7 w-auto object-contain shrink-0" src="logo.png">
+          <div class="min-w-0">
+            <span class="font-headline text-sm font-extrabold text-on-surface block truncate leading-tight">OM Admin</span>
+            <span class="text-[10px] text-outline block truncate">Dhanore Showroom</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 shrink-0">
+          <button type="button" onclick="openCloudConfigModal()" id="mobile-cloud-status-badge" 
+                  class="flex items-center gap-1 px-2.5 py-1 rounded-lg border text-[10px] font-bold bg-amber-50 text-amber-800 border-amber-200">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" id="mobile-cloud-status-dot"></span>
+            <span id="mobile-cloud-status-text">Cloud</span>
+          </button>
+          <a href="index.html" target="_blank" class="p-1.5 rounded-lg bg-surface-low text-on-surface text-xs hover:bg-surface-mid border border-outline-variant/60" title="Store">
+            <span class="material-symbols-outlined text-[16px] text-primary">open_in_new</span>
+          </a>
+          <button type="button" onclick="handleAdminLogout()" class="p-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 text-xs font-bold" title="Logout">
+            <span class="material-symbols-outlined text-[16px]">logout</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Quick Switcher Bar -->
+      <div class="flex items-center gap-1.5 pt-2 border-t border-surface-mid/60 mt-2 overflow-x-auto no-scrollbar">
+        <button type="button" onclick="switchAdminTab('products')" id="mobile-tab-btn-products" class="mobile-nav-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-primary text-white flex items-center gap-1.5 shrink-0">
+          <span class="material-symbols-outlined text-[15px]">inventory_2</span>
+          <span>Products</span>
+          <span class="px-1.5 py-0.2 rounded-full bg-white/20 text-[9px] font-extrabold" id="mobile-tab-count-products">0</span>
+        </button>
+        <button type="button" onclick="switchAdminTab('banners')" id="mobile-tab-btn-banners" class="mobile-nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-on-surface-variant bg-surface-mid/60 flex items-center gap-1.5 shrink-0">
+          <span class="material-symbols-outlined text-[15px]">view_carousel</span>
+          <span>Banners</span>
+          <span class="px-1.5 py-0.2 rounded-full bg-surface-mid text-[9px] font-extrabold" id="mobile-tab-count-banners">0</span>
+        </button>
+        <button type="button" onclick="switchAdminTab('queries')" id="mobile-tab-btn-queries" class="mobile-nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-on-surface-variant bg-surface-mid/60 flex items-center gap-1.5 shrink-0">
+          <span class="material-symbols-outlined text-[15px]">contact_support</span>
+          <span>Queries</span>
+          <span class="px-1.5 py-0.2 rounded-full bg-emerald-500 text-white text-[9px] font-extrabold" id="mobile-tab-count-queries">0</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- =====================================================================
+         RIGHT MAIN CONTENT AREA (Scrollable Views Container)
+         ===================================================================== -->
+    <main class="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 space-y-6 overflow-y-auto">
+      
       <!-- =====================================================================
            VIEW 1: PRODUCTS CATALOG MANAGEMENT
            ===================================================================== -->
@@ -1101,41 +1177,45 @@
     });
 
     /* Cloud Sync Status & Config Logic */
-    async function updateCloudStatusUI() {
+        async function updateCloudStatusUI() {
       const badge = document.getElementById("cloud-status-badge");
       const dot = document.getElementById("cloud-status-dot");
       const text = document.getElementById("cloud-status-text");
+      const mBadge = document.getElementById("mobile-cloud-status-badge");
+      const mDot = document.getElementById("mobile-cloud-status-dot");
+      const mText = document.getElementById("mobile-cloud-status-text");
       if (!badge || !dot || !text) return;
 
-      if (typeof isApiServerAvailable === 'function' && isApiServerAvailable()) {
+      function setMode(modeClass, dotClass, textContent, mShort) {
+        badge.className = "w-full flex items-center justify-between px-3 py-2 rounded-xl border text-xs font-bold transition-all shadow-xs " + modeClass;
+        dot.className = "w-2 h-2 rounded-full " + dotClass;
+        text.textContent = textContent;
+        if (mBadge) mBadge.className = "flex items-center gap-1 px-2.5 py-1 rounded-lg border text-[10px] font-bold " + modeClass;
+        if (mDot) mDot.className = "w-1.5 h-1.5 rounded-full " + dotClass;
+        if (mText) mText.textContent = mShort;
+      }
+
+      if (typeof isApiServerAvailable === "function" && isApiServerAvailable()) {
         try {
-          const res = await fetch('/api/status');
+          const res = await fetch("/api/status");
           if (res.ok) {
             const status = await res.json();
             if (status.cloudConfigured) {
-              badge.className = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all shadow-xs bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100";
-              dot.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
-              text.textContent = "Cloud: .env Connected";
+              setMode("bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100", "bg-emerald-500 animate-pulse", "Cloud: .env Connected", "Cloud");
               return;
             } else {
-              badge.className = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all shadow-xs bg-blue-50 text-blue-800 border-blue-200 hover:bg-blue-100";
-              dot.className = "w-2 h-2 rounded-full bg-blue-500 animate-pulse";
-              text.textContent = "Server: .env File Storage";
+              setMode("bg-blue-50 text-blue-800 border-blue-200 hover:bg-blue-100", "bg-blue-500 animate-pulse", "Server: Local File Storage", "Server");
               return;
             }
           }
         } catch (e) {}
       }
 
-      const isCloud = typeof isSupabaseConfigured === 'function' && isSupabaseConfigured();
+      const isCloud = typeof isSupabaseConfigured === "function" && isSupabaseConfigured();
       if (isCloud) {
-        badge.className = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all shadow-xs bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100";
-        dot.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
-        text.textContent = "Supabase Cloud: Active";
+        setMode("bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100", "bg-emerald-500 animate-pulse", "Supabase Cloud: Active", "Cloud");
       } else {
-        badge.className = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all shadow-xs bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100";
-        dot.className = "w-2 h-2 rounded-full bg-amber-500 animate-pulse";
-        text.textContent = "Local Storage (Device)";
+        setMode("bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100", "bg-amber-500 animate-pulse", "Local Storage (Device)", "Local");
       }
     }
 
@@ -1364,13 +1444,36 @@
       showAdminToast("Logged out successfully.");
     }
 
-    async function unlockAdminDashboard() {
+        async function unlockAdminDashboard() {
       document.getElementById("auth-gate-screen").classList.add("hidden");
       document.getElementById("admin-dashboard-app").classList.remove("hidden");
       refreshAdminProductsTable();
       loadAdminBanners();
       loadAdminQueries();
       updateAdminTabCounters();
+      updateCloudStatusUI();
+
+      // Subscribe to Realtime Banners for cross-device synchronization
+      if (typeof subscribeToBannersRealtime === "function") {
+        subscribeToBannersRealtime((freshBanners) => {
+          if (Array.isArray(freshBanners)) {
+            adminBanners = freshBanners;
+            renderAdminBanners();
+            updateAdminTabCounters();
+          }
+        });
+      }
+
+      // Subscribe to Realtime Queries for live customer leads
+      if (typeof subscribeToQueriesRealtime === "function") {
+        subscribeToQueriesRealtime((freshQueries) => {
+          if (Array.isArray(freshQueries)) {
+            adminQueries = freshQueries;
+            renderAdminQueries();
+            updateAdminTabCounters();
+          }
+        });
+      };
       if (typeof fetchStoreProductsAsync === 'function') {
         try {
           await fetchStoreProductsAsync();
@@ -1415,20 +1518,37 @@
     let adminBanners = [];
     let adminQueries = [];
 
-    function switchAdminTab(tabName) {
+        function switchAdminTab(tabName) {
       currentAdminTab = tabName;
 
-      // Update Tab Button Styles
+      // 1. Update Desktop Sidebar Buttons
       document.querySelectorAll(".admin-tab-btn").forEach(btn => {
-        btn.className = "admin-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-surface-lowest text-on-surface-variant hover:text-on-surface hover:bg-surface-mid border border-surface-mid flex items-center gap-2 shrink-0";
+        btn.className = "admin-tab-btn w-full px-3.5 py-3 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-between text-on-surface-variant hover:text-on-surface hover:bg-surface-mid border border-transparent group cursor-pointer";
+        const badge = btn.querySelector(".tab-badge");
+        if (badge) {
+          badge.className = "tab-badge px-2 py-0.5 rounded-full bg-surface-mid text-[10px] font-extrabold text-on-surface-variant shrink-0";
+        }
       });
 
       const activeBtn = document.getElementById("admin-tab-btn-" + tabName);
       if (activeBtn) {
-        activeBtn.className = "admin-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all bg-primary text-white shadow-xs flex items-center gap-2 shrink-0";
+        activeBtn.className = "admin-tab-btn w-full px-3.5 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-between bg-primary text-white shadow-xs group cursor-pointer";
+        const activeBadge = activeBtn.querySelector(".tab-badge");
+        if (activeBadge) {
+          activeBadge.className = "tab-badge px-2 py-0.5 rounded-full bg-white/20 text-white text-[10px] font-extrabold shrink-0";
+        }
       }
 
-      // Toggle View Sections
+      // 2. Update Mobile Header Buttons
+      document.querySelectorAll(".mobile-nav-btn").forEach(btn => {
+        btn.className = "mobile-nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-on-surface-variant bg-surface-mid/60 flex items-center gap-1.5 shrink-0";
+      });
+      const activeMobileBtn = document.getElementById("mobile-tab-btn-" + tabName);
+      if (activeMobileBtn) {
+        activeMobileBtn.className = "mobile-nav-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-primary text-white flex items-center gap-1.5 shrink-0";
+      }
+
+      // 3. Toggle View Visibility
       document.querySelectorAll(".admin-tab-view").forEach(view => {
         view.classList.add("hidden");
       });
@@ -1438,30 +1558,46 @@
         targetView.classList.remove("hidden");
       }
 
-      // Load View Data
-      if (tabName === 'banners') {
+      // 4. Load View Data Fresh
+      if (tabName === "banners") {
         loadAdminBanners();
-      } else if (tabName === 'queries') {
+      } else if (tabName === "queries") {
         loadAdminQueries();
+      } else if (tabName === "products") {
+        refreshAdminProductsTable();
       }
     }
 
     function updateAdminTabCounters() {
-      const prodList = typeof getStoredProducts === 'function' ? getStoredProducts() : [];
+      const prodList = typeof getStoredProducts === "function" ? getStoredProducts() : [];
+      const prodCount = prodList.length;
+      const bannerCount = adminBanners.length;
+      const newQueriesCount = adminQueries.filter(q => q.status === "new").length;
+
+      // Desktop Badges
       const prodBadge = document.getElementById("tab-count-products");
-      if (prodBadge) prodBadge.textContent = prodList.length;
+      if (prodBadge) prodBadge.textContent = prodCount;
 
       const bannerBadge = document.getElementById("tab-count-banners");
-      if (bannerBadge) bannerBadge.textContent = adminBanners.length;
+      if (bannerBadge) bannerBadge.textContent = bannerCount;
 
-      const newQueriesCount = adminQueries.filter(q => q.status === 'new').length;
       const queryBadge = document.getElementById("tab-count-queries");
       if (queryBadge) {
         queryBadge.textContent = newQueriesCount;
-        queryBadge.className = newQueriesCount > 0 ? 
-          "px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[10px] font-extrabold animate-pulse" : 
-          "px-2 py-0.5 rounded-full bg-surface-mid text-on-surface-variant text-[10px] font-extrabold";
+        queryBadge.className = newQueriesCount > 0 ?
+          "tab-badge px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[10px] font-extrabold shrink-0 animate-pulse" :
+          "tab-badge px-2 py-0.5 rounded-full bg-surface-mid text-on-surface-variant text-[10px] font-extrabold shrink-0";
       }
+
+      // Mobile Badges
+      const mProdBadge = document.getElementById("mobile-tab-count-products");
+      if (mProdBadge) mProdBadge.textContent = prodCount;
+
+      const mBannerBadge = document.getElementById("mobile-tab-count-banners");
+      if (mBannerBadge) mBannerBadge.textContent = bannerCount;
+
+      const mQueryBadge = document.getElementById("mobile-tab-count-queries");
+      if (mQueryBadge) mQueryBadge.textContent = newQueriesCount;
     }
 
     // =========================================================================

@@ -150,6 +150,21 @@ function dbToBanner(row) {
   };
 }
 
+
+function bannerPatchToDb(updates) {
+  const patch = {};
+  if (updates.image !== undefined) patch.image = String(updates.image);
+  if (updates.title !== undefined) patch.title = String(updates.title);
+  if (updates.subtitle !== undefined) patch.subtitle = String(updates.subtitle);
+  if (updates.tag !== undefined) patch.tag = String(updates.tag);
+  if (updates.link !== undefined) patch.link = String(updates.link);
+  if (updates.active !== undefined) patch.active = Boolean(updates.active);
+  if (updates.order !== undefined || updates.display_order !== undefined) {
+    patch.display_order = Number(updates.order != null ? updates.order : updates.display_order) || 1;
+  }
+  patch.updated_at = new Date().toISOString();
+  return patch;
+}
 function bannerToDb(b) {
   return {
     id: String(b.id),
@@ -579,7 +594,7 @@ const server = http.createServer(async (req, res) => {
       return sendJson(res, 201, { success: true, banner: newBanner });
     }
 
-    if (pathname.startsWith('/api/banners/') && req.method === 'PUT') {
+    if (pathname.startsWith('/api/banners/') && (req.method === 'PUT' || req.method === 'PATCH')) {
       const id = decodeURIComponent(pathname.substring('/api/banners/'.length));
       const updates = await parseBody(req);
 
@@ -587,7 +602,7 @@ const server = http.createServer(async (req, res) => {
         try {
           await supabaseFetch(`/banners?id=eq.${encodeURIComponent(id)}`, {
             method: 'PATCH',
-            body: JSON.stringify(bannerToDb(updates))
+            body: JSON.stringify(bannerPatchToDb(updates))
           });
         } catch (e) {
           console.error('Supabase banner update failed:', e);

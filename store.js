@@ -45,8 +45,8 @@ const OM_SUPABASE_CONFIG_KEY = 'om_mobile_supabase_config_v1';
 
 // Default Supabase Cloud credentials (can also be entered dynamically in the Admin UI)
 let OM_SUPABASE_CONFIG = {
-  url: '', // e.g. 'https://your-project.supabase.co'
-  anonKey: '', // e.g. 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+  url: 'https://hfkhqoltplobqpwbptzc.supabase.co',
+  anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhma2hxb2x0cGxvYnFwd2JwdHpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUyNDU0NDIsImV4cCI6MjExMDgyMTQ0Mn0.pwMOtb9OH71qRmxeN294b8H_Py1FGxM9Th_aouSOdf0',
   tableName: 'products'
 };
 
@@ -1024,8 +1024,88 @@ function saveStoredBanners(banners) {
   }
 }
 
+// Realtime subscription for hero banners
+function subscribeToBannersRealtime(onFreshBannersCallback) {
+  if (!supabaseClient) initSupabaseClient();
+  if (supabaseClient && isSupabaseConfigured()) {
+    try {
+      const channel = supabaseClient
+        .channel('om-banners-live-channel')
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'banners' },
+          async (payload) => {
+            console.log('Realtime banner update detected:', payload.eventType);
+            const fresh = await fetchBannersAsync();
+            if (typeof onFreshBannersCallback === 'function') {
+              onFreshBannersCallback(fresh);
+            }
+          }
+        )
+        .subscribe((status) => {
+          console.log('Supabase Banners Realtime status:', status);
+        });
+      return channel;
+    } catch (e) {
+      console.warn('Real-time banners subscription failed:', e);
+    }
+  }
+  return null;
+}
+
 async function fetchBannersAsync() {
-  // 1. Try local server API
+  // 1. Supabase direct cloud (single source of truth across all devices)
+  if (isSupabaseConfigured()) {
+    if (!supabaseClient) initSupabaseClient();
+    if (supabaseClient) {
+      try {
+        const { data, error } = await supabaseClient
+          .from('banners')
+          .select('*')
+          .order('display_order', { ascending: true });
+
+        if (!error && Array.isArray(data)) {
+          // If remote table has 0 rows, auto-seed with default banners
+          if (data.length === 0) {
+            try {
+              const seedRows = DEFAULT_HERO_BANNERS.map(b => ({
+                id: b.id,
+                image: b.image || '',
+                title: b.title || '',
+                subtitle: b.subtitle || '',
+                tag: b.tag || 'Official Showroom',
+                link: b.link || '#products',
+                active: b.active !== false,
+                display_order: Number(b.order) || 1
+              }));
+              await supabaseClient.from('banners').upsert(seedRows, { onConflict: 'id' });
+            } catch (seedErr) {
+              console.warn('Auto-seed banners to Supabase:', seedErr);
+            }
+            saveStoredBanners(DEFAULT_HERO_BANNERS);
+            return DEFAULT_HERO_BANNERS;
+          }
+
+          const mapped = data.map(b => ({
+            id: String(b.id),
+            image: b.image || '',
+            title: b.title || '',
+            subtitle: b.subtitle || '',
+            tag: b.tag || 'Showroom',
+            link: b.link || '#products',
+            active: b.active !== false,
+            order: Number(b.display_order != null ? b.display_order : 1) || 1
+          }));
+          saveStoredBanners(mapped);
+          return mapped;
+        }
+      } catch (e) {
+        console.warn('Supabase fetchBannersAsync error, falling back:', e);
+      }
+    }
+  }
+
+  // 2. Try local server API
   try {
     const res = await fetch('/api/banners');
     if (res.ok) {
@@ -1036,27 +1116,6 @@ async function fetchBannersAsync() {
       }
     }
   } catch (e) {}
-
-  // 2. Try Supabase direct if active
-  if (isSupabaseConfigured() && supabaseClient) {
-    try {
-      const { data, error } = await supabaseClient.from('banners').select('*').order('display_order', { ascending: true });
-      if (!error && Array.isArray(data) && data.length > 0) {
-        const mapped = data.map(b => ({
-          id: String(b.id),
-          image: b.image || '',
-          title: b.title || '',
-          subtitle: b.subtitle || '',
-          tag: b.tag || 'Showroom',
-          link: b.link || '#products',
-          active: b.active !== false,
-          order: Number(b.display_order != null ? b.display_order : 1) || 1
-        }));
-        saveStoredBanners(mapped);
-        return mapped;
-      }
-    } catch (e) {}
-  }
 
   return getStoredBanners();
 }
@@ -1073,6 +1132,28 @@ async function addBannerAsync(banner) {
     order: Number(banner.order) || 1
   };
 
+  if (isSupabaseConfigured()) {
+    if (!supabaseClient) initSupabaseClient();
+    if (supabaseClient) {
+      try {
+        const { error } = await supabaseClient.from('banners').upsert({
+          id: newBanner.id,
+          image: newBanner.image,
+          title: newBanner.title,
+          subtitle: newBanner.subtitle,
+          tag: newBanner.tag,
+          link: newBanner.link,
+          active: newBanner.active,
+          display_order: newBanner.order,
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'id' });
+        if (error) console.error('Supabase banner add error:', error);
+      } catch (e) {
+        console.error('Supabase banner add exception:', e);
+      }
+    }
+  }
+
   try {
     await fetch('/api/banners', {
       method: 'POST',
@@ -1081,28 +1162,45 @@ async function addBannerAsync(banner) {
     });
   } catch (e) {}
 
-  if (isSupabaseConfigured() && supabaseClient) {
-    try {
-      await supabaseClient.from('banners').insert({
-        id: newBanner.id,
-        image: newBanner.image,
-        title: newBanner.title,
-        subtitle: newBanner.subtitle,
-        tag: newBanner.tag,
-        link: newBanner.link,
-        active: newBanner.active,
-        display_order: newBanner.order
-      });
-    } catch (e) {}
-  }
-
   const banners = getStoredBanners();
-  banners.push(newBanner);
+  const exists = banners.findIndex(b => b.id === newBanner.id);
+  if (exists >= 0) {
+    banners[exists] = newBanner;
+  } else {
+    banners.push(newBanner);
+  }
   saveStoredBanners(banners);
   return newBanner;
 }
 
 async function updateBannerAsync(id, updates) {
+  const banners = getStoredBanners();
+  const current = banners.find(b => b.id === id) || {};
+  const merged = { ...current, ...updates, id };
+
+  if (isSupabaseConfigured()) {
+    if (!supabaseClient) initSupabaseClient();
+    if (supabaseClient) {
+      try {
+        const dbRow = {
+          id: String(merged.id),
+          image: String(merged.image || ''),
+          title: String(merged.title || ''),
+          subtitle: String(merged.subtitle || ''),
+          tag: String(merged.tag || 'Showroom'),
+          link: String(merged.link || '#products'),
+          active: merged.active !== false,
+          display_order: Number(merged.order != null ? merged.order : (merged.display_order != null ? merged.display_order : 1)) || 1,
+          updated_at: new Date().toISOString()
+        };
+        const { error } = await supabaseClient.from('banners').upsert(dbRow, { onConflict: 'id' });
+        if (error) console.error('Supabase banner update error:', error);
+      } catch (e) {
+        console.error('Supabase banner update exception:', e);
+      }
+    }
+  }
+
   try {
     await fetch('/api/banners/' + encodeURIComponent(id), {
       method: 'PUT',
@@ -1111,40 +1209,32 @@ async function updateBannerAsync(id, updates) {
     });
   } catch (e) {}
 
-  if (isSupabaseConfigured() && supabaseClient) {
-    try {
-      const dbUpdates = {};
-      if (updates.image !== undefined) dbUpdates.image = updates.image;
-      if (updates.title !== undefined) dbUpdates.title = updates.title;
-      if (updates.subtitle !== undefined) dbUpdates.subtitle = updates.subtitle;
-      if (updates.tag !== undefined) dbUpdates.tag = updates.tag;
-      if (updates.link !== undefined) dbUpdates.link = updates.link;
-      if (updates.active !== undefined) dbUpdates.active = updates.active;
-      if (updates.order !== undefined) dbUpdates.display_order = updates.order;
-      await supabaseClient.from('banners').update(dbUpdates).eq('id', id);
-    } catch (e) {}
-  }
-
-  const banners = getStoredBanners();
   const idx = banners.findIndex(b => b.id === id);
   if (idx !== -1) {
-    banners[idx] = { ...banners[idx], ...updates, id };
-    saveStoredBanners(banners);
-    return banners[idx];
+    banners[idx] = merged;
+  } else {
+    banners.push(merged);
   }
-  return null;
+  saveStoredBanners(banners);
+  return merged;
 }
 
 async function deleteBannerAsync(id) {
+  if (isSupabaseConfigured()) {
+    if (!supabaseClient) initSupabaseClient();
+    if (supabaseClient) {
+      try {
+        const { error } = await supabaseClient.from('banners').delete().eq('id', id);
+        if (error) console.error('Supabase banner delete error:', error);
+      } catch (e) {
+        console.error('Supabase banner delete exception:', e);
+      }
+    }
+  }
+
   try {
     await fetch('/api/banners/' + encodeURIComponent(id), { method: 'DELETE' });
   } catch (e) {}
-
-  if (isSupabaseConfigured() && supabaseClient) {
-    try {
-      await supabaseClient.from('banners').delete().eq('id', id);
-    } catch (e) {}
-  }
 
   let banners = getStoredBanners();
   banners = banners.filter(b => b.id !== id);
@@ -1153,6 +1243,24 @@ async function deleteBannerAsync(id) {
 }
 
 async function resetBannersAsync() {
+  if (isSupabaseConfigured()) {
+    if (!supabaseClient) initSupabaseClient();
+    if (supabaseClient) {
+      try {
+        const seedRows = DEFAULT_HERO_BANNERS.map(b => ({
+          id: b.id,
+          image: b.image || '',
+          title: b.title || '',
+          subtitle: b.subtitle || '',
+          tag: b.tag || 'Showroom',
+          link: b.link || '#products',
+          active: b.active !== false,
+          display_order: Number(b.order) || 1
+        }));
+        await supabaseClient.from('banners').upsert(seedRows, { onConflict: 'id' });
+      } catch (e) {}
+    }
+  }
   try {
     await fetch('/api/banners/reset', { method: 'POST' });
   } catch (e) {}
@@ -1357,6 +1465,24 @@ async function clearQueriesAsync() {
 if (typeof window !== 'undefined') {
   initSupabaseClient();
   bootstrapSupabaseConfig();
+
+  window.DEFAULT_HERO_BANNERS = DEFAULT_HERO_BANNERS;
+  window.getStoredBanners = getStoredBanners;
+  window.saveStoredBanners = saveStoredBanners;
+  window.fetchBannersAsync = fetchBannersAsync;
+  window.addBannerAsync = addBannerAsync;
+  window.updateBannerAsync = updateBannerAsync;
+  window.deleteBannerAsync = deleteBannerAsync;
+  window.resetBannersAsync = resetBannersAsync;
+  window.subscribeToBannersRealtime = subscribeToBannersRealtime;
+  window.getStoredQueries = getStoredQueries;
+  window.saveStoredQueries = saveStoredQueries;
+  window.fetchQueriesAsync = fetchQueriesAsync;
+  window.submitProductEnquiryAsync = submitProductEnquiryAsync;
+  window.updateQueryStatusAsync = updateQueryStatusAsync;
+  window.deleteQueryAsync = deleteQueryAsync;
+  window.clearQueriesAsync = clearQueriesAsync;
+  window.subscribeToQueriesRealtime = subscribeToQueriesRealtime;
 }
 
 // Global window and module exports
@@ -1407,6 +1533,7 @@ if (typeof module !== 'undefined' && module.exports) {
     deleteQueryAsync,
     clearQueriesAsync,
     subscribeToQueriesRealtime,
+    subscribeToBannersRealtime,
     OM_STORAGE_KEY,
     OM_SUPABASE_CONFIG_KEY,
     OM_SAMPLE_PRODUCTS,

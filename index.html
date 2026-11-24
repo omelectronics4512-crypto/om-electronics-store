@@ -759,6 +759,15 @@
           }
         }).catch(() => {});
       }
+            if (typeof subscribeToBannersRealtime === "function") {
+        subscribeToBannersRealtime(fresh => {
+          if (Array.isArray(fresh)) {
+            heroBanners = fresh.filter(b => b.active !== false).sort((a, b) => (a.order || 1) - (b.order || 1));
+            currentHeroSlideIndex = 0;
+            renderHeroSlides();
+          }
+        });
+      }
       if (typeof subscribeToStoreRealtime === "function") {
         subscribeToStoreRealtime(fresh => {
           if (Array.isArray(fresh)) {
