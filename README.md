@@ -1,7 +1,7 @@
-# OM Mobile & Electronics (Branch No. 4 – Dhanore, Pune)
+# OM Mobile & Electronics (Dhanore – Dhanore, Pune)
 ### Modern, Fully Functional & Animated Frontend
 
-A high-performance, responsive e-commerce and retail storefront web application for **OM Mobile & Electronics** (Branch No. 4, PCS Chowk, Dhanore, Pune), converted from a static Stitch design into a **production-ready, fully interactive, and animated frontend experience**.
+A high-performance, responsive e-commerce and retail storefront web application for **OM Mobile & Electronics** (Dhanore Showroom, PCS Chowk, Dhanore, Pune), converted from a static Stitch design into a **production-ready, fully interactive, and animated frontend experience**.
 
 ---
 
@@ -35,7 +35,7 @@ A high-performance, responsive e-commerce and retail storefront web application 
 
 ### 6. 💬 Product Contact & In-Store Reservation System (Replaced Cart)
 - **Direct 1-Tap Inquiry:** Each product features a prominent **"Contact"** button opening an inquiry modal.
-- **Pre-Filled WhatsApp Chat:** Instant message with device name, current price, and 0% EMI inquiry pre-formatted for Dhanore Branch No. 4.
+- **Pre-Filled WhatsApp Chat:** Instant message with device name, current price, and 0% EMI inquiry pre-formatted for Dhanore Showroom.
 - **Direct Store Phone Call:** One-tap calling to the counter (+91 91722 14216).
 - **In-Store Reservation Form:** Reserve sealed units for hands-on trial and demo with zero advance payment.
 
@@ -72,7 +72,7 @@ A high-performance, responsive e-commerce and retail storefront web application 
 - Select brand, model, and issue to get an instant time estimate (1–3 hours turnaround) and book a technician slot on WhatsApp.
 
 ### 12. 🕒 Live Store Status Indicator
-- Dynamically calculates current local time and displays whether Branch No. 4 is currently open (Operating hours: 9:30 AM to 10:00 PM, all 7 days).
+- Dynamically calculates current local time and displays whether Dhanore Showroom is currently open (Operating hours: 9:30 AM to 10:00 PM, all 7 days).
 
 ### 13. 📲 Responsive Architecture & Mobile Native App Feel
 - **Adaptive Breakpoints:** Flawlessly optimized across 320px–480px (Smartphones / Foldables), 640px–1023px (Tablets & iPads), and 1024px+ (Desktop & Ultra-wide).

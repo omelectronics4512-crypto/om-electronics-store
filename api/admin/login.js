@@ -1,5 +1,5 @@
 /* =========================================================================
-   OM MOBILE & ELECTRONICS (Branch No. 4, Dhanore, Pune)
+   OM MOBILE & ELECTRONICS (PCS Chowk, Dhanore, Pune)
    Dedicated Vercel Serverless Function: /api/admin/login
    ========================================================================= */
 
@@ -63,7 +63,7 @@ module.exports = async (req, res) => {
       success: true,
       message: 'Authenticated successfully',
       adminName: 'Gaurav Bhosle',
-      branch: 'Branch No. 4, Dhanore'
+      branch: 'Dhanore Showroom, Dhanore'
     }));
   } else {
     res.end(JSON.stringify({

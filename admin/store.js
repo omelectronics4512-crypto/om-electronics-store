@@ -4,6 +4,43 @@
    ========================================================================= */
 
 const OM_STORAGE_KEY = 'om_mobile_store_products_v1';
+
+const OM_BANNERS_STORAGE_KEY = 'om_mobile_store_banners_v1';
+const OM_QUERIES_STORAGE_KEY = 'om_mobile_customer_queries_v1';
+
+const DEFAULT_HERO_BANNERS = [
+  {
+    id: "banner-1",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAUzoaOnkR2uywaR6oAASK8zBgqvFUOPQrzAMzcG0ep-ob1DLIXj9dSUA7npurEyT4gQLTlOeaS8xL57KETI17rCYZIiIOZ7V1yGeUOEF6aQpLb6GM9fmMCjGz6EAK3eD1oe5nrPdH_et49PKfDt_tCP77aLzPqilS6mwVso2Z46TdAR3Vmp5KzoTB78m9euzw1SblMGKyG5mACD-minhbaSzzhP4puq3YkILG4yOnjIhx1xzCQUA5CXQ",
+    title: "OM Mobile & Electronics",
+    subtitle: "Dhanore Showroom • PCS Chowk, Alandi–Markal Road",
+    tag: "Official Showroom",
+    link: "#products",
+    active: true,
+    order: 1
+  },
+  {
+    id: "banner-2",
+    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1600&q=80",
+    title: "Flagship 5G Smartphones & Accessories",
+    subtitle: "Authorized Apple, Samsung, OnePlus & Vivo with Official Brand Warranty",
+    tag: "Latest Arrivals",
+    link: "#products",
+    active: true,
+    order: 2
+  },
+  {
+    id: "banner-3",
+    image: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=1600&q=80",
+    title: "Laptops, Audio Gear & Smart TVs",
+    subtitle: "0% Downpayment Bajaj Finserv & TVS Credit EMI Options Available",
+    tag: "0% EMI Financing",
+    link: "#products",
+    active: true,
+    order: 3
+  }
+];
+
 const OM_SUPABASE_CONFIG_KEY = 'om_mobile_supabase_config_v1';
 
 // Default Supabase Cloud credentials (can also be entered dynamically in the Admin UI)
@@ -959,6 +996,333 @@ function subscribeToStoreRealtime(onFreshDataCallback) {
   return null;
 }
 
+
+// =========================================================================
+// BANNERS ENGINE (Local + Supabase Cloud)
+// =========================================================================
+function getStoredBanners() {
+  if (typeof window === 'undefined') return DEFAULT_HERO_BANNERS;
+  try {
+    const raw = localStorage.getItem(OM_BANNERS_STORAGE_KEY);
+    if (!raw) {
+      saveStoredBanners(DEFAULT_HERO_BANNERS);
+      return DEFAULT_HERO_BANNERS;
+    }
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) && parsed.length > 0 ? parsed : DEFAULT_HERO_BANNERS;
+  } catch (e) {
+    return DEFAULT_HERO_BANNERS;
+  }
+}
+
+function saveStoredBanners(banners) {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(OM_BANNERS_STORAGE_KEY, JSON.stringify(banners));
+  } catch (e) {
+    console.warn('Failed to save banners to localStorage:', e);
+  }
+}
+
+async function fetchBannersAsync() {
+  // 1. Try local server API
+  try {
+    const res = await fetch('/api/banners');
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        saveStoredBanners(data);
+        return data;
+      }
+    }
+  } catch (e) {}
+
+  // 2. Try Supabase direct if active
+  if (isSupabaseConfigured() && supabaseClient) {
+    try {
+      const { data, error } = await supabaseClient.from('banners').select('*').order('display_order', { ascending: true });
+      if (!error && Array.isArray(data) && data.length > 0) {
+        const mapped = data.map(b => ({
+          id: String(b.id),
+          image: b.image || '',
+          title: b.title || '',
+          subtitle: b.subtitle || '',
+          tag: b.tag || 'Showroom',
+          link: b.link || '#products',
+          active: b.active !== false,
+          order: Number(b.display_order != null ? b.display_order : 1) || 1
+        }));
+        saveStoredBanners(mapped);
+        return mapped;
+      }
+    } catch (e) {}
+  }
+
+  return getStoredBanners();
+}
+
+async function addBannerAsync(banner) {
+  const newBanner = {
+    id: banner.id || ('banner-' + Date.now()),
+    image: banner.image || '',
+    title: banner.title || '',
+    subtitle: banner.subtitle || '',
+    tag: banner.tag || 'Showroom',
+    link: banner.link || '#products',
+    active: banner.active !== false,
+    order: Number(banner.order) || 1
+  };
+
+  try {
+    await fetch('/api/banners', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newBanner)
+    });
+  } catch (e) {}
+
+  if (isSupabaseConfigured() && supabaseClient) {
+    try {
+      await supabaseClient.from('banners').insert({
+        id: newBanner.id,
+        image: newBanner.image,
+        title: newBanner.title,
+        subtitle: newBanner.subtitle,
+        tag: newBanner.tag,
+        link: newBanner.link,
+        active: newBanner.active,
+        display_order: newBanner.order
+      });
+    } catch (e) {}
+  }
+
+  const banners = getStoredBanners();
+  banners.push(newBanner);
+  saveStoredBanners(banners);
+  return newBanner;
+}
+
+async function updateBannerAsync(id, updates) {
+  try {
+    await fetch('/api/banners/' + encodeURIComponent(id), {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates)
+    });
+  } catch (e) {}
+
+  if (isSupabaseConfigured() && supabaseClient) {
+    try {
+      const dbUpdates = {};
+      if (updates.image !== undefined) dbUpdates.image = updates.image;
+      if (updates.title !== undefined) dbUpdates.title = updates.title;
+      if (updates.subtitle !== undefined) dbUpdates.subtitle = updates.subtitle;
+      if (updates.tag !== undefined) dbUpdates.tag = updates.tag;
+      if (updates.link !== undefined) dbUpdates.link = updates.link;
+      if (updates.active !== undefined) dbUpdates.active = updates.active;
+      if (updates.order !== undefined) dbUpdates.display_order = updates.order;
+      await supabaseClient.from('banners').update(dbUpdates).eq('id', id);
+    } catch (e) {}
+  }
+
+  const banners = getStoredBanners();
+  const idx = banners.findIndex(b => b.id === id);
+  if (idx !== -1) {
+    banners[idx] = { ...banners[idx], ...updates, id };
+    saveStoredBanners(banners);
+    return banners[idx];
+  }
+  return null;
+}
+
+async function deleteBannerAsync(id) {
+  try {
+    await fetch('/api/banners/' + encodeURIComponent(id), { method: 'DELETE' });
+  } catch (e) {}
+
+  if (isSupabaseConfigured() && supabaseClient) {
+    try {
+      await supabaseClient.from('banners').delete().eq('id', id);
+    } catch (e) {}
+  }
+
+  let banners = getStoredBanners();
+  banners = banners.filter(b => b.id !== id);
+  saveStoredBanners(banners);
+  return true;
+}
+
+async function resetBannersAsync() {
+  try {
+    await fetch('/api/banners/reset', { method: 'POST' });
+  } catch (e) {}
+  saveStoredBanners(DEFAULT_HERO_BANNERS);
+  return DEFAULT_HERO_BANNERS;
+}
+
+// =========================================================================
+// CUSTOMER QUERIES / LEADS ENGINE
+// =========================================================================
+function getStoredQueries() {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = localStorage.getItem(OM_QUERIES_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveStoredQueries(queries) {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(OM_QUERIES_STORAGE_KEY, JSON.stringify(queries));
+  } catch (e) {
+    console.warn('Failed to save queries to localStorage:', e);
+  }
+}
+
+async function fetchQueriesAsync() {
+  try {
+    const res = await fetch('/api/queries');
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        saveStoredQueries(data);
+        return data;
+      }
+    }
+  } catch (e) {}
+
+  if (isSupabaseConfigured() && supabaseClient) {
+    try {
+      const { data, error } = await supabaseClient.from('queries').select('*').order('created_at', { ascending: false });
+      if (!error && Array.isArray(data)) {
+        const mapped = data.map(q => ({
+          id: String(q.id),
+          productId: q.product_id || '',
+          productName: q.product_name || 'Product',
+          productBrand: q.product_brand || '',
+          productPrice: Number(q.product_price) || 0,
+          productImage: q.product_image || '',
+          customerName: q.customer_name || 'Customer',
+          customerPhone: q.customer_phone || '',
+          message: q.message || '',
+          status: q.status || 'new',
+          createdAt: q.created_at || new Date().toISOString()
+        }));
+        saveStoredQueries(mapped);
+        return mapped;
+      }
+    } catch (e) {}
+  }
+
+  return getStoredQueries();
+}
+
+async function submitProductEnquiryAsync(queryData) {
+  const newQuery = {
+    id: queryData.id || ('query-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5)),
+    productId: queryData.productId || '',
+    productName: queryData.productName || 'Product',
+    productBrand: queryData.productBrand || '',
+    productPrice: Number(queryData.productPrice) || 0,
+    productImage: queryData.productImage || '',
+    customerName: (queryData.customerName || 'Customer').trim(),
+    customerPhone: (queryData.customerPhone || '').trim(),
+    message: queryData.message || '',
+    status: queryData.status || 'new',
+    createdAt: new Date().toISOString()
+  };
+
+  try {
+    await fetch('/api/queries', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newQuery)
+    });
+  } catch (e) {}
+
+  if (isSupabaseConfigured() && supabaseClient) {
+    try {
+      await supabaseClient.from('queries').insert({
+        id: newQuery.id,
+        product_id: newQuery.productId,
+        product_name: newQuery.productName,
+        product_brand: newQuery.productBrand,
+        product_price: newQuery.productPrice,
+        product_image: newQuery.productImage,
+        customer_name: newQuery.customerName,
+        customer_phone: newQuery.customerPhone,
+        message: newQuery.message,
+        status: newQuery.status
+      });
+    } catch (e) {}
+  }
+
+  const queries = getStoredQueries();
+  queries.unshift(newQuery);
+  saveStoredQueries(queries);
+  return newQuery;
+}
+
+async function updateQueryStatusAsync(id, status) {
+  try {
+    await fetch('/api/queries/' + encodeURIComponent(id), {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status })
+    });
+  } catch (e) {}
+
+  if (isSupabaseConfigured() && supabaseClient) {
+    try {
+      await supabaseClient.from('queries').update({ status }).eq('id', id);
+    } catch (e) {}
+  }
+
+  const queries = getStoredQueries();
+  const idx = queries.findIndex(q => q.id === id);
+  if (idx !== -1) {
+    queries[idx].status = status;
+    saveStoredQueries(queries);
+    return queries[idx];
+  }
+  return null;
+}
+
+async function deleteQueryAsync(id) {
+  try {
+    await fetch('/api/queries/' + encodeURIComponent(id), { method: 'DELETE' });
+  } catch (e) {}
+
+  if (isSupabaseConfigured() && supabaseClient) {
+    try {
+      await supabaseClient.from('queries').delete().eq('id', id);
+    } catch (e) {}
+  }
+
+  let queries = getStoredQueries();
+  queries = queries.filter(q => q.id !== id);
+  saveStoredQueries(queries);
+  return true;
+}
+
+async function clearQueriesAsync() {
+  try {
+    await fetch('/api/queries/clear', { method: 'POST' });
+  } catch (e) {}
+
+  if (isSupabaseConfigured() && supabaseClient) {
+    try {
+      await supabaseClient.from('queries').delete().neq('id', '___none___');
+    } catch (e) {}
+  }
+
+  saveStoredQueries([]);
+  return true;
+}
+
 // Auto-initialize client and bootstrap public config on load
 if (typeof window !== 'undefined') {
   initSupabaseClient();
@@ -995,6 +1359,23 @@ if (typeof window !== 'undefined') {
 }
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
+    OM_BANNERS_STORAGE_KEY,
+    OM_QUERIES_STORAGE_KEY,
+    DEFAULT_HERO_BANNERS,
+    getStoredBanners,
+    saveStoredBanners,
+    fetchBannersAsync,
+    addBannerAsync,
+    updateBannerAsync,
+    deleteBannerAsync,
+    resetBannersAsync,
+    getStoredQueries,
+    saveStoredQueries,
+    fetchQueriesAsync,
+    submitProductEnquiryAsync,
+    updateQueryStatusAsync,
+    deleteQueryAsync,
+    clearQueriesAsync,
     OM_STORAGE_KEY,
     OM_SUPABASE_CONFIG_KEY,
     OM_SAMPLE_PRODUCTS,

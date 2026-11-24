@@ -1,7 +1,7 @@
 {
   "name": "om-mobile-electronics",
   "version": "1.0.0",
-  "description": "OM Mobile & Electronics (Branch No. 4, Dhanore, Pune) - Storefront & Admin Portal",
+  "description": "OM Mobile & Electronics (Dhanore, Dhanore, Pune) - Storefront & Admin Portal",
   "main": "index.js",
   "scripts": {
     "start": "node local-server.js",

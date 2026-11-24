@@ -1,5 +1,5 @@
 /* =========================================================================
-   OM MOBILE & ELECTRONICS (Branch No. 4, Dhanore, Pune)
+   OM MOBILE & ELECTRONICS (PCS Chowk, Dhanore, Pune)
    Production Vercel Serverless Function API Handler (/api/*)
    ========================================================================= */
 
@@ -45,6 +45,67 @@ function dbToProduct(row) {
     specs: (typeof row.specs === 'object' && row.specs !== null) ? row.specs : {},
     colors: Array.isArray(row.colors) ? row.colors : [],
     createdAt: row.created_at || new Date().toISOString()
+  };
+}
+
+
+function dbToBanner(row) {
+  if (!row) return null;
+  return {
+    id: String(row.id),
+    image: row.image || '',
+    title: row.title || '',
+    subtitle: row.subtitle || '',
+    tag: row.tag || 'Showroom',
+    link: row.link || '#products',
+    active: row.active !== false,
+    order: Number(row.display_order != null ? row.display_order : (row.order != null ? row.order : 1)) || 1,
+    createdAt: row.created_at || new Date().toISOString()
+  };
+}
+
+function bannerToDb(b) {
+  return {
+    id: String(b.id),
+    image: String(b.image || ''),
+    title: String(b.title || ''),
+    subtitle: String(b.subtitle || ''),
+    tag: String(b.tag || 'Showroom'),
+    link: String(b.link || '#products'),
+    active: b.active !== false,
+    display_order: Number(b.order != null ? b.order : (b.display_order != null ? b.display_order : 1)) || 1
+  };
+}
+
+function dbToQuery(row) {
+  if (!row) return null;
+  return {
+    id: String(row.id),
+    productId: row.product_id || '',
+    productName: row.product_name || 'Device',
+    productBrand: row.product_brand || '',
+    productPrice: Number(row.product_price) || 0,
+    productImage: row.product_image || '',
+    customerName: row.customer_name || 'Customer',
+    customerPhone: row.customer_phone || '',
+    message: row.message || '',
+    status: row.status || 'new',
+    createdAt: row.created_at || new Date().toISOString()
+  };
+}
+
+function queryToDb(q) {
+  return {
+    id: String(q.id),
+    product_id: String(q.productId || q.product_id || ''),
+    product_name: String(q.productName || q.product_name || 'Device'),
+    product_brand: String(q.productBrand || q.product_brand || ''),
+    product_price: Number(q.productPrice != null ? q.productPrice : (q.product_price != null ? q.product_price : 0)) || 0,
+    product_image: String(q.productImage || q.product_image || ''),
+    customer_name: String(q.customerName || q.customer_name || 'Customer'),
+    customer_phone: String(q.customerPhone || q.customer_phone || ''),
+    message: String(q.message || ''),
+    status: String(q.status || 'new')
   };
 }
 
@@ -147,7 +208,7 @@ module.exports = async (req, res) => {
       storageEngine: isCloudActive() ? 'Supabase Cloud PostgreSQL' : 'Local Fallback',
       supabaseUrl: SUPABASE_URL,
       supabaseAnonKey: SUPABASE_ANON_KEY,
-      storeName: 'OM Mobile & Electronics (Branch No. 4, Dhanore)',
+      storeName: 'OM Mobile & Electronics (Dhanore, Dhanore)',
       version: '2.1.0-production'
     });
   }
@@ -158,8 +219,8 @@ module.exports = async (req, res) => {
       supabaseUrl: SUPABASE_URL,
       supabaseAnonKey: SUPABASE_ANON_KEY,
       cloudConfigured: isCloudActive(),
-      storeName: 'OM Mobile & Electronics (Branch No. 4, Dhanore)',
-      branch: 'Branch No. 4, Dhanore, Pune',
+      storeName: 'OM Mobile & Electronics (Dhanore, Dhanore)',
+      branch: 'PCS Chowk, Dhanore, Pune',
       phone: '+91 98220 12345'
     });
   }
@@ -173,7 +234,7 @@ module.exports = async (req, res) => {
         success: true,
         message: 'Authenticated successfully',
         adminName: 'Gaurav Bhosle',
-        branch: 'Branch No. 4, Dhanore'
+        branch: 'Dhanore Showroom, Dhanore'
       });
     } else {
       return sendJson(res, 401, {
@@ -340,6 +401,88 @@ module.exports = async (req, res) => {
       }
     }
     return sendJson(res, 200, { success: true, count: 0 });
+  }
+
+  // 10. Banners
+  if (pathname.includes('/banners')) {
+    if (req.method === 'GET') {
+      if (isCloudActive()) {
+        try {
+          const resp = await supabaseFetch('/banners?select=*&order=display_order.asc');
+          if (resp.ok) {
+            const data = await resp.json();
+            return sendJson(res, 200, data.map(dbToBanner), true);
+          }
+        } catch (e) {
+          console.error('Supabase banners error:', e);
+        }
+      }
+      return sendJson(res, 200, [], false);
+    }
+    if (req.method === 'POST') {
+      const b = await parseBody(req);
+      const newB = { ...b, id: b.id || ('banner-' + Date.now()) };
+      if (isCloudActive()) {
+        try {
+          await supabaseFetch('/banners', { method: 'POST', body: JSON.stringify(bannerToDb(newB)) });
+        } catch (e) { console.error('Supabase banner add error:', e); }
+      }
+      return sendJson(res, 201, { success: true, banner: newB });
+    }
+    if (req.method === 'DELETE') {
+      const id = req.query?.id || parsedUrl.searchParams.get('id') || decodeURIComponent(parsedUrl.pathname.split('/').pop());
+      if (isCloudActive() && id) {
+        try {
+          await supabaseFetch(`/banners?id=eq.${encodeURIComponent(id)}`, { method: 'DELETE' });
+        } catch (e) { console.error('Supabase banner delete error:', e); }
+      }
+      return sendJson(res, 200, { success: true, id });
+    }
+  }
+
+  // 11. Customer Queries
+  if (pathname.includes('/queries')) {
+    if (req.method === 'GET') {
+      if (isCloudActive()) {
+        try {
+          const resp = await supabaseFetch('/queries?select=*&order=created_at.desc');
+          if (resp.ok) {
+            const data = await resp.json();
+            return sendJson(res, 200, data.map(dbToQuery), true);
+          }
+        } catch (e) { console.error('Supabase queries error:', e); }
+      }
+      return sendJson(res, 200, [], false);
+    }
+    if (req.method === 'POST') {
+      const q = await parseBody(req);
+      const newQ = { ...q, id: q.id || ('query-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5)) };
+      if (isCloudActive()) {
+        try {
+          await supabaseFetch('/queries', { method: 'POST', body: JSON.stringify(queryToDb(newQ)) });
+        } catch (e) { console.error('Supabase query add error:', e); }
+      }
+      return sendJson(res, 201, { success: true, query: newQ });
+    }
+    if (req.method === 'PUT') {
+      const id = req.query?.id || parsedUrl.searchParams.get('id') || decodeURIComponent(parsedUrl.pathname.split('/').pop());
+      const updates = await parseBody(req);
+      if (isCloudActive() && id) {
+        try {
+          await supabaseFetch(`/queries?id=eq.${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify(queryToDb(updates)) });
+        } catch (e) { console.error('Supabase query update error:', e); }
+      }
+      return sendJson(res, 200, { success: true, query: { ...updates, id } });
+    }
+    if (req.method === 'DELETE') {
+      const id = req.query?.id || parsedUrl.searchParams.get('id') || decodeURIComponent(parsedUrl.pathname.split('/').pop());
+      if (isCloudActive() && id) {
+        try {
+          await supabaseFetch(`/queries?id=eq.${encodeURIComponent(id)}`, { method: 'DELETE' });
+        } catch (e) { console.error('Supabase query delete error:', e); }
+      }
+      return sendJson(res, 200, { success: true, id });
+    }
   }
 
   return sendJson(res, 404, { error: 'Route not found' });

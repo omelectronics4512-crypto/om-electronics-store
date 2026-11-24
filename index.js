@@ -1,5 +1,5 @@
 /* =========================================================================
-   OM MOBILE & ELECTRONICS (Branch No. 4, Dhanore, Pune)
+   OM MOBILE & ELECTRONICS (Dhanore Showroom, Dhanore, Pune)
    Universal Entrypoint for Vercel Serverless / Node.js Runtime
    ========================================================================= */
 

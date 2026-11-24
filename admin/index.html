@@ -113,7 +113,7 @@
                src="logo.png">
         </div>
         <h1 class="font-headline text-xl sm:text-2xl font-extrabold text-on-surface">Store Admin Portal</h1>
-        <p class="text-xs text-on-surface-variant mt-1">OM Mobile &amp; Electronics • Dhanore Branch No. 4, Pune</p>
+        <p class="text-xs text-on-surface-variant mt-1">OM Mobile &amp; Electronics • Dhanore Showroom, Pune</p>
         <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider mt-2.5">
           <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
           <span>Restricted Management Access</span>
@@ -189,7 +189,7 @@
           <div>
             <div class="flex items-center gap-2">
               <span class="font-headline text-base font-extrabold text-on-surface">OM Admin</span>
-              <span class="px-2 py-0.2 rounded bg-primary-light text-primary-dark text-[10px] font-bold uppercase">Branch No. 4</span>
+              <span class="px-2 py-0.5 rounded bg-primary-light text-primary-dark text-[10px] font-bold uppercase">Dhanore</span>
             </div>
             <span class="hidden sm:inline text-[11px] text-outline">Dhanore Showroom • Product Catalog Manager</span>
           </div>
@@ -219,6 +219,35 @@
 
     <!-- Main Dashboard Container -->
     <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+      
+      <!-- Top Navigation Tabs (Products | Hero Banners | Customer Queries) -->
+      <div class="flex items-center gap-2 border-b border-surface-mid pb-3 overflow-x-auto no-scrollbar">
+        <button type="button" onclick="switchAdminTab('products')" id="admin-tab-btn-products" 
+                class="admin-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all bg-primary text-white shadow-xs flex items-center gap-2 shrink-0">
+          <span class="material-symbols-outlined text-[18px]">inventory_2</span>
+          <span>Products Catalog</span>
+          <span class="px-2 py-0.5 rounded-full bg-white/20 text-[10px] font-extrabold" id="tab-count-products">0</span>
+        </button>
+        
+        <button type="button" onclick="switchAdminTab('banners')" id="admin-tab-btn-banners" 
+                class="admin-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-surface-lowest text-on-surface-variant hover:text-on-surface hover:bg-surface-mid border border-surface-mid flex items-center gap-2 shrink-0">
+          <span class="material-symbols-outlined text-[18px]">view_carousel</span>
+          <span>Hero Banners</span>
+          <span class="px-2 py-0.5 rounded-full bg-surface-mid text-[10px] font-extrabold" id="tab-count-banners">0</span>
+        </button>
+
+        <button type="button" onclick="switchAdminTab('queries')" id="admin-tab-btn-queries" 
+                class="admin-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-surface-lowest text-on-surface-variant hover:text-on-surface hover:bg-surface-mid border border-surface-mid flex items-center gap-2 shrink-0">
+          <span class="material-symbols-outlined text-[18px]">contact_support</span>
+          <span>Customer Queries</span>
+          <span class="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[10px] font-extrabold" id="tab-count-queries">0</span>
+        </button>
+      </div>
+
+      <!-- =====================================================================
+           VIEW 1: PRODUCTS CATALOG MANAGEMENT
+           ===================================================================== -->
+      <div id="admin-view-products" class="admin-tab-view space-y-6">
       
       <!-- Compact Modern KPI Ribbon -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 bg-surface-lowest p-3 sm:p-4 rounded-2xl border border-surface-mid/80 shadow-xs">
@@ -364,6 +393,171 @@
 
       </div>
 
+      </div><!-- END VIEW 1: PRODUCTS -->
+
+      <!-- =====================================================================
+           VIEW 2: HERO BANNERS MANAGEMENT
+           ===================================================================== -->
+      <div id="admin-view-banners" class="admin-tab-view hidden space-y-6">
+        
+        <!-- Banners KPI Ribbon -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 bg-surface-lowest p-3 sm:p-4 rounded-2xl border border-surface-mid/80 shadow-xs">
+          <div class="p-2 sm:px-3 sm:py-1.5 flex items-center gap-3 border-r border-surface-mid/60">
+            <div class="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[20px]">view_carousel</span>
+            </div>
+            <div>
+              <div class="text-[10px] sm:text-[11px] font-bold text-outline uppercase tracking-wider">Total Banners</div>
+              <div class="font-headline text-lg sm:text-2xl font-extrabold text-on-surface" id="stat-total-banners">0</div>
+            </div>
+          </div>
+          <div class="p-2 sm:px-3 sm:py-1.5 flex items-center gap-3 sm:border-r border-surface-mid/60">
+            <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[20px]">visibility</span>
+            </div>
+            <div>
+              <div class="text-[10px] sm:text-[11px] font-bold text-outline uppercase tracking-wider">Active on Homepage</div>
+              <div class="font-headline text-lg sm:text-2xl font-extrabold text-emerald-600" id="stat-active-banners">0</div>
+            </div>
+          </div>
+          <div class="p-2 sm:px-3 sm:py-1.5 col-span-2 sm:col-span-1 flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[20px]">auto_mode</span>
+            </div>
+            <div>
+              <div class="text-[10px] sm:text-[11px] font-bold text-outline uppercase tracking-wider">Rotation Cycle</div>
+              <div class="font-headline text-sm sm:text-base font-extrabold text-secondary">Auto (4 Seconds)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Banners Action Bar -->
+        <div class="p-3.5 sm:p-4 rounded-2xl bg-surface-lowest border border-surface-mid/80 shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <div>
+            <h3 class="font-headline text-sm sm:text-base font-bold text-on-surface">Landing Page Hero Banners</h3>
+            <p class="text-xs text-outline">Manage auto-scrolling visual banners shown on the storefront homepage</p>
+          </div>
+          <div class="flex items-center gap-2 self-end sm:self-auto">
+            <button type="button" onclick="handleResetDefaultBanners()" 
+                    class="px-3 py-2 rounded-xl bg-surface-low hover:bg-surface-mid text-xs font-semibold text-on-surface border border-surface-mid transition-colors flex items-center gap-1.5" title="Reset to standard banners">
+              <span class="material-symbols-outlined text-[16px]">restart_alt</span>
+              <span class="hidden sm:inline">Reset Defaults</span>
+            </button>
+            <button type="button" onclick="openAddBannerModal()" 
+                    class="px-4 py-2 rounded-xl bg-primary hover:bg-primary-container text-white text-xs font-bold shadow-xs transition-all flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[18px]">add_photo_alternate</span>
+              <span>Add Banner</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Banners Cards Grid Container -->
+        <div id="admin-banners-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Dynamically populated -->
+        </div>
+
+      </div><!-- END VIEW 2: BANNERS -->
+
+      <!-- =====================================================================
+           VIEW 3: CUSTOMER QUERIES & LEADS MANAGEMENT
+           ===================================================================== -->
+      <div id="admin-view-queries" class="admin-tab-view hidden space-y-6">
+        
+        <!-- Queries KPI Ribbon -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 bg-surface-lowest p-3 sm:p-4 rounded-2xl border border-surface-mid/80 shadow-xs">
+          <div class="p-2 sm:px-3 sm:py-1.5 flex items-center gap-3 border-r border-surface-mid/60">
+            <div class="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[20px]">contact_support</span>
+            </div>
+            <div>
+              <div class="text-[10px] sm:text-[11px] font-bold text-outline uppercase tracking-wider">Total Enquiries</div>
+              <div class="font-headline text-lg sm:text-2xl font-extrabold text-on-surface" id="stat-total-queries">0</div>
+            </div>
+          </div>
+          <div class="p-2 sm:px-3 sm:py-1.5 flex items-center gap-3 sm:border-r border-surface-mid/60">
+            <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[20px]">mark_chat_unread</span>
+            </div>
+            <div>
+              <div class="text-[10px] sm:text-[11px] font-bold text-outline uppercase tracking-wider">New Leads</div>
+              <div class="font-headline text-lg sm:text-2xl font-extrabold text-emerald-600" id="stat-new-queries">0</div>
+            </div>
+          </div>
+          <div class="p-2 sm:px-3 sm:py-1.5 col-span-2 sm:col-span-1 flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[20px]">call_made</span>
+            </div>
+            <div>
+              <div class="text-[10px] sm:text-[11px] font-bold text-outline uppercase tracking-wider">Contacted / Closed</div>
+              <div class="font-headline text-lg sm:text-2xl font-extrabold text-blue-600" id="stat-contacted-queries">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Queries Action & Filter Toolbar -->
+        <div class="p-3.5 sm:p-4 rounded-2xl bg-surface-lowest border border-surface-mid/80 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+          
+          <!-- Filter Tabs & Search -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 flex-1 max-w-xl">
+            <div class="relative flex-1">
+              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-outline">search</span>
+              <input type="text" id="admin-queries-search" placeholder="Search by customer name, phone, or product..." 
+                     oninput="renderAdminQueries()" 
+                     class="w-full pl-9 pr-3 py-2 rounded-xl bg-surface-low border border-outline-variant/50 text-xs focus:outline-none focus:ring-2 focus:ring-primary/20">
+            </div>
+            <select id="admin-queries-status-filter" onchange="renderAdminQueries()" 
+                    class="px-3 py-2 rounded-xl bg-surface-low border border-outline-variant/50 text-xs font-semibold text-on-surface">
+              <option value="all">All Enquiries</option>
+              <option value="new">New Leads</option>
+              <option value="contacted">Contacted</option>
+              <option value="closed">Closed</option>
+            </select>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex items-center gap-2 self-end sm:self-auto">
+            <button type="button" onclick="handleRefreshQueries()" 
+                    class="px-3 py-2 rounded-xl bg-surface-low hover:bg-surface-mid text-xs font-semibold text-on-surface border border-surface-mid transition-colors flex items-center gap-1.5" title="Refresh leads list">
+              <span class="material-symbols-outlined text-[16px]">sync</span>
+              <span>Sync</span>
+            </button>
+            <button type="button" onclick="handleClearAllQueries()" 
+                    class="px-3 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-xs font-semibold text-red-600 transition-colors flex items-center gap-1.5" title="Clear lead entries">
+              <span class="material-symbols-outlined text-[16px]">delete_sweep</span>
+              <span class="hidden sm:inline">Clear All</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Queries Table / List View -->
+        <div class="rounded-2xl bg-surface-lowest border border-surface-mid shadow-subtle overflow-hidden">
+          <div class="p-4 border-b border-surface-mid flex items-center justify-between">
+            <h2 class="font-headline text-base font-bold text-on-surface">Customer Enquiries &amp; Stock Requests</h2>
+            <span class="text-xs text-outline" id="admin-queries-count">0 enquiries loaded</span>
+          </div>
+          
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-surface-low/60 text-outline font-bold border-b border-surface-mid">
+                  <th class="p-3.5 pl-4">Date &amp; Time</th>
+                  <th class="p-3.5">Customer Contact</th>
+                  <th class="p-3.5">Inquired Product</th>
+                  <th class="p-3.5">Customer Message</th>
+                  <th class="p-3.5">Lead Status</th>
+                  <th class="p-3.5 text-right pr-4">Quick Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-queries-tbody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- END VIEW 3: QUERIES -->
+
     </main>
 
   </div>
@@ -382,7 +576,7 @@
           </div>
           <div>
             <h3 class="font-headline text-base font-bold text-on-surface" id="modal-product-title">Add New Product</h3>
-            <span class="text-[11px] text-outline">Branch No. 4, Dhanore Catalog</span>
+            <span class="text-[11px] text-outline">Dhanore Showroom Catalog</span>
           </div>
         </div>
         <button type="button" onclick="closeProductEditorModal()" class="p-1.5 rounded-xl text-outline hover:text-on-surface hover:bg-surface-low transition-colors">
@@ -458,7 +652,7 @@
           <div>
             <label class="block font-bold text-on-surface mb-1">Stock Status</label>
             <select id="prod-stock-input" class="w-full px-3 py-2.5 rounded-xl bg-surface-low border border-outline-variant/60 text-xs font-semibold">
-              <option value="In Stock - Dhanore Br. 4">In Stock - Dhanore Br. 4</option>
+              <option value="In Stock - Dhanore">In Stock - Dhanore</option>
               <option value="Ready at Dhanore Counter">Ready at Dhanore Counter</option>
               <option value="Only 2 Units Left">Only 2 Units Left</option>
               <option value="Available on Order">Available on Order</option>
@@ -1147,6 +1341,9 @@
       document.getElementById("auth-gate-screen").classList.add("hidden");
       document.getElementById("admin-dashboard-app").classList.remove("hidden");
       refreshAdminProductsTable();
+      loadAdminBanners();
+      loadAdminQueries();
+      updateAdminTabCounters();
       if (typeof fetchStoreProductsAsync === 'function') {
         try {
           await fetchStoreProductsAsync();
@@ -1183,12 +1380,482 @@
       showAdminToast("Sync complete! Products now live on all devices.");
     }
 
+
+    // =========================================================================
+    // ADMIN MULTI-PAGE NAVIGATION TABS
+    // =========================================================================
+    let currentAdminTab = 'products';
+    let adminBanners = [];
+    let adminQueries = [];
+
+    function switchAdminTab(tabName) {
+      currentAdminTab = tabName;
+
+      // Update Tab Button Styles
+      document.querySelectorAll(".admin-tab-btn").forEach(btn => {
+        btn.className = "admin-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-surface-lowest text-on-surface-variant hover:text-on-surface hover:bg-surface-mid border border-surface-mid flex items-center gap-2 shrink-0";
+      });
+
+      const activeBtn = document.getElementById("admin-tab-btn-" + tabName);
+      if (activeBtn) {
+        activeBtn.className = "admin-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all bg-primary text-white shadow-xs flex items-center gap-2 shrink-0";
+      }
+
+      // Toggle View Sections
+      document.querySelectorAll(".admin-tab-view").forEach(view => {
+        view.classList.add("hidden");
+      });
+
+      const targetView = document.getElementById("admin-view-" + tabName);
+      if (targetView) {
+        targetView.classList.remove("hidden");
+      }
+
+      // Load View Data
+      if (tabName === 'banners') {
+        loadAdminBanners();
+      } else if (tabName === 'queries') {
+        loadAdminQueries();
+      }
+    }
+
+    function updateAdminTabCounters() {
+      const prodList = typeof getStoredProducts === 'function' ? getStoredProducts() : [];
+      const prodBadge = document.getElementById("tab-count-products");
+      if (prodBadge) prodBadge.textContent = prodList.length;
+
+      const bannerBadge = document.getElementById("tab-count-banners");
+      if (bannerBadge) bannerBadge.textContent = adminBanners.length;
+
+      const newQueriesCount = adminQueries.filter(q => q.status === 'new').length;
+      const queryBadge = document.getElementById("tab-count-queries");
+      if (queryBadge) {
+        queryBadge.textContent = newQueriesCount;
+        queryBadge.className = newQueriesCount > 0 ? 
+          "px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[10px] font-extrabold animate-pulse" : 
+          "px-2 py-0.5 rounded-full bg-surface-mid text-on-surface-variant text-[10px] font-extrabold";
+      }
+    }
+
+    // =========================================================================
+    // HERO BANNERS MANAGEMENT ENGINE
+    // =========================================================================
+    async function loadAdminBanners() {
+      try {
+        if (typeof window.fetchBannersAsync === 'function') {
+          adminBanners = await window.fetchBannersAsync();
+        } else if (typeof window.getStoredBanners === 'function') {
+          adminBanners = window.getStoredBanners();
+        } else {
+          adminBanners = window.DEFAULT_HERO_BANNERS || [];
+        }
+      } catch (e) {
+        adminBanners = window.DEFAULT_HERO_BANNERS || [];
+      }
+      renderAdminBanners();
+      updateAdminTabCounters();
+    }
+
+    function renderAdminBanners() {
+      const grid = document.getElementById("admin-banners-grid");
+      if (!grid) return;
+
+      const statTotal = document.getElementById("stat-total-banners");
+      const statActive = document.getElementById("stat-active-banners");
+      if (statTotal) statTotal.textContent = adminBanners.length;
+      if (statActive) statActive.textContent = adminBanners.filter(b => b.active !== false).length;
+
+      if (adminBanners.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-12 text-center bg-surface-lowest rounded-2xl border border-surface-mid">
+            <span class="material-symbols-outlined text-4xl text-outline mb-2">view_carousel</span>
+            <h4 class="font-headline text-base font-bold text-on-surface">No Hero Banners Added</h4>
+            <p class="text-xs text-outline mt-1 mb-4">Add high-resolution banners or restore defaults for the landing page.</p>
+            <button type="button" onclick="openAddBannerModal()" class="px-4 py-2 rounded-xl bg-primary text-white text-xs font-bold">Add Banner</button>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = adminBanners.sort((a, b) => (a.order || 1) - (b.order || 1)).map((banner, idx) => `
+        <div class="rounded-2xl bg-surface-lowest border border-surface-mid shadow-xs overflow-hidden flex flex-col group">
+          <!-- Banner Media Preview -->
+          <div class="relative h-44 bg-slate-900 overflow-hidden">
+            <img src="${banner.image}" alt="${banner.title}" class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-between p-3.5">
+              <div class="flex items-center justify-between">
+                <span class="px-2 py-0.5 rounded-full bg-white/90 text-gray-900 text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm">
+                  Slide #${banner.order || idx + 1}
+                </span>
+                <span class="px-2 py-0.5 rounded-full ${banner.active !== false ? 'bg-emerald-500 text-white' : 'bg-gray-700 text-gray-300'} text-[10px] font-bold">
+                  ${banner.active !== false ? 'Active' : 'Inactive'}
+                </span>
+              </div>
+              <div>
+                ${banner.tag ? `<span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wide block mb-0.5">${banner.tag}</span>` : ''}
+                <h4 class="font-headline text-sm font-extrabold text-white line-clamp-1">${banner.title || 'Untitled Banner'}</h4>
+              </div>
+            </div>
+          </div>
+
+          <!-- Banner Card Body -->
+          <div class="p-4 flex-1 flex flex-col justify-between gap-3 text-xs">
+            <div>
+              <p class="text-outline text-[11px] line-clamp-2">${banner.subtitle || 'No subtitle provided.'}</p>
+            </div>
+
+            <div class="pt-3 border-t border-surface-mid flex items-center justify-between gap-2">
+              <button type="button" onclick="handleToggleBannerActive('${banner.id}')" 
+                      class="px-2.5 py-1.5 rounded-lg border ${banner.active !== false ? 'border-amber-300 text-amber-700 bg-amber-50' : 'border-emerald-300 text-emerald-700 bg-emerald-50'} text-[11px] font-bold transition-colors">
+                ${banner.active !== false ? 'Disable' : 'Enable'}
+              </button>
+              
+              <div class="flex items-center gap-1.5">
+                <button type="button" onclick="openEditBannerModal('${banner.id}')" 
+                        class="p-1.5 rounded-lg hover:bg-surface-mid text-outline hover:text-on-surface transition-colors" title="Edit Banner">
+                  <span class="material-symbols-outlined text-[17px]">edit</span>
+                </button>
+                <button type="button" onclick="handleDeleteBanner('${banner.id}')" 
+                        class="p-1.5 rounded-lg hover:bg-red-50 text-red-500 transition-colors" title="Delete Banner">
+                  <span class="material-symbols-outlined text-[17px]">delete</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openAddBannerModal() {
+      document.getElementById("banner-modal-title").textContent = "Add Hero Banner";
+      document.getElementById("banner-edit-id").value = "";
+      document.getElementById("banner-image-input").value = "";
+      document.getElementById("banner-title-input").value = "";
+      document.getElementById("banner-subtitle-input").value = "";
+      document.getElementById("banner-tag-input").value = "Official Showroom";
+      document.getElementById("banner-order-input").value = adminBanners.length + 1;
+      document.getElementById("banner-active-input").checked = true;
+      previewBannerImage("");
+
+      document.getElementById("banner-modal").classList.remove("hidden");
+    }
+
+    function openEditBannerModal(id) {
+      const banner = adminBanners.find(b => b.id === id);
+      if (!banner) return;
+
+      document.getElementById("banner-modal-title").textContent = "Edit Hero Banner";
+      document.getElementById("banner-edit-id").value = banner.id;
+      document.getElementById("banner-image-input").value = banner.image || "";
+      document.getElementById("banner-title-input").value = banner.title || "";
+      document.getElementById("banner-subtitle-input").value = banner.subtitle || "";
+      document.getElementById("banner-tag-input").value = banner.tag || "";
+      document.getElementById("banner-order-input").value = banner.order || 1;
+      document.getElementById("banner-active-input").checked = banner.active !== false;
+      previewBannerImage(banner.image || "");
+
+      document.getElementById("banner-modal").classList.remove("hidden");
+    }
+
+    function closeBannerModal() {
+      document.getElementById("banner-modal").classList.add("hidden");
+    }
+
+    function previewBannerImage(url) {
+      const img = document.getElementById("banner-preview-img");
+      const ph = document.getElementById("banner-preview-placeholder");
+      if (!img || !ph) return;
+
+      if (url && url.trim()) {
+        img.src = url;
+        img.classList.remove("hidden");
+        ph.classList.add("hidden");
+        img.onerror = () => {
+          img.classList.add("hidden");
+          ph.classList.remove("hidden");
+        };
+      } else {
+        img.classList.add("hidden");
+        ph.classList.remove("hidden");
+      }
+    }
+
+    function handleBannerFileUpload(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const rawImg = new Image();
+        rawImg.onload = function() {
+          try {
+            const maxDimension = 1600;
+            let width = rawImg.width;
+            let height = rawImg.height;
+
+            if (width > maxDimension || height > maxDimension) {
+              if (width > height) {
+                height = Math.round((height * maxDimension) / width);
+                width = maxDimension;
+              } else {
+                width = Math.round((width * maxDimension) / height);
+                height = maxDimension;
+              }
+            }
+
+            const canvas = document.createElement("canvas");
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(rawImg, 0, 0, width, height);
+
+            const compressedBase64 = canvas.toDataURL("image/jpeg", 0.78);
+            document.getElementById("banner-image-input").value = compressedBase64;
+            previewBannerImage(compressedBase64);
+            showAdminToast("Banner photo compressed and ready!");
+          } catch (err) {
+            document.getElementById("banner-image-input").value = event.target.result;
+            previewBannerImage(event.target.result);
+          }
+        };
+        rawImg.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+      e.target.value = "";
+    }
+
+    async function handleSaveBannerSubmit(e) {
+      e.preventDefault();
+      const editId = document.getElementById("banner-edit-id").value;
+      const image = document.getElementById("banner-image-input").value.trim();
+      const title = document.getElementById("banner-title-input").value.trim();
+      const subtitle = document.getElementById("banner-subtitle-input").value.trim();
+      const tag = document.getElementById("banner-tag-input").value.trim();
+      const order = Number(document.getElementById("banner-order-input").value) || 1;
+      const active = document.getElementById("banner-active-input").checked;
+
+      const bannerData = { image, title, subtitle, tag, order, active };
+
+      if (editId) {
+        if (typeof window.updateBannerAsync === 'function') {
+          await window.updateBannerAsync(editId, bannerData);
+        }
+        showAdminToast("Banner updated successfully!");
+      } else {
+        if (typeof window.addBannerAsync === 'function') {
+          await window.addBannerAsync(bannerData);
+        }
+        showAdminToast("New banner added successfully!");
+      }
+
+      closeBannerModal();
+      await loadAdminBanners();
+    }
+
+    async function handleToggleBannerActive(id) {
+      const banner = adminBanners.find(b => b.id === id);
+      if (!banner) return;
+      const newStatus = banner.active === false ? true : false;
+      if (typeof window.updateBannerAsync === 'function') {
+        await window.updateBannerAsync(id, { active: newStatus });
+      }
+      showAdminToast(newStatus ? "Banner enabled!" : "Banner disabled.");
+      await loadAdminBanners();
+    }
+
+    async function handleDeleteBanner(id) {
+      if (!confirm("Are you sure you want to delete this banner?")) return;
+      if (typeof window.deleteBannerAsync === 'function') {
+        await window.deleteBannerAsync(id);
+      }
+      showAdminToast("Banner deleted.");
+      await loadAdminBanners();
+    }
+
+    async function handleResetDefaultBanners() {
+      if (!confirm("Reset banners to default OM Mobile showroom slides?")) return;
+      if (typeof window.resetBannersAsync === 'function') {
+        await window.resetBannersAsync();
+      }
+      showAdminToast("Reset to default banners.");
+      await loadAdminBanners();
+    }
+
+    // =========================================================================
+    // CUSTOMER QUERIES & LEADS ENGINE
+    // =========================================================================
+    async function loadAdminQueries() {
+      try {
+        if (typeof window.fetchQueriesAsync === 'function') {
+          adminQueries = await window.fetchQueriesAsync();
+        } else if (typeof window.getStoredQueries === 'function') {
+          adminQueries = window.getStoredQueries();
+        } else {
+          adminQueries = [];
+        }
+      } catch (e) {
+        adminQueries = [];
+      }
+      renderAdminQueries();
+      updateAdminTabCounters();
+    }
+
+    function renderAdminQueries() {
+      const tbody = document.getElementById("admin-queries-tbody");
+      const countLabel = document.getElementById("admin-queries-count");
+      if (!tbody) return;
+
+      const search = (document.getElementById("admin-queries-search")?.value || "").trim().toLowerCase();
+      const statusFilter = document.getElementById("admin-queries-status-filter")?.value || "all";
+
+      const statTotal = document.getElementById("stat-total-queries");
+      const statNew = document.getElementById("stat-new-queries");
+      const statContacted = document.getElementById("stat-contacted-queries");
+
+      const totalCount = adminQueries.length;
+      const newCount = adminQueries.filter(q => q.status === 'new').length;
+      const contactedCount = adminQueries.filter(q => q.status !== 'new').length;
+
+      if (statTotal) statTotal.textContent = totalCount;
+      if (statNew) statNew.textContent = newCount;
+      if (statContacted) statContacted.textContent = contactedCount;
+
+      const filtered = adminQueries.filter(q => {
+        if (statusFilter !== 'all' && q.status !== statusFilter) return false;
+        if (!search) return true;
+        return (q.customerName && q.customerName.toLowerCase().includes(search)) ||
+               (q.customerPhone && q.customerPhone.includes(search)) ||
+               (q.productName && q.productName.toLowerCase().includes(search)) ||
+               (q.message && q.message.toLowerCase().includes(search));
+      });
+
+      if (countLabel) countLabel.textContent = `${filtered.length} of ${totalCount} inquiries`;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="p-8 text-center text-outline">
+              <span class="material-symbols-outlined text-3xl mb-1 block">inbox</span>
+              ${search || statusFilter !== 'all' ? 'No inquiries match current filters.' : 'No customer inquiries received yet. When visitors click "Inquire" on products, their details will appear here.'}
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(q => {
+        const dateStr = q.createdAt ? new Date(q.createdAt).toLocaleString('en-IN', {
+          day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
+        }) : 'Recent';
+
+        const cleanPhone = (q.customerPhone || '').replace(/[^0-9]/g, '');
+        const waMsg = `Hello ${q.customerName || 'Customer'}, thank you for inquiring about ${q.productName} at OM Mobile & Electronics. How can we help you today?`;
+        const waUrl = `https://wa.me/91${cleanPhone.slice(-10)}?text=${encodeURIComponent(waMsg)}`;
+
+        const statusClasses = {
+          'new': 'bg-emerald-50 text-emerald-700 border-emerald-200',
+          'contacted': 'bg-blue-50 text-blue-700 border-blue-200',
+          'closed': 'bg-gray-100 text-gray-700 border-gray-200'
+        };
+
+        return `
+          <tr class="border-b border-surface-mid hover:bg-surface-low/50 transition-colors">
+            <td class="p-3.5 pl-4 text-outline whitespace-nowrap">
+              <span class="font-medium text-on-surface block">${dateStr}</span>
+              <span class="text-[10px] text-outline">ID: ${q.id.slice(-6)}</span>
+            </td>
+
+            <td class="p-3.5">
+              <div class="font-bold text-on-surface">${q.customerName || 'Anonymous'}</div>
+              <a href="tel:${q.customerPhone}" class="text-primary hover:underline font-semibold flex items-center gap-1 mt-0.5">
+                <span class="material-symbols-outlined text-[13px]">call</span>
+                <span>${q.customerPhone || 'No Phone'}</span>
+              </a>
+            </td>
+
+            <td class="p-3.5">
+              <div class="flex items-center gap-2">
+                ${q.productImage ? `<img src="${q.productImage}" alt="${q.productName}" class="w-8 h-8 rounded-lg object-contain bg-white border border-surface-mid p-0.5 shrink-0">` : ''}
+                <div class="min-w-0">
+                  <div class="font-semibold text-on-surface truncate max-w-xs">${q.productName || 'Product'}</div>
+                  <div class="text-[11px] text-primary font-bold tabular-nums">₹${Number(q.productPrice || 0).toLocaleString('en-IN')}</div>
+                </div>
+              </div>
+            </td>
+
+            <td class="p-3.5 max-w-xs">
+              <p class="text-on-surface text-xs line-clamp-2">${q.message || 'Customer requested availability & pricing.'}</p>
+            </td>
+
+            <td class="p-3.5">
+              <select onchange="handleUpdateQueryStatus('${q.id}', this.value)" 
+                      class="px-2.5 py-1 rounded-lg text-xs font-bold border ${statusClasses[q.status] || statusClasses.new} focus:outline-none">
+                <option value="new" ${q.status === 'new' ? 'selected' : ''}>New Lead</option>
+                <option value="contacted" ${q.status === 'contacted' ? 'selected' : ''}>Contacted</option>
+                <option value="closed" ${q.status === 'closed' ? 'selected' : ''}>Closed</option>
+              </select>
+            </td>
+
+            <td class="p-3.5 pr-4 text-right whitespace-nowrap">
+              <div class="flex items-center justify-end gap-1.5">
+                <a href="${waUrl}" target="_blank" rel="noopener noreferrer" 
+                   class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] transition-colors shadow-xs" title="Reply on WhatsApp">
+                  <span class="material-symbols-outlined text-[14px]">chat</span>
+                  <span>WhatsApp</span>
+                </a>
+                <a href="tel:${q.customerPhone}" 
+                   class="p-1.5 rounded-lg hover:bg-surface-mid text-on-surface border border-surface-mid transition-colors" title="Call Customer">
+                  <span class="material-symbols-outlined text-[16px]">call</span>
+                </a>
+                <button type="button" onclick="handleDeleteQuery('${q.id}')" 
+                        class="p-1.5 rounded-lg hover:bg-red-50 text-red-500 transition-colors" title="Delete Inquiry">
+                  <span class="material-symbols-outlined text-[16px]">delete</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function handleUpdateQueryStatus(id, newStatus) {
+      if (typeof window.updateQueryStatusAsync === 'function') {
+        await window.updateQueryStatusAsync(id, newStatus);
+      }
+      showAdminToast("Lead status marked as " + newStatus);
+      await loadAdminQueries();
+    }
+
+    async function handleDeleteQuery(id) {
+      if (!confirm("Are you sure you want to delete this customer inquiry?")) return;
+      if (typeof window.deleteQueryAsync === 'function') {
+        await window.deleteQueryAsync(id);
+      }
+      showAdminToast("Inquiry deleted.");
+      await loadAdminQueries();
+    }
+
+    async function handleClearAllQueries() {
+      if (!confirm("Are you sure you want to clear all customer inquiries? This cannot be undone.")) return;
+      if (typeof window.clearQueriesAsync === 'function') {
+        await window.clearQueriesAsync();
+      }
+      showAdminToast("All inquiries cleared.");
+      await loadAdminQueries();
+    }
+
+    async function handleRefreshQueries() {
+      await loadAdminQueries();
+      showAdminToast("Inquiries refreshed.");
+    }
+
     /* Table Refresh & Rendering */
     function refreshAdminProductsTable() {
       const products = getStoredProducts();
       const tbody = document.getElementById("admin-products-tbody");
       const emptyState = document.getElementById("admin-empty-state");
       const countLabel = document.getElementById("admin-table-count");
+      updateAdminTabCounters();
 
       // Update Top Stats
       document.getElementById("stat-total-products").textContent = products.length;
@@ -1331,7 +1998,7 @@
         emiBadge.textContent = `0% EMI: ~₹${Number(product.emiPerMonth).toLocaleString('en-IN')}/mo`;
       }
 
-      document.getElementById("prod-stock-input").value = product.stockStatus || "In Stock - Dhanore Br. 4";
+      document.getElementById("prod-stock-input").value = product.stockStatus || "In Stock - Dhanore";
       document.getElementById("prod-rating-input").value = product.rating || 4.8;
       document.getElementById("prod-reviews-input").value = product.reviews || 50;
       document.getElementById("prod-image-url").value = product.image || "";
@@ -1605,6 +2272,92 @@
       }, 3500);
     }
   </script>
+
+
+  <!-- ADD / EDIT HERO BANNER MODAL -->
+  <div id="banner-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-surface-mid overflow-hidden flex flex-col max-h-[92vh] animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Modal Header -->
+      <div class="px-5 py-4 border-b border-surface-mid flex items-center justify-between bg-surface-lowest">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-[18px]">view_carousel</span>
+          </div>
+          <h3 class="font-headline text-sm sm:text-base font-bold text-on-surface" id="banner-modal-title">Add Hero Banner</h3>
+        </div>
+        <button type="button" onclick="closeBannerModal()" class="p-1.5 rounded-xl hover:bg-surface-mid text-outline hover:text-on-surface transition-colors">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+
+      <!-- Modal Body Form -->
+      <form id="banner-form" onsubmit="handleSaveBannerSubmit(event)" class="p-5 overflow-y-auto space-y-3.5 text-xs">
+        <input type="hidden" id="banner-edit-id" value="">
+
+        <!-- Banner Image URL & File Upload -->
+        <div>
+          <label class="block font-bold text-on-surface mb-1">Banner Image <span class="text-red-500">*</span></label>
+          <div class="flex items-center gap-2">
+            <input type="url" id="banner-image-input" required placeholder="https://example.com/banner.jpg" 
+                   oninput="previewBannerImage(this.value)"
+                   class="flex-1 px-3 py-2 rounded-xl bg-surface-low border border-outline-variant/60 text-xs focus:outline-none focus:ring-2 focus:ring-primary/20">
+            <label class="px-3 py-2 rounded-xl bg-surface-mid hover:bg-surface-high font-semibold text-on-surface cursor-pointer flex items-center gap-1 shrink-0">
+              <span class="material-symbols-outlined text-[16px]">upload</span>
+              <span>Upload</span>
+              <input type="file" id="banner-file-input" accept="image/*" class="hidden" onchange="handleBannerFileUpload(event)">
+            </label>
+          </div>
+          
+          <!-- Image Preview -->
+          <div id="banner-preview-box" class="mt-2.5 h-36 rounded-2xl border border-surface-mid overflow-hidden bg-slate-900 relative flex items-center justify-center">
+            <img id="banner-preview-img" src="" alt="Banner Preview" class="w-full h-full object-cover hidden">
+            <span id="banner-preview-placeholder" class="text-white/60 text-xs flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[18px]">image</span>
+              <span>Preview will appear here</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Headline & Subtitle -->
+        <div>
+          <label class="block font-bold text-on-surface mb-1">Headline / Title <span class="text-red-500">*</span></label>
+          <input type="text" id="banner-title-input" required placeholder="e.g. OM Mobile & Electronics" 
+                 class="w-full px-3 py-2 rounded-xl bg-surface-low border border-outline-variant/60 text-xs focus:outline-none focus:ring-2 focus:ring-primary/20">
+        </div>
+
+        <div>
+          <label class="block font-bold text-on-surface mb-1">Subtitle / Tagline</label>
+          <input type="text" id="banner-subtitle-input" placeholder="e.g. Dhanore Showroom • PCS Chowk, Alandi–Markal Road" 
+                 class="w-full px-3 py-2 rounded-xl bg-surface-low border border-outline-variant/60 text-xs focus:outline-none focus:ring-2 focus:ring-primary/20">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-on-surface mb-1">Tag Badge</label>
+            <input type="text" id="banner-tag-input" placeholder="e.g. Official Showroom" 
+                   class="w-full px-3 py-2 rounded-xl bg-surface-low border border-outline-variant/60 text-xs focus:outline-none focus:ring-2 focus:ring-primary/20">
+          </div>
+          <div>
+            <label class="block font-bold text-on-surface mb-1">Display Order</label>
+            <input type="number" id="banner-order-input" min="1" max="99" value="1" 
+                   class="w-full px-3 py-2 rounded-xl bg-surface-low border border-outline-variant/60 text-xs focus:outline-none focus:ring-2 focus:ring-primary/20">
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 pt-1">
+          <input type="checkbox" id="banner-active-input" checked class="w-4 h-4 rounded text-primary focus:ring-primary">
+          <label for="banner-active-input" class="text-xs font-semibold text-on-surface">Active (Show in auto-scrolling carousel on homepage)</label>
+        </div>
+
+        <div class="pt-3 border-t border-surface-mid flex items-center justify-end gap-2">
+          <button type="button" onclick="closeBannerModal()" class="px-4 py-2 rounded-xl bg-surface-mid hover:bg-surface-high text-xs font-bold text-on-surface transition-colors">Cancel</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-primary hover:bg-primary-container text-white text-xs font-bold shadow-xs transition-all">Save Banner</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
 
 </body>
 </html>

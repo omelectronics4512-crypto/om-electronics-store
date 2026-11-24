@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>All Products Catalog | OM Mobile &amp; Electronics - Dhanore, Pune</title>
-  <meta name="description" content="Explore live inventory of 5G smartphones, laptops, audio gear, smartwatches, and accessories at OM Mobile & Electronics Branch No. 4, Dhanore, Pune.">
+  <meta name="description" content="Explore live inventory of 5G smartphones, laptops, audio gear, smartwatches, and accessories at OM Mobile & Electronics PCS Chowk, Dhanore, Pune.">
 
   <!-- Google Fonts: Manrope & Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -137,13 +137,13 @@
   <script src="store.js?v=2.2"></script>
 </head>
 
-<body class="bg-background font-body text-on-surface text-[15px] antialiased selection:bg-primary-light selection:text-primary-dark overflow-x-hidden max-w-full w-full">
+<body class="bg-background font-body text-on-surface text-[15px] antialiased selection:bg-primary-light selection:text-primary-dark overflow-x-clip max-w-full w-full">
 
   
 
   <!-- STICKY HEADER -->
-  <header id="main-header" class="sticky top-2 sm:top-3 z-40 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 transition-all duration-200">
-    <div class="bg-white/95 backdrop-blur-md border border-surface-mid rounded-2xl sm:rounded-3xl shadow-subtle px-3 sm:px-6 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
+  <header id="main-header" class="sticky top-2 sm:top-3 z-50 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 transition-all duration-300">
+    <div id="main-header-bar" class="bg-white/95 backdrop-blur-md border border-slate-200/90 rounded-2xl sm:rounded-3xl shadow-lg shadow-slate-900/10 hover:shadow-xl transition-all duration-300 px-3 sm:px-6 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
       
       <!-- Brand Logo -->
       <a href="index.html" class="flex items-center gap-2 sm:gap-3 shrink-0 group min-w-0">
@@ -151,7 +151,7 @@
         <div class="flex flex-col truncate">
           <div class="flex items-center gap-1 sm:gap-1.5">
             <span class="font-headline text-base sm:text-xl font-bold text-on-surface tracking-tight group-hover:text-primary transition-colors truncate">OM Mobile</span>
-            <span class="px-1.5 py-0.5 rounded bg-primary-light/80 text-primary-dark text-[9px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0">Br. 4</span>
+            
           </div>
           <span class="hidden sm:inline text-[10px] sm:text-[11px] font-medium text-on-surface-variant truncate">&amp; Electronics • Pune</span>
         </div>
@@ -204,7 +204,7 @@
           Electronics &amp; Gadgets Catalog
         </h1>
         <p class="text-xs sm:text-sm text-on-surface-variant mt-1.5 max-w-xl">
-          Browse authentic flagship 5G smartphones, laptops, audio gear, and accessories available at Dhanore Branch No. 4.
+          Browse authentic flagship 5G smartphones, laptops, audio gear, and accessories available at Dhanore Showroom.
         </p>
       </div>
     </section>
@@ -213,65 +213,63 @@
     <section class="w-full bg-white py-8 sm:py-12">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <!-- Filter Controls Container -->
-        <div class="p-4 sm:p-5 rounded-2xl bg-surface-low border border-surface-mid mb-8 flex flex-col gap-4">
+        <!-- Filter Controls Container (Search & Sort Top Prominence) -->
+        <div class="p-4 sm:p-5 rounded-2xl bg-surface-low border border-surface-mid mb-8 flex flex-col gap-3.5 shadow-sm">
           
-          <!-- Category Tabs Row -->
-          <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1" id="category-tabs-container">
-            <button type="button" onclick="setCategory('all')" data-cat="all" class="category-btn px-3.5 py-2 rounded-xl text-xs font-bold transition-all bg-primary text-white shadow-xs shrink-0">
-              All (<span id="count-all">0</span>)
-            </button>
-            <button type="button" onclick="setCategory('smartphones')" data-cat="smartphones" class="category-btn px-3.5 py-2 rounded-xl text-xs font-semibold text-on-surface-variant hover:text-on-surface hover:bg-surface-mid transition-all shrink-0">
-              Smartphones (<span id="count-smartphones">0</span>)
-            </button>
-            <button type="button" onclick="setCategory('laptops')" data-cat="laptops" class="category-btn px-3.5 py-2 rounded-xl text-xs font-semibold text-on-surface-variant hover:text-on-surface hover:bg-surface-mid transition-all shrink-0">
-              Laptops (<span id="count-laptops">0</span>)
-            </button>
-            <button type="button" onclick="setCategory('audio')" data-cat="audio" class="category-btn px-3.5 py-2 rounded-xl text-xs font-semibold text-on-surface-variant hover:text-on-surface hover:bg-surface-mid transition-all shrink-0">
-              Audio (<span id="count-audio">0</span>)
-            </button>
-            <button type="button" onclick="setCategory('wearables')" data-cat="wearables" class="category-btn px-3.5 py-2 rounded-xl text-xs font-semibold text-on-surface-variant hover:text-on-surface hover:bg-surface-mid transition-all shrink-0">
-              Smartwatches (<span id="count-wearables">0</span>)
-            </button>
-            <button type="button" onclick="setCategory('accessories')" data-cat="accessories" class="category-btn px-3.5 py-2 rounded-xl text-xs font-semibold text-on-surface-variant hover:text-on-surface hover:bg-surface-mid transition-all shrink-0">
-              Accessories (<span id="count-accessories">0</span>)
-            </button>
-            <button type="button" onclick="setCategory('tv-appliances')" data-cat="tv-appliances" class="category-btn px-3.5 py-2 rounded-xl text-xs font-semibold text-on-surface-variant hover:text-on-surface hover:bg-surface-mid transition-all shrink-0">
-              TVs &amp; Home (<span id="count-tv-appliances">0</span>)
-            </button>
-          </div>
-
-          <!-- Secondary Filter Controls: Brand, Budget & Search -->
-          <div class="pt-3 border-t border-surface-mid flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
-            
-            <!-- Brand Pills -->
-            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1" id="brand-chips-container">
-              <span class="text-xs font-bold text-outline uppercase tracking-wider shrink-0 mr-1">Brand:</span>
-              <button type="button" onclick="filterByBrand('All')" class="brand-filter-btn px-3 py-1 rounded-lg text-xs font-bold bg-primary text-white transition-all shadow-xs shrink-0" data-brand="All">All</button>
-              <button type="button" onclick="filterByBrand('Apple')" class="brand-filter-btn px-3 py-1 rounded-lg text-xs font-medium bg-white text-on-surface hover:bg-surface-mid border border-surface-mid transition-all shrink-0" data-brand="Apple">Apple</button>
-              <button type="button" onclick="filterByBrand('Samsung')" class="brand-filter-btn px-3 py-1 rounded-lg text-xs font-medium bg-white text-on-surface hover:bg-surface-mid border border-surface-mid transition-all shrink-0" data-brand="Samsung">Samsung</button>
-              <button type="button" onclick="filterByBrand('OnePlus')" class="brand-filter-btn px-3 py-1 rounded-lg text-xs font-medium bg-white text-on-surface hover:bg-surface-mid border border-surface-mid transition-all shrink-0" data-brand="OnePlus">OnePlus</button>
-              <button type="button" onclick="filterByBrand('Vivo')" class="brand-filter-btn px-3 py-1 rounded-lg text-xs font-medium bg-white text-on-surface hover:bg-surface-mid border border-surface-mid transition-all shrink-0" data-brand="Vivo">Vivo</button>
-              <button type="button" onclick="filterByBrand('Xiaomi')" class="brand-filter-btn px-3 py-1 rounded-lg text-xs font-medium bg-white text-on-surface hover:bg-surface-mid border border-surface-mid transition-all shrink-0" data-brand="Xiaomi">Xiaomi</button>
+          <!-- 1. Search Bar & Sort Dropdown (Top Row) -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3">
+            <div class="relative flex-1">
+              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[19px] text-outline">search</span>
+              <input type="text" id="catalog-search-input" placeholder="Search smartphones, laptops, audio, accessories..." 
+                     class="w-full pl-9 pr-4 py-2.5 rounded-xl bg-white border border-outline-variant/60 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-xs">
             </div>
 
-            <!-- Search and Sort -->
-            <div class="flex items-center gap-2">
-              <div class="relative flex-1 md:w-52">
-                <span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-[17px] text-outline">search</span>
-                <input type="text" id="catalog-search-input" placeholder="Search products..." 
-                       class="w-full pl-8 pr-3 py-1.5 rounded-xl bg-white border border-outline-variant/60 text-xs focus:outline-none focus:ring-2 focus:ring-primary/20">
-              </div>
-
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="text-xs font-semibold text-outline hidden sm:inline">Sort:</span>
               <select id="catalog-sort-select" onchange="applyFiltersAndSort()" 
-                      class="px-2.5 py-1.5 rounded-xl bg-white border border-outline-variant/60 text-xs font-medium text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 shrink-0">
+                      class="px-3 py-2.5 rounded-xl bg-white border border-outline-variant/60 text-xs sm:text-sm font-semibold text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-xs shrink-0">
                 <option value="featured">Featured</option>
                 <option value="price-asc">Price: Low to High</option>
                 <option value="price-desc">Price: High to Low</option>
                 <option value="rating">Top Rated</option>
               </select>
             </div>
+          </div>
 
+          <!-- 2. Category Tabs Row (Middle Row) -->
+          <div class="pt-2 border-t border-surface-mid flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1" id="category-tabs-container">
+            <button type="button" onclick="setCategory('all')" data-cat="all" class="category-btn px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-primary text-white shadow-xs shrink-0">
+              All (<span id="count-all">0</span>)
+            </button>
+            <button type="button" onclick="setCategory('smartphones')" data-cat="smartphones" class="category-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold text-on-surface-variant hover:text-on-surface hover:bg-surface-mid transition-all shrink-0">
+              Smartphones (<span id="count-smartphones">0</span>)
+            </button>
+            <button type="button" onclick="setCategory('laptops')" data-cat="laptops" class="category-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold text-on-surface-variant hover:text-on-surface hover:bg-surface-mid transition-all shrink-0">
+              Laptops (<span id="count-laptops">0</span>)
+            </button>
+            <button type="button" onclick="setCategory('audio')" data-cat="audio" class="category-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold text-on-surface-variant hover:text-on-surface hover:bg-surface-mid transition-all shrink-0">
+              Audio (<span id="count-audio">0</span>)
+            </button>
+            <button type="button" onclick="setCategory('wearables')" data-cat="wearables" class="category-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold text-on-surface-variant hover:text-on-surface hover:bg-surface-mid transition-all shrink-0">
+              Smartwatches (<span id="count-wearables">0</span>)
+            </button>
+            <button type="button" onclick="setCategory('accessories')" data-cat="accessories" class="category-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold text-on-surface-variant hover:text-on-surface hover:bg-surface-mid transition-all shrink-0">
+              Accessories (<span id="count-accessories">0</span>)
+            </button>
+            <button type="button" onclick="setCategory('tv-appliances')" data-cat="tv-appliances" class="category-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold text-on-surface-variant hover:text-on-surface hover:bg-surface-mid transition-all shrink-0">
+              TVs &amp; Home (<span id="count-tv-appliances">0</span>)
+            </button>
+          </div>
+
+          <!-- 3. Brand Pills Row (Bottom Row) -->
+          <div class="pt-2 border-t border-surface-mid flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1" id="brand-chips-container">
+            <span class="text-xs font-bold text-outline uppercase tracking-wider shrink-0 mr-1">Brand:</span>
+            <button type="button" onclick="filterByBrand('All')" class="brand-filter-btn px-3 py-1 rounded-lg text-xs font-bold bg-primary text-white transition-all shadow-xs shrink-0" data-brand="All">All</button>
+            <button type="button" onclick="filterByBrand('Apple')" class="brand-filter-btn px-3 py-1 rounded-lg text-xs font-medium bg-white text-on-surface hover:bg-surface-mid border border-surface-mid transition-all shrink-0" data-brand="Apple">Apple</button>
+            <button type="button" onclick="filterByBrand('Samsung')" class="brand-filter-btn px-3 py-1 rounded-lg text-xs font-medium bg-white text-on-surface hover:bg-surface-mid border border-surface-mid transition-all shrink-0" data-brand="Samsung">Samsung</button>
+            <button type="button" onclick="filterByBrand('OnePlus')" class="brand-filter-btn px-3 py-1 rounded-lg text-xs font-medium bg-white text-on-surface hover:bg-surface-mid border border-surface-mid transition-all shrink-0" data-brand="OnePlus">OnePlus</button>
+            <button type="button" onclick="filterByBrand('Vivo')" class="brand-filter-btn px-3 py-1 rounded-lg text-xs font-medium bg-white text-on-surface hover:bg-surface-mid border border-surface-mid transition-all shrink-0" data-brand="Vivo">Vivo</button>
+            <button type="button" onclick="filterByBrand('Xiaomi')" class="brand-filter-btn px-3 py-1 rounded-lg text-xs font-medium bg-white text-on-surface hover:bg-surface-mid border border-surface-mid transition-all shrink-0" data-brand="Xiaomi">Xiaomi</button>
           </div>
 
         </div>
@@ -313,7 +311,7 @@
         <img alt="OM Mobile Logo" class="h-6 w-auto object-contain" src="logo.png">
         <span class="font-headline font-bold text-on-surface">OM Mobile &amp; Electronics</span>
         <span class="text-outline">•</span>
-        <span>Branch No. 4, Dhanore, Pune</span>
+        <span>PCS Chowk, Dhanore, Pune</span>
       </div>
       <div class="flex items-center gap-4">
         <a href="index.html" class="hover:text-primary transition-colors">Home Page</a>
@@ -365,6 +363,23 @@
 
     let currentCategory = "all";
     let currentBrand = "All";
+    
+    function setupStickyNavbar() {
+      const headerBar = document.getElementById("main-header-bar");
+      if (!headerBar) return;
+      const onScroll = () => {
+        if (window.scrollY > 20) {
+          headerBar.classList.add("shadow-xl", "border-slate-300", "bg-white/98");
+          headerBar.classList.remove("shadow-lg");
+        } else {
+          headerBar.classList.remove("shadow-xl", "border-slate-300", "bg-white/98");
+          headerBar.classList.add("shadow-lg");
+        }
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+    }
+
     let currentSearchQuery = "";
     let currentSort = "featured";
 
@@ -580,45 +595,145 @@
       const product = PRODUCTS.find(p => p.id === productId);
       if (!product) return;
 
-      const modal = document.getElementById("product-contact-modal");
-      const body = document.getElementById("product-contact-modal-body");
+      const modal = document.getElementById("product-enquiry-modal");
+      const body = document.getElementById("product-enquiry-modal-body");
       if (!modal || !body) return;
 
-      const defaultMsg = `Hello OM Mobile Dhanore! I am interested in *${product.name}* (Price: ₹${product.price.toLocaleString("en-IN")}). Is it in stock at Branch No. 4?`;
+      const defaultMsg = `Hello OM Mobile! I am interested in ${product.name} (Price: ₹${product.price.toLocaleString("en-IN")}). Please let me know availability and best offer.`;
       const waUrl = `https://wa.me/919172214216?text=${encodeURIComponent(defaultMsg)}`;
 
       body.innerHTML = `
-        <div class="p-3 rounded-xl bg-surface-low border border-surface-mid flex items-center gap-3">
-          <img src="${product.image}" alt="${product.name}" class="w-14 h-14 rounded-lg object-contain bg-white p-1 shrink-0 border border-surface-mid">
-          <div class="flex-1 truncate">
+        <!-- Product Summary Card -->
+        <div class="p-3 rounded-2xl bg-surface-low border border-surface-mid flex items-center gap-3">
+          <img src="${product.image}" alt="${product.name}" class="w-14 h-14 rounded-xl object-contain bg-white p-1 shrink-0 border border-surface-mid">
+          <div class="flex-1 min-w-0">
             <span class="text-[10px] font-bold text-outline uppercase">${product.brand}</span>
             <h4 class="font-headline text-sm font-bold text-on-surface truncate">${product.name}</h4>
-            <span class="font-headline text-sm font-extrabold text-primary tabular-nums">₹${product.price.toLocaleString('en-IN')}</span>
+            <div class="flex items-center gap-2 mt-0.5">
+              <span class="font-headline text-sm font-extrabold text-primary tabular-nums">₹${product.price.toLocaleString('en-IN')}</span>
+              <span class="text-[10px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">In Stock</span>
+            </div>
           </div>
         </div>
 
-        <div class="flex flex-col gap-2 pt-1">
+        <!-- Enquiry Form -->
+        <form id="product-enquiry-form" onsubmit="handleProductEnquirySubmit(event, '${product.id}')" class="space-y-3 pt-1">
+          <div>
+            <label class="block text-[11px] font-bold text-on-surface mb-1">Your Full Name <span class="text-red-500">*</span></label>
+            <input type="text" id="enquiry-name" required placeholder="Enter your full name" 
+                   class="w-full px-3 py-2 rounded-xl bg-surface-low border border-outline-variant/60 text-xs text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20">
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold text-on-surface mb-1">Phone / WhatsApp Number <span class="text-red-500">*</span></label>
+            <input type="tel" id="enquiry-phone" required pattern="[0-9]{10,}" placeholder="10-digit mobile number" 
+                   class="w-full px-3 py-2 rounded-xl bg-surface-low border border-outline-variant/60 text-xs text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20">
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold text-on-surface mb-1">Message / Question</label>
+            <textarea id="enquiry-message" rows="2" 
+                      class="w-full px-3 py-2 rounded-xl bg-surface-low border border-outline-variant/60 text-xs text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20">${defaultMsg}</textarea>
+          </div>
+
+          <div class="pt-1">
+            <button type="submit" id="enquiry-submit-btn" 
+                    class="w-full py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-[17px]">send</span>
+              <span>Submit Enquiry to Store</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Alternative Instant WhatsApp Link -->
+        <div class="pt-2 text-center border-t border-surface-mid">
+          <span class="text-[10px] text-outline block mb-1.5">Want an immediate reply right now?</span>
           <a href="${waUrl}" target="_blank" rel="noopener noreferrer" 
-             class="flex items-center justify-center gap-2 p-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-subtle transition-all">
-            <span class="material-symbols-outlined text-[18px]">chat</span>
-            <span>Chat on WhatsApp</span>
-          </a>
-          <a href="tel:+919172214216" 
-             class="flex items-center justify-center gap-2 p-3 rounded-xl bg-surface-low hover:bg-surface-mid text-on-surface font-semibold text-xs border border-surface-mid transition-all">
-            <span class="material-symbols-outlined text-[18px] text-primary">call</span>
-            <span>Call Store (+91 91722 14216)</span>
+             class="inline-flex items-center justify-center gap-1.5 py-2 px-4 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold transition-colors w-full border border-emerald-200">
+            <span class="material-symbols-outlined text-[17px] text-emerald-600">chat</span>
+            <span>Chat on WhatsApp Instantly</span>
           </a>
         </div>
       `;
 
       modal.classList.remove("hidden");
-      modal.classList.add("flex");
+    }
+
+    function closeProductEnquiryModal() {
+      const modal = document.getElementById("product-enquiry-modal");
+      if (modal) modal.classList.add("hidden");
     }
 
     function closeProductContactModal() {
-      const modal = document.getElementById("product-contact-modal");
-      modal?.classList.add("hidden");
-      modal?.classList.remove("flex");
+      closeProductEnquiryModal();
+    }
+
+    async function handleProductEnquirySubmit(event, productId) {
+      event.preventDefault();
+      const product = PRODUCTS.find(p => p.id === productId);
+      if (!product) return;
+
+      const nameInput = document.getElementById("enquiry-name");
+      const phoneInput = document.getElementById("enquiry-phone");
+      const msgInput = document.getElementById("enquiry-message");
+      const btn = document.getElementById("enquiry-submit-btn");
+
+      if (!nameInput || !phoneInput) return;
+      const name = nameInput.value.trim();
+      const phone = phoneInput.value.trim();
+      const message = msgInput ? msgInput.value.trim() : "";
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span class="material-symbols-outlined text-[17px] animate-spin">refresh</span><span>Submitting...</span>`;
+      }
+
+      const queryPayload = {
+        productId: product.id,
+        productName: product.name,
+        productBrand: product.brand,
+        productPrice: product.price,
+        productImage: product.image,
+        customerName: name,
+        customerPhone: phone,
+        message: message,
+        status: 'new'
+      };
+
+      try {
+        if (typeof window.submitProductEnquiryAsync === 'function') {
+          await window.submitProductEnquiryAsync(queryPayload);
+        }
+      } catch (err) {
+        console.warn('Enquiry submission warning:', err);
+      }
+
+      const body = document.getElementById("product-enquiry-modal-body");
+      if (body) {
+        const waUrl = `https://wa.me/919172214216?text=${encodeURIComponent(`Hello OM Mobile, I submitted an enquiry for ${product.name}. My name is ${name} (${phone}).`)}`;
+        body.innerHTML = `
+          <div class="text-center py-5">
+            <div class="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center mb-3 shadow-inner">
+              <span class="material-symbols-outlined text-3xl">check_circle</span>
+            </div>
+            <h4 class="font-headline text-base sm:text-lg font-extrabold text-on-surface">Enquiry Submitted!</h4>
+            <p class="text-xs text-on-surface-variant mt-1.5 max-w-xs mx-auto leading-relaxed">
+              Thank you, <strong>${name}</strong>. Our team at OM Mobile Dhanore has received your request for <strong>${product.name}</strong> and will contact you at <strong>${phone}</strong> shortly.
+            </p>
+            <div class="pt-5 flex flex-col sm:flex-row items-center justify-center gap-2">
+              <button type="button" onclick="closeProductEnquiryModal()" 
+                      class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-surface-mid hover:bg-surface-high text-xs font-bold text-on-surface transition-colors">
+                Close
+              </button>
+              <a href="${waUrl}" target="_blank" rel="noopener noreferrer" 
+                 class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-subtle flex items-center justify-center gap-1.5">
+                <span class="material-symbols-outlined text-[17px]">chat</span>
+                <span>Also Chat on WhatsApp</span>
+              </a>
+            </div>
+          </div>
+        `;
+      }
     }
 
     function openQuickViewModal(productId) {
@@ -673,6 +788,35 @@
       modal?.classList.remove("flex");
     }
   </script>
+
+
+  <!-- PRODUCT ENQUIRY MODAL (Customer Leads Engine) -->
+  <div id="product-enquiry-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="relative w-full max-w-md bg-white rounded-3xl shadow-2xl border border-surface-mid overflow-hidden max-h-[92vh] flex flex-col animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Modal Header -->
+      <div class="px-5 py-4 border-b border-surface-mid flex items-center justify-between bg-surface-lowest">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-[19px]">chat</span>
+          </div>
+          <div>
+            <h3 class="font-headline text-sm sm:text-base font-bold text-on-surface">Product Enquiry</h3>
+            <p class="text-[11px] text-on-surface-variant">OM Mobile &amp; Electronics • Dhanore</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeProductEnquiryModal()" class="p-1.5 rounded-xl hover:bg-surface-mid text-outline hover:text-on-surface transition-colors">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div id="product-enquiry-modal-body" class="p-5 overflow-y-auto space-y-4 text-xs">
+        <!-- Rendered dynamically -->
+      </div>
+
+    </div>
+  </div>
 
 </body>
 </html>

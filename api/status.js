@@ -1,5 +1,5 @@
 /* =========================================================================
-   OM MOBILE & ELECTRONICS (Branch No. 4, Dhanore, Pune)
+   OM MOBILE & ELECTRONICS (PCS Chowk, Dhanore, Pune)
    Dedicated Vercel Serverless Function: /api/status
    ========================================================================= */
 
@@ -31,7 +31,7 @@ module.exports = (req, res) => {
     storageEngine: isCloudActive() ? 'Supabase Cloud PostgreSQL' : 'Local Fallback',
     supabaseUrl: SUPABASE_URL,
     supabaseAnonKey: SUPABASE_ANON_KEY,
-    storeName: 'OM Mobile & Electronics (Branch No. 4, Dhanore)',
+    storeName: 'OM Mobile & Electronics (Dhanore, Dhanore)',
     version: '2.1.0-production'
   }));
 };

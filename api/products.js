@@ -1,5 +1,5 @@
 /* =========================================================================
-   OM MOBILE & ELECTRONICS (Branch No. 4, Dhanore, Pune)
+   OM MOBILE & ELECTRONICS (PCS Chowk, Dhanore, Pune)
    Dedicated Vercel Serverless Function: /api/products
    ========================================================================= */
 
