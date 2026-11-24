@@ -220,68 +220,59 @@
     <!-- Main Dashboard Container -->
     <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       
-      <!-- Stats Overview Cards -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        
-        <div class="p-4 sm:p-5 rounded-2xl bg-surface-lowest border border-surface-mid shadow-subtle flex flex-col justify-between">
-          <div class="flex items-center justify-between text-outline mb-2">
-            <span class="text-xs font-bold uppercase tracking-wider">Total Products</span>
-            <span class="material-symbols-outlined text-[22px] text-primary">inventory_2</span>
+      <!-- Compact Modern KPI Ribbon -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 bg-surface-lowest p-3 sm:p-4 rounded-2xl border border-surface-mid/80 shadow-xs">
+        <div class="p-2 sm:px-3 sm:py-1.5 flex items-center gap-3 border-r border-surface-mid/60 last:border-r-0">
+          <div class="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-[20px]">inventory_2</span>
           </div>
-          <div class="flex items-baseline gap-2">
-            <span class="font-headline text-2xl sm:text-3xl font-extrabold text-on-surface" id="stat-total-products">0</span>
-            <span class="text-[11px] text-outline">items in catalog</span>
+          <div>
+            <div class="text-[10px] sm:text-[11px] font-bold text-outline uppercase tracking-wider">Total Products</div>
+            <div class="font-headline text-lg sm:text-2xl font-extrabold text-on-surface" id="stat-total-products">0</div>
           </div>
         </div>
-
-        <div class="p-4 sm:p-5 rounded-2xl bg-surface-lowest border border-surface-mid shadow-subtle flex flex-col justify-between">
-          <div class="flex items-center justify-between text-outline mb-2">
-            <span class="text-xs font-bold uppercase tracking-wider">In Stock Ready</span>
-            <span class="material-symbols-outlined text-[22px] text-emerald-600">check_circle</span>
+        <div class="p-2 sm:px-3 sm:py-1.5 flex items-center gap-3 md:border-r border-surface-mid/60">
+          <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-[20px]">check_circle</span>
           </div>
-          <div class="flex items-baseline gap-2">
-            <span class="font-headline text-2xl sm:text-3xl font-extrabold text-emerald-600" id="stat-in-stock">0</span>
-            <span class="text-[11px] text-outline">available units</span>
+          <div>
+            <div class="text-[10px] sm:text-[11px] font-bold text-outline uppercase tracking-wider">In Stock Ready</div>
+            <div class="font-headline text-lg sm:text-2xl font-extrabold text-emerald-600" id="stat-in-stock">0</div>
           </div>
         </div>
-
-        <div class="p-4 sm:p-5 rounded-2xl bg-surface-lowest border border-surface-mid shadow-subtle flex flex-col justify-between">
-          <div class="flex items-center justify-between text-outline mb-2">
-            <span class="text-xs font-bold uppercase tracking-wider">Smartphones</span>
-            <span class="material-symbols-outlined text-[22px] text-secondary">phone_iphone</span>
+        <div class="p-2 sm:px-3 sm:py-1.5 flex items-center gap-3 border-r border-surface-mid/60">
+          <div class="w-9 h-9 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-[20px]">phone_iphone</span>
           </div>
-          <div class="flex items-baseline gap-2">
-            <span class="font-headline text-2xl sm:text-3xl font-extrabold text-secondary" id="stat-smartphones">0</span>
-            <span class="text-[11px] text-outline">5G devices</span>
+          <div>
+            <div class="text-[10px] sm:text-[11px] font-bold text-outline uppercase tracking-wider">Smartphones</div>
+            <div class="font-headline text-lg sm:text-2xl font-extrabold text-secondary" id="stat-smartphones">0</div>
           </div>
         </div>
-
-        <div class="p-4 sm:p-5 rounded-2xl bg-surface-lowest border border-surface-mid shadow-subtle flex flex-col justify-between">
-          <div class="flex items-center justify-between text-outline mb-2">
-            <span class="text-xs font-bold uppercase tracking-wider">Laptops &amp; Other</span>
-            <span class="material-symbols-outlined text-[22px] text-tertiary">laptop_mac</span>
+        <div class="p-2 sm:px-3 sm:py-1.5 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-[20px]">devices_other</span>
           </div>
-          <div class="flex items-baseline gap-2">
-            <span class="font-headline text-2xl sm:text-3xl font-extrabold text-tertiary" id="stat-laptops">0</span>
-            <span class="text-[11px] text-outline">laptops &amp; audio</span>
+          <div>
+            <div class="text-[10px] sm:text-[11px] font-bold text-outline uppercase tracking-wider">Other Categories</div>
+            <div class="font-headline text-lg sm:text-2xl font-extrabold text-amber-700" id="stat-laptops">0</div>
           </div>
         </div>
-
       </div>
 
-      <!-- Action & Toolbar Section -->
-      <div class="p-4 sm:p-5 rounded-2xl bg-surface-lowest border border-surface-mid shadow-subtle flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
+      <!-- Clean Action & Toolbar Section -->
+      <div class="p-3.5 sm:p-4 rounded-2xl bg-surface-lowest border border-surface-mid/80 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
         
         <!-- Search & Filter Controls -->
-        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 flex-1 max-w-2xl">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 flex-1 max-w-xl">
           <div class="relative flex-1">
             <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-outline">search</span>
             <input type="text" id="admin-search-input" placeholder="Search products by model, brand, spec..." 
                    oninput="handleAdminSearch()" 
-                   class="w-full pl-9 pr-3 py-2 rounded-xl bg-surface-low border border-outline-variant/60 text-xs focus:outline-none focus:ring-2 focus:ring-primary/30">
+                   class="w-full pl-9 pr-3 py-2 rounded-xl bg-surface-low border border-outline-variant/50 text-xs focus:outline-none focus:ring-2 focus:ring-primary/20">
           </div>
           <select id="admin-category-filter" onchange="handleAdminSearch()" 
-                  class="px-3 py-2 rounded-xl bg-surface-low border border-outline-variant/60 text-xs font-semibold text-on-surface">
+                  class="px-3 py-2 rounded-xl bg-surface-low border border-outline-variant/50 text-xs font-semibold text-on-surface">
             <option value="all">All Categories</option>
             <option value="smartphones">Smartphones</option>
             <option value="laptops">Laptops</option>
@@ -292,32 +283,42 @@
           </select>
         </div>
 
-        <!-- Action Buttons -->
-        <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+        <!-- Action Controls -->
+        <div class="flex items-center gap-2 self-end sm:self-auto">
           
           <button type="button" onclick="openAddProductModal()" 
-                  class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-primary hover:bg-primary-container text-white text-xs font-bold shadow-subtle transition-all">
-            <span class="material-symbols-outlined text-[18px]">add_circle</span>
-            <span>Add New Product</span>
-          </button>
-
-          <button type="button" onclick="handleLoadSampleProducts()" 
-                  class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-secondary-light/60 hover:bg-secondary-light text-secondary-dark text-xs font-bold transition-all border border-secondary/20" title="Populate catalog with 16 authentic Dhanore products">
-            <span class="material-symbols-outlined text-[18px]">cloud_download</span>
-            <span class="hidden sm:inline">Load Sample (16 Items)</span>
-            <span class="sm:hidden">Sample</span>
+                  class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-primary hover:bg-primary-container text-white text-xs font-bold shadow-xs transition-all">
+            <span class="material-symbols-outlined text-[18px]">add</span>
+            <span>Add Product</span>
           </button>
 
           <button type="button" onclick="handleRefreshProductsFromCloud()" 
-                  class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-surface-low hover:bg-surface-mid text-on-surface text-xs font-bold transition-all border border-outline-variant/60" title="Sync & Refresh Inventory from Cloud Database">
-            <span class="material-symbols-outlined text-[18px]">sync</span>
-            <span>Sync Cloud</span>
+                  class="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-surface-low hover:bg-surface-mid text-on-surface text-xs font-semibold transition-colors border border-outline-variant/50" title="Sync & Refresh Inventory from Cloud Database">
+            <span class="material-symbols-outlined text-[17px] text-outline">sync</span>
+            <span class="hidden sm:inline">Sync</span>
           </button>
 
-          <button type="button" onclick="handleClearAllProducts()" 
-                  class="inline-flex items-center justify-center p-2.5 rounded-xl bg-surface-low hover:bg-red-50 text-outline hover:text-red-600 transition-colors border border-outline-variant/60" title="Clear All Products from Store">
-            <span class="material-symbols-outlined text-[18px]">delete_sweep</span>
-          </button>
+          <!-- More Actions Dropdown -->
+          <div class="relative" id="admin-more-menu-container">
+            <button type="button" onclick="toggleAdminMoreMenu()" 
+                    class="p-2.5 rounded-xl bg-surface-low hover:bg-surface-mid text-outline hover:text-on-surface transition-colors border border-outline-variant/50 flex items-center justify-center" title="Catalog Management Tools">
+              <span class="material-symbols-outlined text-[18px]">more_vert</span>
+            </button>
+
+            <div id="admin-more-menu" class="hidden absolute right-0 mt-2 w-52 bg-surface-lowest rounded-2xl shadow-floating border border-surface-mid py-1.5 z-30 text-xs">
+              <button type="button" onclick="handleLoadSampleProducts(); toggleAdminMoreMenu();" 
+                      class="w-full text-left px-3.5 py-2 hover:bg-surface-low flex items-center gap-2.5 text-on-surface">
+                <span class="material-symbols-outlined text-[17px] text-secondary">cloud_download</span>
+                <span>Load 16 Sample Products</span>
+              </button>
+              <div class="my-1 border-t border-surface-mid/60"></div>
+              <button type="button" onclick="handleClearAllProducts(); toggleAdminMoreMenu();" 
+                      class="w-full text-left px-3.5 py-2 hover:bg-red-50 text-red-600 flex items-center gap-2.5">
+                <span class="material-symbols-outlined text-[17px]">delete_sweep</span>
+                <span>Clear All Catalog</span>
+              </button>
+            </div>
+          </div>
 
         </div>
 
@@ -368,102 +369,95 @@
   </div>
 
   <!-- =========================================================================
-       3. ADD / EDIT PRODUCT MODAL
+       3. ADD / EDIT PRODUCT MODAL (Clean, Spacious & Intuitive)
        ========================================================================= -->
   <div id="product-editor-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs">
-    <div class="relative w-full max-w-2xl bg-surface-lowest rounded-2xl sm:rounded-3xl shadow-2xl border border-surface-mid overflow-hidden max-h-[92vh] flex flex-col modal-content">
+    <div class="relative w-full max-w-xl bg-surface-lowest rounded-2xl sm:rounded-3xl shadow-2xl border border-surface-mid/80 overflow-hidden max-h-[92vh] flex flex-col modal-content">
       
       <!-- Modal Header -->
-      <div class="p-4 sm:p-5 border-b border-surface-mid flex items-center justify-between bg-surface-low/50">
-        <div class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center shadow-xs">
+      <div class="px-5 py-4 border-b border-surface-mid/70 flex items-center justify-between bg-surface-lowest">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
             <span class="material-symbols-outlined text-[20px]" id="modal-title-icon">add_box</span>
           </div>
           <div>
             <h3 class="font-headline text-base font-bold text-on-surface" id="modal-product-title">Add New Product</h3>
-            <span class="text-[11px] text-on-surface-variant">Configure hardware specs, price, and Dhanore stock</span>
+            <span class="text-[11px] text-outline">Branch No. 4, Dhanore Catalog</span>
           </div>
         </div>
-        <button type="button" onclick="closeProductEditorModal()" class="p-1.5 rounded-xl text-outline hover:text-on-surface hover:bg-surface-mid transition-colors">
+        <button type="button" onclick="closeProductEditorModal()" class="p-1.5 rounded-xl text-outline hover:text-on-surface hover:bg-surface-low transition-colors">
           <span class="material-symbols-outlined text-[20px]">close</span>
         </button>
       </div>
 
       <!-- Modal Body (Form) -->
-      <form id="product-editor-form" onsubmit="handleSaveProduct(event)" class="p-4 sm:p-6 overflow-y-auto space-y-4 text-xs">
+      <form id="product-editor-form" onsubmit="handleSaveProduct(event)" class="p-5 sm:p-6 overflow-y-auto space-y-4 text-xs">
         <input type="hidden" id="edit-product-id">
 
-        <!-- Title & Brand -->
-        <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
-          <div class="sm:col-span-8">
-            <label class="block font-bold text-on-surface mb-1">Product Title *</label>
-            <input type="text" id="prod-name-input" required placeholder="e.g. Apple iPhone 15 (128GB, Black)" 
-                   class="w-full p-2.5 rounded-xl bg-surface-low border border-outline-variant/60 focus:ring-2 focus:ring-primary/20 text-xs font-semibold">
-          </div>
-          <div class="sm:col-span-4">
-            <label class="block font-bold text-on-surface mb-1">Brand *</label>
-            <select id="prod-brand-input" required class="w-full p-2.5 rounded-xl bg-surface-low border border-outline-variant/60 focus:ring-2 focus:ring-primary/20 text-xs font-semibold">
-              <option value="Apple">Apple</option>
-              <option value="Samsung">Samsung</option>
-              <option value="OnePlus">OnePlus</option>
-              <option value="Vivo">Vivo</option>
-              <option value="Xiaomi">Xiaomi / Redmi</option>
-              <option value="boAt">boAt</option>
-              <option value="HP">HP</option>
-              <option value="Lenovo">Lenovo</option>
-              <option value="ASUS">ASUS</option>
-              <option value="Realme">Realme</option>
-              <option value="Sony">Sony</option>
-              <option value="Other">Other Brand</option>
+        <!-- Title -->
+        <div>
+          <label class="block font-bold text-on-surface mb-1">Product Title *</label>
+          <input type="text" id="prod-name-input" required placeholder="e.g. Apple iPhone 15 (128GB, Black)" 
+                 class="w-full px-3 py-2.5 rounded-xl bg-surface-low border border-outline-variant/60 focus:ring-2 focus:ring-primary/20 text-xs font-semibold">
+        </div>
+
+        <!-- Brand & Category Row (with dynamic Add Brand and Add Category) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <!-- Brand -->
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="font-bold text-on-surface">Brand *</label>
+              <button type="button" onclick="toggleAddBrandInput()" class="text-[11px] font-bold text-primary hover:underline flex items-center gap-0.5">
+                <span class="material-symbols-outlined text-[13px]">add</span>
+                <span>Add Brand</span>
+              </button>
+            </div>
+            <select id="prod-brand-input" required onchange="handleBrandSelectChange(this)"
+                    class="w-full px-3 py-2.5 rounded-xl bg-surface-low border border-outline-variant/60 focus:ring-2 focus:ring-primary/20 text-xs font-semibold">
+              <!-- Dynamically populated -->
             </select>
+            <!-- Inline Add Brand input box -->
+            <div id="inline-add-brand-box" class="hidden mt-2 p-2 rounded-xl bg-surface-low border border-primary/30 flex items-center gap-1.5">
+              <input type="text" id="custom-brand-name-input" placeholder="Brand name (e.g. Google Pixel)" 
+                     class="flex-1 px-2.5 py-1.5 rounded-lg bg-surface-lowest text-xs border border-outline-variant/60 font-semibold focus:outline-none focus:ring-1 focus:ring-primary">
+              <button type="button" onclick="confirmAddCustomBrand()" class="px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary-dark">Add</button>
+              <button type="button" onclick="toggleAddBrandInput(false)" class="p-1.5 text-outline hover:text-on-surface"><span class="material-symbols-outlined text-[16px]">close</span></button>
+            </div>
+          </div>
+
+          <!-- Category -->
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="font-bold text-on-surface">Category *</label>
+              <button type="button" onclick="toggleAddCategoryInput()" class="text-[11px] font-bold text-primary hover:underline flex items-center gap-0.5">
+                <span class="material-symbols-outlined text-[13px]">add</span>
+                <span>Add Category</span>
+              </button>
+            </div>
+            <select id="prod-category-input" required onchange="handleCategorySelectChange(this)"
+                    class="w-full px-3 py-2.5 rounded-xl bg-surface-low border border-outline-variant/60 focus:ring-2 focus:ring-primary/20 text-xs font-semibold">
+              <!-- Dynamically populated -->
+            </select>
+            <!-- Inline Add Category input box -->
+            <div id="inline-add-cat-box" class="hidden mt-2 p-2 rounded-xl bg-surface-low border border-primary/30 flex items-center gap-1.5">
+              <input type="text" id="custom-cat-name-input" placeholder="Category name (e.g. Tablets)" 
+                     class="flex-1 px-2.5 py-1.5 rounded-lg bg-surface-lowest text-xs border border-outline-variant/60 font-semibold focus:outline-none focus:ring-1 focus:ring-primary">
+              <button type="button" onclick="confirmAddCustomCategory()" class="px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary-dark">Add</button>
+              <button type="button" onclick="toggleAddCategoryInput(false)" class="p-1.5 text-outline hover:text-on-surface"><span class="material-symbols-outlined text-[16px]">close</span></button>
+            </div>
           </div>
         </div>
 
-        <!-- Category & Tag -->
-        <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
-          <div class="sm:col-span-6">
-            <label class="block font-bold text-on-surface mb-1">Category *</label>
-            <select id="prod-category-input" required class="w-full p-2.5 rounded-xl bg-surface-low border border-outline-variant/60 focus:ring-2 focus:ring-primary/20 text-xs font-semibold">
-              <option value="smartphones">Smartphones</option>
-              <option value="laptops">Laptops</option>
-              <option value="audio">Audio &amp; TWS</option>
-              <option value="wearables">Smartwatches / Wearables</option>
-              <option value="accessories">Original Accessories &amp; Chargers</option>
-              <option value="tv-appliances">Smart TVs &amp; Home Appliances</option>
-            </select>
-          </div>
-          <div class="sm:col-span-6">
+        <!-- Tag & Stock Status Row -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
             <label class="block font-bold text-on-surface mb-1">Product Tag / Badge</label>
             <input type="text" id="prod-tag-input" placeholder="e.g. Flagship 5G, Bestseller, Student Pick" 
-                   class="w-full p-2.5 rounded-xl bg-surface-low border border-outline-variant/60 focus:ring-2 focus:ring-primary/20 text-xs">
+                   class="w-full px-3 py-2.5 rounded-xl bg-surface-low border border-outline-variant/60 focus:ring-2 focus:ring-primary/20 text-xs">
           </div>
-        </div>
-
-        <!-- Pricing & 0% EMI -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3.5 rounded-2xl bg-surface-low border border-surface-mid">
-          <div>
-            <label class="block font-bold text-on-surface mb-1">Selling Price (₹) *</label>
-            <input type="number" id="prod-price-input" required min="1" placeholder="e.g. 69900" 
-                   oninput="handleAutoCalculateEMI()"
-                   class="w-full p-2 rounded-xl bg-surface-lowest border border-outline-variant/60 text-xs font-bold">
-          </div>
-          <div>
-            <label class="block font-bold text-on-surface mb-1">Original Price (₹)</label>
-            <input type="number" id="prod-origprice-input" min="1" placeholder="e.g. 79900" 
-                   class="w-full p-2 rounded-xl bg-surface-lowest border border-outline-variant/60 text-xs">
-          </div>
-          <div>
-            <label class="block font-bold text-on-surface mb-1">0% Monthly EMI (₹)</label>
-            <input type="number" id="prod-emi-input" placeholder="Auto-calculated (12 mo)" 
-                   class="w-full p-2 rounded-xl bg-surface-lowest border border-outline-variant/60 text-xs font-semibold text-primary">
-          </div>
-        </div>
-
-        <!-- Stock Status & Stock Badge -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block font-bold text-on-surface mb-1">Stock Status</label>
-            <select id="prod-stock-input" class="w-full p-2.5 rounded-xl bg-surface-low border border-outline-variant/60 text-xs font-semibold">
+            <select id="prod-stock-input" class="w-full px-3 py-2.5 rounded-xl bg-surface-low border border-outline-variant/60 text-xs font-semibold">
               <option value="In Stock - Dhanore Br. 4">In Stock - Dhanore Br. 4</option>
               <option value="Ready at Dhanore Counter">Ready at Dhanore Counter</option>
               <option value="Only 2 Units Left">Only 2 Units Left</option>
@@ -471,44 +465,57 @@
               <option value="Out of Stock">Out of Stock</option>
             </select>
           </div>
+        </div>
+
+        <!-- Pricing Row -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
           <div>
-            <label class="block font-bold text-on-surface mb-1">Rating &amp; Reviews</label>
-            <div class="grid grid-cols-2 gap-2">
-              <input type="number" id="prod-rating-input" step="0.1" min="1" max="5" value="4.8" placeholder="Rating (4.8)" class="p-2.5 rounded-xl bg-surface-low border border-outline-variant/60 text-xs">
-              <input type="number" id="prod-reviews-input" min="0" value="84" placeholder="Reviews count" class="p-2.5 rounded-xl bg-surface-low border border-outline-variant/60 text-xs">
+            <label class="block font-bold text-on-surface mb-1">Selling Price (₹) *</label>
+            <input type="number" id="prod-price-input" required min="1" placeholder="e.g. 69900" 
+                   oninput="handleAutoCalculateEMI()"
+                   class="w-full px-3 py-2.5 rounded-xl bg-surface-low border border-outline-variant/60 text-xs font-bold">
+            <div class="flex items-center gap-1.5 mt-1 text-[11px] text-outline">
+              <span id="emi-preview-badge" class="font-semibold text-secondary">0% EMI: ~₹0/mo</span>
+              <input type="hidden" id="prod-emi-input">
             </div>
+          </div>
+          <div>
+            <label class="block font-bold text-on-surface mb-1">Original Price / MRP (₹)</label>
+            <input type="number" id="prod-origprice-input" min="1" placeholder="e.g. 79900" 
+                   class="w-full px-3 py-2.5 rounded-xl bg-surface-low border border-outline-variant/60 text-xs">
+            <span class="text-[10px] text-outline mt-1 block">Shown with strikethrough discount</span>
           </div>
         </div>
 
-        <!-- Product Image (URL or Upload) -->
-        <div class="p-3.5 rounded-2xl bg-surface-low border border-surface-mid space-y-2.5">
-          <label class="block font-bold text-on-surface">Product Image (URL or Local File Upload) *</label>
-          <div class="flex items-center gap-2">
-            <input type="text" id="prod-image-url" placeholder="Paste image web URL or upload photo below..." 
-                   oninput="previewProductImage(this.value)"
-                   class="flex-1 p-2.5 rounded-xl bg-surface-lowest border border-outline-variant/60 text-xs font-mono">
-            <label class="px-3 py-2.5 rounded-xl bg-surface-lowest hover:bg-surface-mid border border-outline-variant/60 text-xs font-bold text-primary cursor-pointer shrink-0 flex items-center gap-1 shadow-xs">
-              <span class="material-symbols-outlined text-[16px]">upload_file</span>
-              <span>Upload Photo</span>
-              <input type="file" accept="image/*" class="hidden" onchange="handleImageFileUpload(event)">
-            </label>
-          </div>
-
-          <!-- Image Preview & Presets -->
-          <div class="flex items-center gap-3 pt-1">
-            <div class="w-14 h-14 rounded-xl bg-surface-lowest border border-surface-mid p-1 flex items-center justify-center shrink-0">
+        <!-- Product Image (Clean compact section) -->
+        <div class="space-y-2 pt-1">
+          <label class="block font-bold text-on-surface">Product Image *</label>
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-xl bg-surface-low border border-surface-mid p-1 flex items-center justify-center shrink-0 overflow-hidden">
               <img id="image-preview" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYEN-LXNFg3e1vo-HmSM3AVUBHvKpvE0jPrA7dYRkRnLH5_pVPnYimT2-6B_H0j590Rk-EcWKm3SCabEcnYCctpKWB5OiuMG4efrpePglxrG_nwGYflgo6wUyYjP9jlIMMzF_BI8dA1EtGGHwmDeiCSqbOFckhbpC_wgCzQaap8-3WnbaSMgSQGWq4AGqlX_Srm-D_Mg-F6S4y7k4lssA0wpWZlk0ck_7-nfCnfldwqvGUolNxJidoZw" 
                    alt="Preview" class="w-full h-full object-contain">
             </div>
-            <div class="flex-1 text-[11px] text-outline">
-              <span>Quick Presets:</span>
-              <div class="flex flex-wrap gap-1 mt-1">
-                <button type="button" onclick="applyImagePreset('iphone')" class="px-2 py-0.5 rounded bg-surface-lowest hover:bg-surface-mid text-[10px] font-semibold border border-outline-variant/60">iPhone 15</button>
-                <button type="button" onclick="applyImagePreset('galaxy')" class="px-2 py-0.5 rounded bg-surface-lowest hover:bg-surface-mid text-[10px] font-semibold border border-outline-variant/60">Galaxy S24</button>
-                <button type="button" onclick="applyImagePreset('laptop')" class="px-2 py-0.5 rounded bg-surface-lowest hover:bg-surface-mid text-[10px] font-semibold border border-outline-variant/60">HP Laptop</button>
-                <button type="button" onclick="applyImagePreset('audio')" class="px-2 py-0.5 rounded bg-surface-lowest hover:bg-surface-mid text-[10px] font-semibold border border-outline-variant/60">boAt Audio</button>
-              </div>
+            <div class="flex-1 flex items-center gap-2">
+              <input type="text" id="prod-image-url" placeholder="Paste image URL or upload photo..." 
+                     oninput="previewProductImage(this.value)"
+                     class="flex-1 px-3 py-2 rounded-xl bg-surface-low border border-outline-variant/60 text-xs font-mono">
+              <label class="px-3 py-2 rounded-xl bg-surface-low hover:bg-surface-mid border border-outline-variant/60 text-xs font-bold text-primary cursor-pointer shrink-0 flex items-center gap-1 shadow-xs transition-colors">
+                <span class="material-symbols-outlined text-[16px]">upload_file</span>
+                <span class="hidden sm:inline">Upload</span>
+                <input type="file" accept="image/*" class="hidden" onchange="handleImageFileUpload(event)">
+              </label>
             </div>
+          </div>
+          <!-- Compact presets -->
+          <div class="flex items-center gap-1 text-[10px] text-outline pt-0.5">
+            <span class="shrink-0 font-medium">Quick presets:</span>
+            <button type="button" onclick="applyImagePreset('iphone')" class="px-1.5 py-0.5 rounded hover:bg-surface-low text-primary font-semibold">iPhone</button>
+            <span>•</span>
+            <button type="button" onclick="applyImagePreset('galaxy')" class="px-1.5 py-0.5 rounded hover:bg-surface-low text-primary font-semibold">Galaxy</button>
+            <span>•</span>
+            <button type="button" onclick="applyImagePreset('laptop')" class="px-1.5 py-0.5 rounded hover:bg-surface-low text-primary font-semibold">Laptop</button>
+            <span>•</span>
+            <button type="button" onclick="applyImagePreset('audio')" class="px-1.5 py-0.5 rounded hover:bg-surface-low text-primary font-semibold">Audio</button>
           </div>
         </div>
 
@@ -516,36 +523,42 @@
         <div>
           <label class="block font-bold text-on-surface mb-1">Short Description</label>
           <textarea id="prod-desc-input" rows="2" placeholder="e.g. Dynamic Island, 48MP Main camera, USB-C, official Apple warranty." 
-                    class="w-full p-2.5 rounded-xl bg-surface-low border border-outline-variant/60 focus:ring-2 focus:ring-primary/20 text-xs"></textarea>
+                    class="w-full px-3 py-2 rounded-xl bg-surface-low border border-outline-variant/60 focus:ring-2 focus:ring-primary/20 text-xs"></textarea>
         </div>
 
-        <!-- Hardware Specifications -->
-        <div class="p-3.5 rounded-2xl bg-surface-low border border-surface-mid space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-on-surface">Hardware Specifications (For Quick View &amp; Compare Matrix)</span>
-            <span class="text-[10px] text-outline">Optional but recommended</span>
+        <!-- Collapsible Hardware Specifications (Default collapsed to prevent clutter) -->
+        <details id="specs-accordion" class="group rounded-xl border border-surface-mid/80 bg-surface-low/30 overflow-hidden">
+          <summary class="flex items-center justify-between p-3 font-bold text-xs text-on-surface cursor-pointer select-none hover:bg-surface-low/60 transition-colors">
+            <span class="flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[16px] text-primary">tune</span>
+              <span>Hardware Specifications (Optional)</span>
+            </span>
+            <span class="material-symbols-outlined text-[18px] text-outline group-open:rotate-180 transition-transform">expand_more</span>
+          </summary>
+          <div class="p-3 pt-1 border-t border-surface-mid/60 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <input type="text" id="spec-display" placeholder="Display: e.g. 6.1 OLED 120Hz" class="p-2 rounded-xl bg-surface-lowest border border-outline-variant/50">
+            <input type="text" id="spec-processor" placeholder="Processor: e.g. Snapdragon 8 Gen 3" class="p-2 rounded-xl bg-surface-lowest border border-outline-variant/50">
+            <input type="text" id="spec-storage" placeholder="RAM / Storage: e.g. 8GB RAM | 256GB" class="p-2 rounded-xl bg-surface-lowest border border-outline-variant/50">
+            <input type="text" id="spec-battery" placeholder="Battery: e.g. 5000 mAh, 80W Fast Charge" class="p-2 rounded-xl bg-surface-lowest border border-outline-variant/50">
+            <input type="text" id="spec-camera" placeholder="Camera: e.g. 50MP Sony OIS + 32MP Front" class="p-2 rounded-xl bg-surface-lowest border border-outline-variant/50">
+            <input type="text" id="spec-os" placeholder="OS: e.g. Android 14 / Official OS" class="p-2 rounded-xl bg-surface-lowest border border-outline-variant/50">
           </div>
-          
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-            <input type="text" id="spec-display" placeholder="Display: e.g. 6.1 OLED 120Hz" class="p-2 rounded-xl bg-surface-lowest border border-outline-variant/60">
-            <input type="text" id="spec-processor" placeholder="Processor: e.g. A16 Bionic / Snapdragon 8 Gen 3" class="p-2 rounded-xl bg-surface-lowest border border-outline-variant/60">
-            <input type="text" id="spec-storage" placeholder="RAM / Storage: e.g. 8GB RAM | 256GB Storage" class="p-2 rounded-xl bg-surface-lowest border border-outline-variant/60">
-            <input type="text" id="spec-battery" placeholder="Battery: e.g. 5000 mAh, 80W Fast Charge" class="p-2 rounded-xl bg-surface-lowest border border-outline-variant/60">
-            <input type="text" id="spec-camera" placeholder="Camera: e.g. 50MP Sony OIS + 32MP Front" class="p-2 rounded-xl bg-surface-lowest border border-outline-variant/60">
-            <input type="text" id="spec-os" placeholder="OS: e.g. Android 14 / Windows 11 Home" class="p-2 rounded-xl bg-surface-lowest border border-outline-variant/60">
-          </div>
-        </div>
+        </details>
+
+        <!-- Hidden Rating & Reviews (auto-defaults) -->
+        <input type="hidden" id="prod-rating-input" value="4.8">
+        <input type="hidden" id="prod-reviews-input" value="60">
 
         <!-- Submit CTA -->
-        <div class="pt-2 flex items-center justify-end gap-2.5 border-t border-surface-mid">
+        <div class="pt-3 flex items-center justify-end gap-2.5 border-t border-surface-mid/70">
           <button type="button" onclick="closeProductEditorModal()" 
                   class="px-4 py-2.5 rounded-xl bg-surface-low hover:bg-surface-mid text-on-surface font-semibold text-xs transition-colors">
             Cancel
           </button>
           <button type="submit" id="save-product-btn"
-                  class="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-container text-white font-bold text-xs shadow-subtle transition-all flex items-center gap-1.5">
+                  class="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-container text-white font-bold text-xs shadow-xs transition-all flex items-center gap-1.5">
             <span class="material-symbols-outlined text-[18px]">save</span>
-            <span>Save Product to Catalog</span>
+            <span>Save Product</span>
           </button>
         </div>
 
@@ -655,6 +668,216 @@
     };
 
     let activeEditProductId = null;
+
+    /* =========================================================================
+       DYNAMIC BRANDS & CATEGORIES (WITH INLINE "+ ADD" CAPABILITY)
+       ========================================================================= */
+    const DEFAULT_BRANDS = [
+      "Apple", "Samsung", "OnePlus", "Vivo", "Xiaomi", "Realme", "Oppo",
+      "Motorola", "boAt", "Noise", "HP", "Lenovo", "Dell", "ASUS", "Sony", "LG", "Other"
+    ];
+
+    const DEFAULT_CATEGORIES = [
+      { id: "smartphones", label: "Smartphones" },
+      { id: "laptops", label: "Laptops & Computers" },
+      { id: "audio", label: "Audio & TWS" },
+      { id: "wearables", label: "Smartwatches & Wearables" },
+      { id: "accessories", label: "Accessories & Chargers" },
+      { id: "tv-appliances", label: "Smart TVs & Appliances" }
+    ];
+
+    function getCustomBrands() {
+      try {
+        const stored = localStorage.getItem("om_custom_brands");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed)) return parsed;
+        }
+      } catch (e) {}
+      return [];
+    }
+
+    function saveCustomBrand(name) {
+      if (!name) return;
+      const current = getCustomBrands();
+      if (!current.some(b => b.toLowerCase() === name.toLowerCase()) &&
+          !DEFAULT_BRANDS.some(b => b.toLowerCase() === name.toLowerCase())) {
+        current.push(name);
+        try {
+          localStorage.setItem("om_custom_brands", JSON.stringify(current));
+        } catch (e) {}
+      }
+    }
+
+    function getCustomCategories() {
+      try {
+        const stored = localStorage.getItem("om_custom_categories");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed)) return parsed;
+        }
+      } catch (e) {}
+      return [];
+    }
+
+    function saveCustomCategory(label) {
+      if (!label) return;
+      const current = getCustomCategories();
+      const slug = label.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      if (!current.some(c => c.id === slug || c.label.toLowerCase() === label.toLowerCase()) &&
+          !DEFAULT_CATEGORIES.some(c => c.id === slug || c.label.toLowerCase() === label.toLowerCase())) {
+        current.push({ id: slug, label: label.trim() });
+        try {
+          localStorage.setItem("om_custom_categories", JSON.stringify(current));
+        } catch (e) {}
+      }
+    }
+
+    function populateBrandDropdown(selectedBrand = "Apple") {
+      const select = document.getElementById("prod-brand-input");
+      if (!select) return;
+
+      const customBrands = getCustomBrands();
+      const allBrands = [...DEFAULT_BRANDS];
+      for (const cb of customBrands) {
+        if (!allBrands.some(b => b.toLowerCase() === cb.toLowerCase())) {
+          allBrands.push(cb);
+        }
+      }
+
+      if (selectedBrand && selectedBrand !== "__add_new_brand__" && !allBrands.some(b => b.toLowerCase() === selectedBrand.toLowerCase())) {
+        allBrands.push(selectedBrand);
+      }
+
+      let html = allBrands.map(b => `<option value="${b}">${b}</option>`).join('');
+      html += `<option value="__add_new_brand__" class="font-bold text-primary">+ Add New Brand...</option>`;
+      select.innerHTML = html;
+
+      const match = allBrands.find(b => b.toLowerCase() === (selectedBrand || '').toLowerCase());
+      select.value = match || allBrands[0] || "Apple";
+    }
+
+    function populateCategoryDropdown(selectedCat = "smartphones") {
+      const select = document.getElementById("prod-category-input");
+      const filterSelect = document.getElementById("admin-category-filter");
+      if (!select) return;
+
+      const customCats = getCustomCategories();
+      const allCats = [...DEFAULT_CATEGORIES];
+      for (const cc of customCats) {
+        if (!allCats.some(c => c.id === cc.id)) {
+          allCats.push(cc);
+        }
+      }
+
+      if (selectedCat && selectedCat !== "__add_new_category__" && !allCats.some(c => c.id === selectedCat)) {
+        allCats.push({ id: selectedCat, label: selectedCat });
+      }
+
+      select.innerHTML = allCats.map(c => `<option value="${c.id}">${c.label}</option>`).join('') +
+                         `<option value="__add_new_category__" class="font-bold text-primary">+ Add New Category...</option>`;
+
+      select.value = selectedCat || "smartphones";
+
+      // Also sync filter on toolbar
+      if (filterSelect) {
+        const curFilter = filterSelect.value || "all";
+        filterSelect.innerHTML = `<option value="all">All Categories</option>` +
+                                 allCats.map(c => `<option value="${c.id}">${c.label}</option>`).join('');
+        filterSelect.value = curFilter;
+      }
+    }
+
+    function handleBrandSelectChange(selectElem) {
+      if (selectElem.value === '__add_new_brand__') {
+        toggleAddBrandInput(true);
+      } else {
+        toggleAddBrandInput(false);
+      }
+    }
+
+    function toggleAddBrandInput(force) {
+      const box = document.getElementById("inline-add-brand-box");
+      const input = document.getElementById("custom-brand-name-input");
+      if (!box) return;
+      const show = force !== undefined ? Boolean(force) : box.classList.contains("hidden");
+      if (show) {
+        box.classList.remove("hidden");
+        if (input) { input.value = ""; input.focus(); }
+      } else {
+        box.classList.add("hidden");
+        const select = document.getElementById("prod-brand-input");
+        if (select && select.value === '__add_new_brand__') {
+          select.value = DEFAULT_BRANDS[0];
+        }
+      }
+    }
+
+    function confirmAddCustomBrand() {
+      const input = document.getElementById("custom-brand-name-input");
+      const name = (input ? input.value : "").trim();
+      if (!name) {
+        showAdminToast("Please enter a brand name.");
+        return;
+      }
+      saveCustomBrand(name);
+      populateBrandDropdown(name);
+      toggleAddBrandInput(false);
+      showAdminToast(`Brand "${name}" added!`);
+    }
+
+    function handleCategorySelectChange(selectElem) {
+      if (selectElem.value === '__add_new_category__') {
+        toggleAddCategoryInput(true);
+      } else {
+        toggleAddCategoryInput(false);
+      }
+    }
+
+    function toggleAddCategoryInput(force) {
+      const box = document.getElementById("inline-add-cat-box");
+      const input = document.getElementById("custom-cat-name-input");
+      if (!box) return;
+      const show = force !== undefined ? Boolean(force) : box.classList.contains("hidden");
+      if (show) {
+        box.classList.remove("hidden");
+        if (input) { input.value = ""; input.focus(); }
+      } else {
+        box.classList.add("hidden");
+        const select = document.getElementById("prod-category-input");
+        if (select && select.value === '__add_new_category__') {
+          select.value = "smartphones";
+        }
+      }
+    }
+
+    function confirmAddCustomCategory() {
+      const input = document.getElementById("custom-cat-name-input");
+      const name = (input ? input.value : "").trim();
+      if (!name) {
+        showAdminToast("Please enter a category name.");
+        return;
+      }
+      saveCustomCategory(name);
+      const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      populateCategoryDropdown(slug);
+      toggleAddCategoryInput(false);
+      showAdminToast(`Category "${name}" added!`);
+    }
+
+    /* Toolbar Overflow Menu */
+    function toggleAdminMoreMenu() {
+      const menu = document.getElementById("admin-more-menu");
+      if (menu) menu.classList.toggle("hidden");
+    }
+
+    document.addEventListener("click", (e) => {
+      const container = document.getElementById("admin-more-menu-container");
+      const menu = document.getElementById("admin-more-menu");
+      if (container && menu && !container.contains(e.target)) {
+        menu.classList.add("hidden");
+      }
+    });
 
     /* Cloud Sync Status & Config Logic */
     async function updateCloudStatusUI() {
@@ -799,6 +1022,7 @@
 
     // Check existing session on load
     document.addEventListener("DOMContentLoaded", () => {
+      populateCategoryDropdown();
       if (typeof bootstrapSupabaseConfig === 'function') {
         bootstrapSupabaseConfig().then(() => updateCloudStatusUI()).catch(() => {});
       } else {
@@ -1062,6 +1286,18 @@
       document.getElementById("modal-product-title").textContent = "Add New Product";
       document.getElementById("product-editor-form").reset();
       document.getElementById("edit-product-id").value = "";
+
+      populateBrandDropdown("Apple");
+      populateCategoryDropdown("smartphones");
+      toggleAddBrandInput(false);
+      toggleAddCategoryInput(false);
+
+      const accordion = document.getElementById("specs-accordion");
+      if (accordion) accordion.open = false;
+
+      const emiBadge = document.getElementById("emi-preview-badge");
+      if (emiBadge) emiBadge.textContent = "0% EMI: ~₹0/mo";
+
       applyImagePreset("iphone");
 
       const modal = document.getElementById("product-editor-modal");
@@ -1079,13 +1315,22 @@
       document.getElementById("modal-product-title").textContent = "Edit Product: " + product.name;
       document.getElementById("edit-product-id").value = product.id;
 
+      populateBrandDropdown(product.brand || "Apple");
+      populateCategoryDropdown(product.category || "smartphones");
+      toggleAddBrandInput(false);
+      toggleAddCategoryInput(false);
+
       document.getElementById("prod-name-input").value = product.name || "";
-      document.getElementById("prod-brand-input").value = product.brand || "Apple";
-      document.getElementById("prod-category-input").value = product.category || "smartphones";
       document.getElementById("prod-tag-input").value = product.tag || "";
       document.getElementById("prod-price-input").value = product.price || "";
       document.getElementById("prod-origprice-input").value = product.originalPrice || "";
       document.getElementById("prod-emi-input").value = product.emiPerMonth || "";
+
+      const emiBadge = document.getElementById("emi-preview-badge");
+      if (emiBadge && product.emiPerMonth) {
+        emiBadge.textContent = `0% EMI: ~₹${Number(product.emiPerMonth).toLocaleString('en-IN')}/mo`;
+      }
+
       document.getElementById("prod-stock-input").value = product.stockStatus || "In Stock - Dhanore Br. 4";
       document.getElementById("prod-rating-input").value = product.rating || 4.8;
       document.getElementById("prod-reviews-input").value = product.reviews || 50;
@@ -1101,6 +1346,10 @@
       document.getElementById("spec-battery").value = specs["Battery"] || "";
       document.getElementById("spec-camera").value = specs["Camera"] || "";
       document.getElementById("spec-os").value = specs["OS"] || "";
+
+      const accordion = document.getElementById("specs-accordion");
+      const hasSpecs = Object.values(specs).some(v => Boolean(v && String(v).trim()));
+      if (accordion) accordion.open = Boolean(hasSpecs);
 
       const modal = document.getElementById("product-editor-modal");
       modal.classList.remove("hidden");
@@ -1131,8 +1380,20 @@
           return;
         }
 
-        const brand = document.getElementById("prod-brand-input").value;
-        const category = document.getElementById("prod-category-input").value;
+        let brand = document.getElementById("prod-brand-input").value;
+        if (brand === '__add_new_brand__') {
+          const customName = document.getElementById("custom-brand-name-input")?.value?.trim();
+          brand = customName || "Other";
+          saveCustomBrand(brand);
+        }
+
+        let category = document.getElementById("prod-category-input").value;
+        if (category === '__add_new_category__') {
+          const customCat = document.getElementById("custom-cat-name-input")?.value?.trim();
+          category = customCat ? customCat.toLowerCase().replace(/[^a-z0-9]+/g, '-') : "smartphones";
+          if (customCat) saveCustomCategory(customCat);
+        }
+
         const tag = document.getElementById("prod-tag-input").value.trim() || (brand + " Official");
         const price = Number(document.getElementById("prod-price-input").value) || 0;
         const originalPrice = Number(document.getElementById("prod-origprice-input").value) || (price + Math.round(price * 0.12));
@@ -1144,13 +1405,12 @@
         const description = document.getElementById("prod-desc-input").value.trim();
 
         const specs = {
-          "Display": document.getElementById("spec-display").value.trim() || "FHD+ AMOLED Display",
-          "Processor": document.getElementById("spec-processor").value.trim() || "High Performance Octa-Core",
-          "RAM / Storage": document.getElementById("spec-storage").value.trim() || "8GB RAM | 128GB Storage",
-          "Battery": document.getElementById("spec-battery").value.trim() || "5000 mAh Fast Charge",
-          "Camera": document.getElementById("spec-camera").value.trim() || "50MP AI Dual Camera",
-          "OS": document.getElementById("spec-os").value.trim() || "Android / Official OS",
-          "Warranty": "1 Year Manufacturer Warranty"
+          "Display": document.getElementById("spec-display").value.trim() || "",
+          "Processor": document.getElementById("spec-processor").value.trim() || "",
+          "RAM / Storage": document.getElementById("spec-storage").value.trim() || "",
+          "Battery": document.getElementById("spec-battery").value.trim() || "",
+          "Camera": document.getElementById("spec-camera").value.trim() || "",
+          "OS": document.getElementById("spec-os").value.trim() || ""
         };
 
         const tagColor = category === 'smartphones' ? 'bg-primary-light text-primary-dark' : 
@@ -1178,7 +1438,7 @@
           showAdminToast(`Updated: ${name}`);
         } else {
           await addStoreProductAsync(payload);
-          showAdminToast(`Added new product: ${name}`);
+          showAdminToast(`Added: ${name}`);
         }
       } catch (err) {
         console.error("Error saving product:", err);
@@ -1237,12 +1497,17 @@
 
     function handleAutoCalculateEMI() {
       const price = Number(document.getElementById("prod-price-input").value) || 0;
+      const emiBadge = document.getElementById("emi-preview-badge");
       if (price > 0) {
         const emi = Math.round(price / 12);
         document.getElementById("prod-emi-input").value = emi;
+        if (emiBadge) emiBadge.textContent = `0% EMI: ~₹${emi.toLocaleString('en-IN')}/mo`;
         if (!document.getElementById("prod-origprice-input").value) {
           document.getElementById("prod-origprice-input").value = Math.round(price * 1.15);
         }
+      } else {
+        document.getElementById("prod-emi-input").value = 0;
+        if (emiBadge) emiBadge.textContent = "0% EMI: ~₹0/mo";
       }
     }
 
