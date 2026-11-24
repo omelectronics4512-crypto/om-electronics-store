@@ -462,6 +462,33 @@
            VIEW 3: CUSTOMER QUERIES & LEADS MANAGEMENT
            ===================================================================== -->
       <div id="admin-view-queries" class="admin-tab-view hidden space-y-6">
+
+        <!-- Supabase Cloud Setup Alert (If queries table needs to be created in Supabase SQL editor) -->
+        <div id="queries-cloud-notice" class="hidden p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shadow-xs">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-800 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[22px]">database</span>
+            </div>
+            <div>
+              <div class="font-bold text-sm text-amber-900">Supabase Cloud Sync: 'queries' Table Required</div>
+              <p class="text-[11px] text-amber-700 mt-0.5">
+                To receive inquiries submitted by visitors from other phones and laptops, run the 1-click SQL migration in your Supabase dashboard.
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 self-end md:self-auto shrink-0">
+            <button type="button" onclick="openCopySqlModal()" class="px-3.5 py-2 rounded-xl bg-amber-800 hover:bg-amber-900 text-white font-bold text-xs flex items-center gap-1.5 shadow-xs transition-colors">
+              <span class="material-symbols-outlined text-[16px]">content_copy</span>
+              <span>1-Click Copy SQL</span>
+            </button>
+            <a href="https://supabase.com/dashboard/project/hfkhqoltplobqpwbptzc/sql/new" target="_blank" rel="noopener noreferrer" 
+               class="px-3.5 py-2 rounded-xl bg-white hover:bg-amber-100 text-amber-900 font-bold text-xs border border-amber-300 flex items-center gap-1.5 transition-colors">
+              <span>Open Supabase SQL Editor</span>
+              <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+            </a>
+          </div>
+        </div>
+
         
         <!-- Queries KPI Ribbon -->
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 bg-surface-lowest p-3 sm:p-4 rounded-2xl border border-surface-mid/80 shadow-xs">
@@ -1684,6 +1711,51 @@
     // =========================================================================
     // CUSTOMER QUERIES & LEADS ENGINE
     // =========================================================================
+    async 
+    function openCopySqlModal() {
+      document.getElementById("copy-sql-modal").classList.remove("hidden");
+    }
+
+    function closeCopySqlModal() {
+      document.getElementById("copy-sql-modal").classList.add("hidden");
+    }
+
+    function copySqlScriptToClipboard() {
+      const code = document.getElementById("sql-script-code").textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        const btnText = document.getElementById("copy-sql-btn-text");
+        if (btnText) btnText.textContent = "Copied to Clipboard!";
+        showAdminToast("SQL copied to clipboard! Paste it into Supabase SQL Editor and click Run.");
+        setTimeout(() => {
+          if (btnText) btnText.textContent = "Copy SQL Script";
+        }, 3000);
+      }).catch(() => {
+        showAdminToast("Please select the code and copy manually.");
+      });
+    }
+
+    async function checkSupabaseQueriesTableStatus() {
+      const notice = document.getElementById("queries-cloud-notice");
+      if (!notice) return;
+
+      if (typeof isSupabaseConfigured === 'function' && isSupabaseConfigured() && window.supabaseClient) {
+        try {
+          const { error } = await window.supabaseClient.from('queries').select('id').limit(1);
+          if (error && (error.code === 'PGRST205' || error.message?.includes('schema cache') || error.message?.includes('not find'))) {
+            // Table is missing
+            notice.classList.remove("hidden");
+          } else {
+            // Table exists!
+            notice.classList.add("hidden");
+          }
+        } catch (e) {
+          notice.classList.remove("hidden");
+        }
+      } else {
+        notice.classList.add("hidden");
+      }
+    }
+  
     async function loadAdminQueries() {
       try {
         if (typeof window.fetchQueriesAsync === 'function') {
@@ -1698,6 +1770,7 @@
       }
       renderAdminQueries();
       updateAdminTabCounters();
+      checkSupabaseQueriesTableStatus();
     }
 
     function renderAdminQueries() {
@@ -2355,6 +2428,112 @@
           <button type="submit" class="px-5 py-2 rounded-xl bg-primary hover:bg-primary-container text-white text-xs font-bold shadow-xs transition-all">Save Banner</button>
         </div>
       </form>
+
+    </div>
+  </div>
+
+
+  <!-- SUPABASE SQL MIGRATION MODAL -->
+  <div id="copy-sql-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-surface-mid overflow-hidden flex flex-col max-h-[92vh] animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Modal Header -->
+      <div class="px-5 py-4 border-b border-surface-mid flex items-center justify-between bg-surface-lowest">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-[20px]">database</span>
+          </div>
+          <div>
+            <h3 class="font-headline text-sm sm:text-base font-bold text-on-surface">Supabase SQL Migration for Inquiries &amp; Banners</h3>
+            <p class="text-[11px] text-outline">Paste this script in your Supabase SQL Editor to enable cross-device cloud sync</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeCopySqlModal()" class="p-1.5 rounded-xl hover:bg-surface-mid text-outline hover:text-on-surface transition-colors">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-5 overflow-y-auto space-y-4 text-xs">
+        <div class="p-3 rounded-xl bg-surface-low border border-surface-mid flex items-center justify-between">
+          <div>
+            <span class="font-bold text-on-surface block">Instructions:</span>
+            <span class="text-outline text-[11px]">1. Click 'Copy SQL Script' below &bull; 2. Open Supabase SQL Editor &bull; 3. Paste and Click 'Run'</span>
+          </div>
+          <button type="button" onclick="copySqlScriptToClipboard()" id="copy-sql-btn" 
+                  class="px-4 py-2 rounded-xl bg-primary hover:bg-primary-hover text-white font-bold text-xs shadow-xs transition-all flex items-center gap-1.5 shrink-0">
+            <span class="material-symbols-outlined text-[16px]">content_copy</span>
+            <span id="copy-sql-btn-text">Copy SQL Script</span>
+          </button>
+        </div>
+
+        <pre class="p-3.5 rounded-2xl bg-slate-900 text-slate-100 font-mono text-[11px] overflow-x-auto max-h-80 border border-slate-800 leading-relaxed select-all" id="sql-script-code">-- 1. Create Customer Queries Table
+create table if not exists public.queries (
+  id text primary key,
+  product_id text,
+  product_name text not null,
+  product_brand text default '',
+  product_price numeric default 0,
+  product_image text default '',
+  customer_name text not null,
+  customer_phone text not null,
+  message text default '',
+  status text default 'new',
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- 2. Create Hero Banners Table
+create table if not exists public.banners (
+  id text primary key,
+  image text not null,
+  title text default '',
+  subtitle text default '',
+  tag text default 'Showroom',
+  link text default '#products',
+  active boolean default true,
+  display_order integer default 1,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  updated_at timestamp with time zone default timezone('utc'::text, now())
+);
+
+-- 3. Enable RLS
+alter table public.queries enable row level security;
+alter table public.banners enable row level security;
+
+-- 4. Public Policies
+drop policy if exists "Allow public read queries" on public.queries;
+create policy "Allow public read queries" on public.queries for select using (true);
+drop policy if exists "Allow anon insert queries" on public.queries;
+create policy "Allow anon insert queries" on public.queries for insert with check (true);
+drop policy if exists "Allow anon update queries" on public.queries;
+create policy "Allow anon update queries" on public.queries for update using (true);
+drop policy if exists "Allow anon delete queries" on public.queries;
+create policy "Allow anon delete queries" on public.queries for delete using (true);
+
+drop policy if exists "Allow public read banners" on public.banners;
+create policy "Allow public read banners" on public.banners for select using (true);
+drop policy if exists "Allow anon insert banners" on public.banners;
+create policy "Allow anon insert banners" on public.banners for insert with check (true);
+drop policy if exists "Allow anon update banners" on public.banners;
+create policy "Allow anon update banners" on public.banners for update using (true);
+drop policy if exists "Allow anon delete banners" on public.banners;
+create policy "Allow anon delete banners" on public.banners for delete using (true);
+
+-- 5. Enable Realtime
+alter publication supabase_realtime add table public.queries;
+alter publication supabase_realtime add table public.banners;</pre>
+
+        <div class="flex items-center justify-between pt-2 border-t border-surface-mid">
+          <a href="https://supabase.com/dashboard/project/hfkhqoltplobqpwbptzc/sql/new" target="_blank" rel="noopener noreferrer" 
+             class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-colors shadow-xs">
+            <span>Open Supabase SQL Editor</span>
+            <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+          </a>
+          <button type="button" onclick="closeCopySqlModal()" class="px-4 py-2 rounded-xl bg-surface-mid hover:bg-surface-high font-bold text-xs text-on-surface transition-colors">
+            Close
+          </button>
+        </div>
+      </div>
 
     </div>
   </div>

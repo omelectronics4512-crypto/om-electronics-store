@@ -1182,6 +1182,36 @@ function saveStoredQueries(queries) {
   }
 }
 
+
+// Realtime subscription for customer queries
+function subscribeToQueriesRealtime(onFreshQueriesCallback) {
+  if (!supabaseClient) initSupabaseClient();
+  if (supabaseClient && isSupabaseConfigured()) {
+    try {
+      const channel = supabaseClient
+        .channel('om-queries-live-channel')
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'queries' },
+          async (payload) => {
+            console.log('Realtime query update detected:', payload.eventType);
+            const fresh = await fetchQueriesAsync();
+            if (typeof onFreshQueriesCallback === 'function') {
+              onFreshQueriesCallback(fresh);
+            }
+          }
+        )
+        .subscribe((status) => {
+          console.log('Supabase Queries Realtime status:', status);
+        });
+      return channel;
+    } catch (e) {
+      console.warn('Real-time queries subscription failed:', e);
+    }
+  }
+  return null;
+}
+
 async function fetchQueriesAsync() {
   try {
     const res = await fetch('/api/queries');
@@ -1376,6 +1406,7 @@ if (typeof module !== 'undefined' && module.exports) {
     updateQueryStatusAsync,
     deleteQueryAsync,
     clearQueriesAsync,
+    subscribeToQueriesRealtime,
     OM_STORAGE_KEY,
     OM_SUPABASE_CONFIG_KEY,
     OM_SAMPLE_PRODUCTS,
