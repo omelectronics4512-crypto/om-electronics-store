@@ -172,7 +172,6 @@
       <nav class="hidden md:flex items-center gap-1 lg:gap-2">
         <a href="#home" class="nav-link px-3.5 py-2 rounded-xl text-sm font-semibold text-primary bg-primary-light/40 transition-colors" data-section="home">Home</a>
         <a href="#products" class="nav-link px-3.5 py-2 rounded-xl text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-mid transition-colors" data-section="products">Products</a>
-        <a href="#emi-calculator" class="nav-link px-3.5 py-2 rounded-xl text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-mid transition-colors" data-section="emi-calculator">0% EMI</a>
         <a href="#services" class="nav-link px-3.5 py-2 rounded-xl text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-mid transition-colors" data-section="services">Services</a>
         <a href="#contact" class="nav-link px-3.5 py-2 rounded-xl text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-mid transition-colors" data-section="contact">Store Visit</a>
       </nav>
@@ -207,7 +206,6 @@
         <a href="#home" class="mobile-nav-link px-3 py-2 rounded-lg font-medium text-sm text-primary bg-primary-light/40">Home</a>
         <a href="#products" class="mobile-nav-link px-3 py-2 rounded-lg font-medium text-sm text-on-surface hover:bg-surface-low">Live Products Catalog</a>
         <a href="products.html" class="mobile-nav-link px-3 py-2 rounded-lg font-medium text-sm text-on-surface hover:bg-surface-low">Dedicated Catalog Page</a>
-        <a href="#emi-calculator" class="mobile-nav-link px-3 py-2 rounded-lg font-medium text-sm text-on-surface hover:bg-surface-low">0% EMI Calculator</a>
         <a href="#services" class="mobile-nav-link px-3 py-2 rounded-lg font-medium text-sm text-on-surface hover:bg-surface-low">Services &amp; Repairs</a>
         <a href="#contact" class="mobile-nav-link px-3 py-2 rounded-lg font-medium text-sm text-on-surface hover:bg-surface-low">Store Location &amp; Directions</a>
       </div>
@@ -437,139 +435,7 @@
       </div>
     </section>
 
-    <!-- 6. INTERACTIVE 0% EMI CALCULATOR (#emi-calculator) -->
-    <section id="emi-calculator" class="w-full bg-white py-12 sm:py-16 border-b border-surface-mid scroll-mt-20">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-          <div>
-            <h2 class="font-headline text-2xl sm:text-3xl font-bold text-on-surface tracking-tight">0% EMI &amp; Financing Calculator</h2>
-            <p class="text-xs sm:text-sm text-on-surface-variant mt-1">Estimate your monthly installment with Bajaj Finserv &amp; TVS Credit. 15-minute paperless store approval.</p>
-          </div>
-        </div>
-
-        <!-- Calculator Card Container -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 p-5 sm:p-8 rounded-2xl bg-surface-low border border-surface-mid">
-          
-          <!-- Left Column: Inputs & Sliders -->
-          <div class="lg:col-span-7 flex flex-col gap-6">
-            
-            <!-- Quick Preset Buttons -->
-            <div>
-              <label class="block text-xs font-bold text-on-surface uppercase tracking-wider mb-2">Device Price Preset</label>
-              <div class="flex flex-wrap gap-2 mb-3">
-                <button type="button" onclick="setPresetPrice(19999, 'Midrange 5G')" class="preset-price-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-white hover:bg-surface-mid border border-outline-variant/60 text-on-surface transition-colors">
-                  ₹19,999 (Midrange)
-                </button>
-                <button type="button" onclick="setPresetPrice(29999, 'OnePlus / Vivo')" class="preset-price-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-white hover:bg-surface-mid border border-outline-variant/60 text-on-surface transition-colors">
-                  ₹29,999 (OnePlus / Vivo)
-                </button>
-                <button type="button" onclick="setPresetPrice(54990, 'Laptop')" class="preset-price-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-white hover:bg-surface-mid border border-outline-variant/60 text-on-surface transition-colors">
-                  ₹54,990 (Laptop)
-                </button>
-                <button type="button" onclick="setPresetPrice(69900, 'iPhone 15')" class="preset-price-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-white hover:bg-surface-mid border border-outline-variant/60 text-on-surface transition-colors">
-                  ₹69,900 (iPhone)
-                </button>
-              </div>
-
-              <!-- Price Slider -->
-              <div class="flex items-center justify-between text-xs text-on-surface-variant mb-1.5">
-                <span>Device Cost:</span>
-                <span class="font-headline text-base font-bold text-primary tabular-nums" id="display-price-slider">₹29,999</span>
-              </div>
-              <input type="range" id="price-slider" min="10000" max="150000" step="1000" value="29999" 
-                     class="w-full h-2 bg-surface-mid rounded-lg appearance-none cursor-pointer accent-primary"
-                     oninput="updateCalculator()">
-            </div>
-
-            <!-- Downpayment Slider -->
-            <div>
-              <div class="flex items-center justify-between text-xs text-on-surface-variant mb-1.5">
-                <span class="font-bold text-on-surface uppercase tracking-wider">Down Payment:</span>
-                <span class="font-headline text-sm font-bold text-secondary tabular-nums" id="display-downpayment-val">₹0 (0% Down)</span>
-              </div>
-              <input type="range" id="downpayment-slider" min="0" max="50" step="5" value="0" 
-                     class="w-full h-2 bg-surface-mid rounded-lg appearance-none cursor-pointer accent-secondary"
-                     oninput="updateCalculator()">
-            </div>
-
-            <!-- Tenure Buttons -->
-            <div>
-              <label class="block text-xs font-bold text-on-surface uppercase tracking-wider mb-2">Select Tenure (Months)</label>
-              <div class="grid grid-cols-3 sm:grid-cols-6 gap-2" id="tenure-container">
-                <button type="button" onclick="setTenure(3)" class="tenure-btn py-2 px-3 rounded-xl text-xs font-bold border border-outline-variant/60 bg-white text-on-surface transition-all" data-months="3">3 Mo</button>
-                <button type="button" onclick="setTenure(6)" class="tenure-btn py-2 px-3 rounded-xl text-xs font-bold border border-outline-variant/60 bg-white text-on-surface transition-all" data-months="6">6 Mo</button>
-                <button type="button" onclick="setTenure(9)" class="tenure-btn py-2 px-3 rounded-xl text-xs font-bold border border-outline-variant/60 bg-white text-on-surface transition-all" data-months="9">9 Mo</button>
-                <button type="button" onclick="setTenure(12)" class="tenure-btn py-2 px-3 rounded-xl text-xs font-bold border border-primary bg-primary text-white shadow-xs transition-all" data-months="12">12 Mo</button>
-                <button type="button" onclick="setTenure(18)" class="tenure-btn py-2 px-3 rounded-xl text-xs font-bold border border-outline-variant/60 bg-white text-on-surface transition-all" data-months="18">18 Mo</button>
-                <button type="button" onclick="setTenure(24)" class="tenure-btn py-2 px-3 rounded-xl text-xs font-bold border border-outline-variant/60 bg-white text-on-surface transition-all" data-months="24">24 Mo</button>
-              </div>
-            </div>
-
-            <!-- Financing Partners Supported -->
-            <div class="flex items-center gap-2 text-xs text-on-surface-variant pt-1">
-              <span class="font-semibold text-primary">In-Store Partners:</span>
-              <span>Bajaj Finserv • TVS Credit • HDB Financial • All Major Cards</span>
-            </div>
-
-          </div>
-
-          <!-- Right Column: Live Output & WhatsApp Apply CTA -->
-          <div class="lg:col-span-5 flex flex-col justify-between p-6 rounded-2xl bg-white border border-surface-mid shadow-subtle">
-            
-            <div class="flex flex-col gap-4">
-              <div class="flex items-center justify-between pb-3 border-b border-surface-mid">
-                <span class="text-xs font-bold text-on-surface uppercase tracking-wider">Calculation Breakdown</span>
-                <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">0% Interest Scheme</span>
-              </div>
-
-              <!-- Big Result Box -->
-              <div class="p-4 rounded-xl bg-surface-low border border-surface-mid flex flex-col items-center justify-center text-center">
-                <span class="text-xs font-medium text-on-surface-variant uppercase tracking-wider">Estimated Monthly EMI</span>
-                <span class="font-headline text-3xl sm:text-4xl font-extrabold text-primary tabular-nums mt-1" id="calc-monthly-emi">₹2,499</span>
-                <span class="text-xs text-on-surface-variant mt-1" id="calc-tenure-subtext">per month for 12 months</span>
-              </div>
-
-              <!-- Spec Breakdown List -->
-              <div class="space-y-2 text-xs">
-                <div class="flex justify-between py-1 border-b border-surface-mid">
-                  <span class="text-on-surface-variant">Device Cost</span>
-                  <span class="font-bold tabular-nums" id="calc-device-cost">₹29,999</span>
-                </div>
-                <div class="flex justify-between py-1 border-b border-surface-mid">
-                  <span class="text-on-surface-variant">Down Payment</span>
-                  <span class="font-bold tabular-nums" id="calc-downpayment">₹0</span>
-                </div>
-                <div class="flex justify-between py-1 border-b border-surface-mid">
-                  <span class="text-on-surface-variant">Interest Rate</span>
-                  <span class="font-bold text-emerald-600">0% (Zero Interest)</span>
-                </div>
-                <div class="flex justify-between py-1.5 font-bold text-sm">
-                  <span>Loan Principal</span>
-                  <span class="text-primary tabular-nums" id="calc-net-loan">₹29,999</span>
-                </div>
-              </div>
-
-              <p class="text-[11px] text-on-surface-variant">Instant 15-minute approval with Aadhaar and PAN card at our Dhanore store.</p>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="pt-4 flex flex-col gap-2">
-              <button type="button" onclick="applyEmiOnWhatsApp()" 
-                      class="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-subtle transition-all">
-                <span class="material-symbols-outlined text-[18px]">chat</span>
-                <span>Apply for this EMI via WhatsApp</span>
-              </button>
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-
-    <!-- 7. UNIFIED STORE SERVICES & TRUST PILLARS (#services) -->
+    <!-- 6. UNIFIED STORE SERVICES & TRUST PILLARS (#services) -->
     <section id="services" class="w-full bg-surface-low py-12 sm:py-16 border-b border-surface-mid scroll-mt-20">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
@@ -707,7 +573,6 @@
       </div>
       <div class="flex items-center gap-4">
         <a href="products.html" class="hover:text-primary transition-colors">Catalog Page</a>
-        <a href="#emi-calculator" class="hover:text-primary transition-colors">0% EMI</a>
         <a href="#services" class="hover:text-primary transition-colors">Services</a>
         <a href="#contact" class="hover:text-primary transition-colors">Contact</a>
       </div>
@@ -782,15 +647,9 @@
     let currentSearchQuery = "";
     let currentSort = "featured";
 
-    // Calculator State
-    let calcPrice = 29999;
-    let calcDownpaymentPercent = 0;
-    let calcTenureMonths = 12;
-
     document.addEventListener("DOMContentLoaded", () => {
       updateCategoryCounts();
       renderCatalog();
-      updateCalculator();
       updateStoreOpenStatus();
       setupKeyboardShortcuts();
 
@@ -1016,54 +875,6 @@
           </div>
         `;
       }).join('');
-    }
-
-    function setPresetPrice(price, name) {
-      calcPrice = price;
-      document.getElementById("price-slider").value = price;
-      updateCalculator();
-    }
-
-    function setTenure(months) {
-      calcTenureMonths = months;
-      document.querySelectorAll(".tenure-btn").forEach(btn => {
-        if (parseInt(btn.getAttribute("data-months")) === months) {
-          btn.className = "tenure-btn py-2 px-3 rounded-xl text-xs font-bold border border-primary bg-primary text-white shadow-xs transition-all";
-        } else {
-          btn.className = "tenure-btn py-2 px-3 rounded-xl text-xs font-bold border border-outline-variant/60 bg-white text-on-surface transition-all";
-        }
-      });
-      updateCalculator();
-    }
-
-    function updateCalculator() {
-      const priceSlider = document.getElementById("price-slider");
-      const downSlider = document.getElementById("downpayment-slider");
-      if (!priceSlider || !downSlider) return;
-
-      calcPrice = parseInt(priceSlider.value);
-      calcDownpaymentPercent = parseInt(downSlider.value);
-
-      document.getElementById("display-price-slider").textContent = "₹" + calcPrice.toLocaleString('en-IN');
-      const downpaymentAmt = Math.round((calcPrice * calcDownpaymentPercent) / 100);
-      document.getElementById("display-downpayment-val").textContent = `₹${downpaymentAmt.toLocaleString('en-IN')} (${calcDownpaymentPercent}% Down)`;
-
-      let netLoan = calcPrice - downpaymentAmt;
-      if (netLoan < 0) netLoan = 0;
-      const monthlyEmi = Math.round(netLoan / calcTenureMonths);
-
-      document.getElementById("calc-monthly-emi").textContent = "₹" + monthlyEmi.toLocaleString('en-IN');
-      document.getElementById("calc-tenure-subtext").textContent = `per month for ${calcTenureMonths} months (${calcDownpaymentPercent}% down)`;
-      document.getElementById("calc-device-cost").textContent = "₹" + calcPrice.toLocaleString('en-IN');
-      document.getElementById("calc-downpayment").textContent = "₹" + downpaymentAmt.toLocaleString('en-IN');
-      document.getElementById("calc-net-loan").textContent = "₹" + netLoan.toLocaleString('en-IN');
-    }
-
-    function applyEmiOnWhatsApp() {
-      const price = document.getElementById("calc-device-cost")?.textContent || "₹29,999";
-      const emi = document.getElementById("calc-monthly-emi")?.textContent || "₹2,499";
-      const msg = `Hello OM Mobile Dhanore! I want to check my 0% EMI eligibility for a device worth ${price}. Estimated monthly EMI is ${emi} for ${calcTenureMonths} months. Please share required documents.`;
-      window.open(`https://wa.me/919172214216?text=${encodeURIComponent(msg)}`, "_blank");
     }
 
     function contactProduct(productId) {
